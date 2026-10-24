@@ -85,28 +85,34 @@ export function App() {
         )}
 
         {currentView === 'room' && (
-          <div className="space-y-4">
-            {/* Montador Visual do Cômodo (Scene Builder) */}
-            <SceneBuilder
-              world={activeWorld}
-              completedItemIds={completedItemIds}
-              activeItemId={activeItem.id}
-              onSelectItem={handleSelectItem}
-            />
+          <div className="max-w-6xl mx-auto px-2 xs:px-3 sm:px-6 lg:px-8">
+            <div className="lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start space-y-4 lg:space-y-0">
+              {/* Montador Visual do Cômodo (Scene Builder) */}
+              <div className="lg:col-span-6 xl:col-span-6">
+                <SceneBuilder
+                  world={activeWorld}
+                  completedItemIds={completedItemIds}
+                  activeItemId={activeItem.id}
+                  onSelectItem={handleSelectItem}
+                />
+              </div>
 
-            {/* Arena de Soletração do Objeto em Foco */}
-            <WordArena
-              key={activeItem.id}
-              item={activeItem}
-              worldTitle={activeWorld.title}
-              placementLabel={activeWorld.placementLabel}
-              isItemCompleted={!!completedItemIds[activeItem.id]}
-              onComplete={handleCompleteItem}
-              onPrevItem={handlePrevItem}
-              onNextItem={handleNextItem}
-              hasPrev={activeItemIndex > 0}
-              hasNext={activeItemIndex < activeWorld.items.length - 1}
-            />
+              {/* Arena de Soletração do Objeto em Foco */}
+              <div className="lg:col-span-6 xl:col-span-6">
+                <WordArena
+                  key={activeItem.id}
+                  item={activeItem}
+                  worldTitle={activeWorld.title}
+                  placementLabel={activeWorld.placementLabel}
+                  isItemCompleted={!!completedItemIds[activeItem.id]}
+                  onComplete={handleCompleteItem}
+                  onPrevItem={handlePrevItem}
+                  onNextItem={handleNextItem}
+                  hasPrev={activeItemIndex > 0}
+                  hasNext={activeItemIndex < activeWorld.items.length - 1}
+                />
+              </div>
+            </div>
           </div>
         )}
       </main>

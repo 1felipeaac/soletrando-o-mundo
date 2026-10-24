@@ -1,4 +1,6 @@
-import { ArrowLeft, Star, ShieldCheck, MapPin } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Star, ShieldCheck, MapPin, Download } from 'lucide-react';
+import { pwaService } from '../services/pwaService';
 
 interface NavbarProps {
   currentView: 'map' | 'room';
@@ -17,9 +19,21 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentWorldTitle,
   onOpenParentalGate,
 }) => {
+  const [canInstall, setCanInstall] = useState(pwaService.canInstall());
+
+  useEffect(() => {
+    return pwaService.subscribe(() => {
+      setCanInstall(pwaService.canInstall());
+    });
+  }, []);
+
+  const handleInstallClick = async () => {
+    await pwaService.install();
+  };
+
   return (
-    <header className="sticky top-0 z-30 bg-[#e8f4fc]/95 backdrop-blur-md border-b-2 border-sky-200/80 px-3 sm:px-6 py-2.5 shadow-xs transition-colors">
-      <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+    <header className="sticky top-0 z-30 bg-[#e8f4fc]/95 backdrop-blur-md border-b-2 border-sky-200/80 px-3 sm:px-6 lg:px-8 py-2.5 shadow-xs transition-colors">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
         {/* Lado Esquerdo: Voltar ao Mapa ou Logo */}
         <div className="flex items-center gap-2.5 min-w-0">
           {currentView !== 'map' ? (
@@ -53,20 +67,32 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
         </div>
 
-        {/* Lado Direito: Estrelas + Trava Parental */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        {/* Lado Direito: PWA Install + Estrelas + Trava Parental */}
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {/* Botão de Instalação PWA */}
+          {canInstall && (
+            <button
+              onClick={handleInstallClick}
+              className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-black px-2.5 sm:px-3.5 py-1.5 rounded-2xl border border-amber-500 shadow-xs transition-all active:scale-95 text-xs cursor-pointer"
+              title="Instalar Aplicativo no Dispositivo"
+            >
+              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-950" />
+              <span className="hidden xs:inline">Instalar App</span>
+            </button>
+          )}
+
           {/* Badge de Estrelas / Pontuação */}
-          <div className="flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-full border border-sky-200 shadow-xs">
+          <div className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3.5 py-1.5 rounded-full border border-sky-200 shadow-xs">
             <Star className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0 drop-shadow-2xs" />
             <span className="text-xs sm:text-sm font-black text-slate-800">
-              {starsCount * 40 || starsCount} <span className="text-slate-400 font-semibold text-[11px]">({starsCount}/{totalItems})</span>
+              {starsCount * 40 || starsCount} <span className="text-slate-400 font-semibold text-[10px] sm:text-[11px]">({starsCount}/{totalItems})</span>
             </span>
           </div>
 
           {/* Botão de Trava Parental (Área dos Pais) */}
           <button
             onClick={onOpenParentalGate}
-            className="p-2 sm:px-3 sm:py-2 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white border-2 border-sky-600 shadow-xs transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
+            className="p-1.5 sm:px-3 sm:py-2 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white border-2 border-sky-600 shadow-xs transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
             title="Área dos Pais (Trava Matemática)"
             aria-label="Área dos Pais"
           >

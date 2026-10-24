@@ -13,7 +13,7 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
   onSelectWorld,
 }) => {
   return (
-    <div className="w-full max-w-lg mx-auto px-4 py-5 select-none space-y-5">
+    <div className="w-full max-w-xl sm:max-w-2xl mx-auto px-3 sm:px-4 py-4 sm:py-6 select-none space-y-4 sm:space-y-5">
       {/* Título de Boas-Vindas */}
       <div className="text-center space-y-1 mb-2">
         <span className="inline-flex items-center gap-1.5 bg-sky-100 text-sky-900 font-extrabold text-xs px-3.5 py-1 rounded-full border border-sky-200 shadow-2xs">
@@ -23,7 +23,7 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
         <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
           Escolha um Mundo para Brincar
         </h2>
-        <p className="text-xs font-semibold text-slate-600">
+        <p className="text-xs sm:text-sm font-semibold text-slate-600">
           Soletre palavras do cotidiano e monte cada cantinho!
         </p>
       </div>
@@ -72,12 +72,12 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
 
                 <div className="flex items-center gap-4">
                   {/* Ícone 3D / Ilustração da Ilha */}
-                  <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white flex items-center justify-center text-4xl border-2 border-slate-200 shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                    {world.id === 1 ? (
+                  <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white flex items-center justify-center text-4xl border-2 border-slate-200 shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+                    {world.sceneImage ? (
                       <img
-                        src="/images/bedroom_scene.jpg"
-                        alt="O Quarto"
-                        className="w-full h-full object-cover rounded-xl"
+                        src={world.sceneImage}
+                        alt={world.shortName}
+                        className="w-full h-full object-cover object-center rounded-xl mx-auto block"
                       />
                     ) : (
                       <span role="img" aria-label={world.shortName}>

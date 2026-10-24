@@ -28,9 +28,9 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
   const sceneImageSrc = world.sceneImage || '/images/bedroom_scene.jpg';
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 select-none">
+    <div className="w-full max-w-2xl lg:max-w-none mx-auto px-2 xs:px-3 sm:px-4 select-none">
       {/* Moldura do Cenário Isométrico Vivo (Como no Mockup de Alta Fidelidade) */}
-      <div className="bg-white rounded-3xl border-3 border-sky-200 p-3 sm:p-4 shadow-sm relative overflow-hidden space-y-3">
+      <div className="bg-white rounded-3xl border-3 border-sky-200 p-3 xs:p-3.5 sm:p-4 shadow-sm relative overflow-hidden space-y-3">
         {/* Cabeçalho do Cenário */}
         <div className="flex items-center justify-between bg-sky-50/80 px-3.5 py-2 rounded-2xl border border-sky-100">
           <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
         </div>
 
         {/* Esteira Seletora de Móveis e Brinquedos (8 Itens Táteis) */}
-        <div className="grid grid-cols-4 gap-2 sm:gap-2.5 pt-1">
+        <div className="grid grid-cols-4 gap-1.5 xs:gap-2 sm:gap-2.5 pt-1">
           {items.map((item) => {
             const isCompleted = !!completedItemIds[item.id];
             const isCurrent = item.id === activeItemId;
@@ -161,7 +161,7 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectItem(item)}
-                className={`relative flex flex-col items-center justify-between p-2 sm:p-2.5 rounded-2xl border-2 transition-all cursor-pointer active:scale-95 ${
+                className={`relative flex flex-col items-center justify-between p-1.5 xs:p-2 sm:p-2.5 rounded-2xl border-2 transition-all cursor-pointer active:scale-95 ${
                   isCurrent
                     ? 'bg-amber-100/90 border-amber-500 shadow-sm ring-2 ring-amber-400 scale-[1.02]'
                     : isCompleted
@@ -187,7 +187,7 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
 
                 {/* Ilustração: Colorida se concluído, Sombreada no mistério */}
                 <div
-                  className={`w-11 h-11 sm:w-13 sm:h-13 my-0.5 transition-transform flex items-center justify-center ${
+                  className={`w-9 h-9 xs:w-11 xs:h-11 sm:w-13 sm:h-13 my-0.5 transition-transform flex items-center justify-center mx-auto ${
                     isCompleted
                       ? 'scale-100'
                       : isCurrent
@@ -200,7 +200,7 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
 
                 {/* Nome do Objeto */}
                 <span
-                  className={`text-[10px] sm:text-xs font-black uppercase tracking-wider truncate w-full text-center ${
+                  className={`text-[9px] xs:text-[10px] sm:text-xs font-black uppercase tracking-wider truncate w-full text-center ${
                     isCompleted
                       ? 'text-emerald-950 font-extrabold'
                       : isCurrent

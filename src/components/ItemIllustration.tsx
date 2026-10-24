@@ -28,13 +28,14 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 }) => {
   const cleanId = itemId.trim().toLowerCase();
   const imageSrc = IMAGE_MAP[cleanId];
+  const combinedClassName = `${className} object-contain object-center mx-auto block`;
 
   if (imageSrc) {
     return (
       <img
         src={imageSrc}
         alt={itemId}
-        className={`${className} object-contain rounded-2xl select-none`}
+        className={`${combinedClassName} rounded-2xl select-none`}
         loading="lazy"
         draggable={false}
       />
@@ -44,7 +45,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
   switch (cleanId) {
     case 'mesa':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           {/* Sombra no chão */}
           <ellipse cx="50" cy="88" rx="42" ry="6" fill="#E2E8F0" />
           {/* Pernas traseiras */}
@@ -72,7 +73,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'cama':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="86" rx="42" ry="6" fill="#E2E8F0" />
           {/* Cabeceira alta de madeira */}
           <rect x="12" y="20" width="12" height="66" rx="3" fill="#B45309" stroke="#78350F" strokeWidth="2" />
@@ -90,7 +91,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'sofa':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="86" rx="40" ry="6" fill="#E2E8F0" />
           {/* Encosto acolchoado */}
           <rect x="16" y="28" width="68" height="36" rx="10" fill="#F97316" stroke="#C2410C" strokeWidth="2.5" />
@@ -110,7 +111,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'abajur':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="24" ry="5" fill="#E2E8F0" />
           {/* Base e haste */}
           <ellipse cx="50" cy="86" rx="16" ry="4" fill="#94A3B8" stroke="#475569" strokeWidth="2" />
@@ -126,7 +127,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'porta':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <rect x="22" y="10" width="56" height="80" rx="3" fill="#D97706" stroke="#92400E" strokeWidth="3" />
           <rect x="28" y="18" width="44" height="30" rx="2" fill="#B45309" stroke="#78350F" strokeWidth="1.5" />
           <rect x="28" y="54" width="44" height="30" rx="2" fill="#B45309" stroke="#78350F" strokeWidth="1.5" />
@@ -136,7 +137,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'tapete':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="50" rx="46" ry="24" fill="#38BDF8" stroke="#0284C7" strokeWidth="3" />
           <ellipse cx="50" cy="50" rx="36" ry="18" fill="#BAE6FD" stroke="#0284C7" strokeWidth="1.5" />
           <ellipse cx="50" cy="50" rx="24" ry="11" fill="#FEF08A" stroke="#CA8A04" strokeWidth="1.5" />
@@ -145,7 +146,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'bola':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="28" ry="6" fill="#E2E8F0" />
           <circle cx="50" cy="50" r="36" fill="#EF4444" stroke="#991B1B" strokeWidth="3" />
           <path d="M26 30C36 40 40 60 30 72" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" fill="none" />
@@ -156,7 +157,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'urso':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="30" ry="6" fill="#E2E8F0" />
           {/* Orelhas */}
           <circle cx="28" cy="28" r="12" fill="#B45309" stroke="#78350F" strokeWidth="2.5" />
@@ -178,7 +179,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'sopa':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="36" ry="6" fill="#E2E8F0" />
           {/* Tigela de cerâmica */}
           <path d="M16 46C16 72 30 84 50 84C70 84 84 72 84 46H16Z" fill="#38BDF8" stroke="#0284C7" strokeWidth="2.5" />
@@ -198,7 +199,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'maca':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="28" ry="6" fill="#E2E8F0" />
           {/* Cabinho */}
           <path d="M50 28C51 20 56 16 60 14" stroke="#78350F" strokeWidth="3" strokeLinecap="round" />
@@ -224,7 +225,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'copo':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="26" ry="6" fill="#E2E8F0" />
           {/* Vidro do copo */}
           <path d="M26 22L34 84C34 86 36 88 38 88H62C64 88 66 86 66 84L74 22H26Z" fill="#E0F2FE" stroke="#0284C7" strokeWidth="2.5" />
@@ -239,7 +240,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'prato':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="42" ry="6" fill="#E2E8F0" />
           {/* Prato cerâmico externo */}
           <ellipse cx="50" cy="54" rx="44" ry="26" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="3" />
@@ -254,7 +255,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'garfo':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="90" rx="16" ry="4" fill="#E2E8F0" />
           {/* Cabo ergonômico com ponta arredondada */}
           <path d="M47 48L46 84C46 87 48 89 50 89C52 89 54 87 54 84L53 48H47Z" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
@@ -272,7 +273,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     case 'banana':
       return (
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
           <ellipse cx="50" cy="88" rx="36" ry="6" fill="#E2E8F0" />
           {/* Banana descascada fofa */}
           <path
@@ -300,7 +301,7 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     default:
       return (
-        <span className="text-4xl flex items-center justify-center select-none" role="img" aria-label={itemId}>
+        <span className="text-4xl flex items-center justify-center mx-auto select-none" role="img" aria-label={itemId}>
           {fallbackIcon || '⭐'}
         </span>
       );

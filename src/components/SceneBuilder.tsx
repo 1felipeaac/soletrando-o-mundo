@@ -23,13 +23,10 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
     ? (world.completedTitle || `${world.shortName} Completo! 🏆`)
     : (world.shortName || world.title);
 
-  const headerSubtitle = world.sceneSubtitle || 'Toque nas sombras misteriosas para soletrar e mobiliar o quarto';
+  const headerSubtitle = isRoomFinished
+    ? 'O ambiente está completo e pronto para brincar!'
+    : (world.sceneSubtitle || 'Descubra os objetos abaixo para revelar o cômodo');
   const successBanner = world.completedBanner || `${world.shortName} 100% Montado!`;
-  
-  // Imagem base: Cenário Sombreado durante o jogo, Foto Completa ao finalizar 100%
-  const currentSceneImage = isRoomFinished
-    ? (world.sceneImage || '/images/bedroom_scene.jpg')
-    : (world.shadowedSceneImage || '/images/bedroom_scene_shadowed.jpg');
 
   return (
     <div className="w-full max-w-2xl lg:max-w-none mx-auto px-2 xs:px-3 sm:px-4 select-none">
@@ -52,11 +49,11 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
           </div>
 
           <span className="bg-white text-slate-800 text-xs font-black px-3 py-1 rounded-xl border border-sky-200 shadow-2xs">
-            {completedCount}/{items.length} Concluídos
+            {completedCount}/{items.length} Revelados
           </span>
         </div>
 
-        {/* Banner Comemorativo 100% Concluído (Posicionado ACIMA do Cenário para deixar o quarto 100% visível!) */}
+        {/* Banner Comemorativo 100% Concluído (Posicionado ACIMA do Cenário) */}
         {isRoomFinished && (
           <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-300 p-3 sm:p-3.5 rounded-2xl border-2 border-amber-400 shadow-sm flex items-center justify-between gap-2 animate-pop-in">
             <div className="flex items-center gap-2.5">
@@ -68,7 +65,7 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                   {successBanner}
                 </h3>
                 <p className="text-[10px] sm:text-xs font-extrabold text-amber-900/90 leading-tight">
-                  Tudo no lugar! O ambiente está decorado e pronto para brincar.
+                  Tudo no lugar! O ambiente foi revelado e está pronto para brincar.
                 </p>
               </div>
             </div>
@@ -79,76 +76,28 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
           </div>
         )}
 
-        {/* Vista Isométrica: Sombreada durante o progresso (com stickers dos acertos) e Completa ao finalizar */}
+        {/* Vista Isométrica: Em Blur durante o progresso, e Nítida ao finalizar 100% */}
         <div className="relative rounded-2xl overflow-hidden border-2 border-sky-100 shadow-inner bg-sky-50 aspect-4/3 sm:aspect-16/10 max-h-[260px] sm:max-h-[320px] lg:max-h-[340px]">
           <img
-            key={currentSceneImage}
-            src={currentSceneImage}
+            src={world.sceneImage || '/images/bedroom_scene.jpg'}
             alt={world.title}
-            className="w-full h-full object-cover object-center select-none transition-all duration-700"
+            className={`w-full h-full object-cover object-center select-none transition-all duration-700 ${
+              isRoomFinished
+                ? 'filter-none scale-100'
+                : 'blur-md scale-105'
+            }`}
             draggable={false}
           />
 
-          {/* Camada de Stickers sobre as Sombras (Apenas enquanto o quarto estiver sendo montado) */}
-          {!isRoomFinished &&
-            items.map((item) => {
-              const isCompleted = !!completedItemIds[item.id];
-              const isCurrent = item.id === activeItemId;
-              const { x = 50, y = 50, size = 48 } = item.roomPlacement || {};
-              const stickerSrc = item.stickerImage || `/images/stickers/${item.id}.png`;
-
-              return (
-                <button
-                  key={`hotspot-${item.id}`}
-                  onClick={() => onSelectItem(item)}
-                  style={{
-                    left: `${x}%`,
-                    top: `${y}%`,
-                    width: `${size}px`,
-                    height: `${size}px`,
-                  }}
-                  className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 group ${
-                    isCurrent ? 'scale-110 z-20' : 'z-10 hover:scale-105'
-                  }`}
-                  title={isCompleted ? item.displayName : `Descubra este objeto: ${item.displayName}`}
-                  aria-label={isCompleted ? item.displayName : `Objeto misterioso`}
-                >
-                  {isCompleted ? (
-                    // Objeto Concluído: Sticker Nítido e Colorido Sobrepondo a Sombra com Perfeição
-                    <div className="w-full h-full relative drop-shadow-md animate-pop-in">
-                      <img
-                        src={stickerSrc}
-                        alt={item.displayName}
-                        className="w-full h-full object-contain select-none"
-                        draggable={false}
-                      />
-                      {isCurrent && (
-                        <span className="absolute -inset-1 rounded-full border-2 border-amber-400 animate-pulse pointer-events-none" />
-                      )}
-                    </div>
-                  ) : (
-                    // Objeto Misterioso (Sombra): Indicador Interativo Suave com '?'
-                    <div
-                      className={`w-full h-full relative flex items-center justify-center rounded-2xl transition-all ${
-                        isCurrent
-                          ? 'border-2 border-amber-400 bg-amber-400/20 ring-2 ring-amber-300 shadow-sm'
-                          : 'hover:bg-amber-400/10'
-                      }`}
-                    >
-                      <span
-                        className={`w-6 h-6 rounded-full text-xs font-black flex items-center justify-center shadow-xs transition-transform ${
-                          isCurrent
-                            ? 'bg-amber-400 text-amber-950 scale-110 animate-bounce'
-                            : 'bg-sky-200/90 text-sky-800 hover:scale-105'
-                        }`}
-                      >
-                        ?
-                      </span>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+          {/* Overlay suave informativo enquanto o cômodo estiver em Blur */}
+          {!isRoomFinished && (
+            <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] flex items-center justify-center p-3 pointer-events-none">
+              <div className="bg-white/90 text-slate-800 font-extrabold text-[11px] sm:text-xs px-3.5 py-1.5 rounded-full border border-sky-200/80 shadow-xs flex items-center gap-1.5 animate-pulse">
+                <span>✨</span>
+                <span>Descubra todos os objetos abaixo para revelar o cômodo!</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Esteira Seletora de Móveis e Brinquedos (8 Itens Táteis) */}

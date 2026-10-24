@@ -75,9 +75,11 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
                   <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white flex items-center justify-center text-4xl border-2 border-slate-200 shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
                     {world.sceneImage ? (
                       <img
-                        src={isFinished ? world.sceneImage : (world.shadowedSceneImage || world.sceneImage)}
+                        src={world.sceneImage}
                         alt={world.shortName}
-                        className="w-full h-full object-cover object-center rounded-xl mx-auto block"
+                        className={`w-full h-full object-cover object-center rounded-xl mx-auto block transition-all duration-500 ${
+                          isFinished ? 'filter-none scale-100' : 'blur-[2px] scale-105'
+                        }`}
                       />
                     ) : (
                       <span role="img" aria-label={world.shortName}>

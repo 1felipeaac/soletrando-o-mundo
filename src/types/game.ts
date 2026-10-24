@@ -9,6 +9,7 @@ export interface ItemStage {
   bnccCode: string;
   category: 'furniture' | 'toy' | 'decoration' | 'structure' | 'food' | 'animal';
   icon: string;
+  stickerImage?: string;
   // Posição no cenário do cômodo (porcentagem ou layout)
   roomPlacement: {
     label: string;
@@ -28,6 +29,7 @@ export interface WorldRoom {
   description: string;
   icon: string;
   sceneImage?: string;
+  shadowedSceneImage?: string;
   sceneSubtitle?: string;
   completedTitle?: string;
   completedBanner?: string;

@@ -8,17 +8,22 @@ interface ItemIllustrationProps {
 }
 
 const IMAGE_MAP: Record<string, string> = {
-  cama: '/images/cama.jpg',
-  mesa: '/images/mesa.jpg',
+  cama: '/images/stickers/cama.png',
+  mesa: '/images/stickers/mesa.png',
+  urso: '/images/stickers/urso.png',
+  tapete: '/images/stickers/tapete.png',
+  relogio: '/images/stickers/relogio.png',
+  quadro: '/images/stickers/quadro.png',
+  janela: '/images/stickers/janela.png',
+  banco: '/images/stickers/banco.png',
+  bolo: '/images/stickers/bolo.png',
+  suco: '/images/stickers/suco.png',
+  sopa: '/images/stickers/sopa.png',
+  // Preservados para outros cômodos e expansões
   sofa: '/images/sofa.jpg',
   bola: '/images/bola.jpg',
-  urso: '/images/urso.jpg',
   porta: '/images/porta.jpg',
-  tapete: '/images/tapete.jpg',
   abajur: '/images/abajur.jpg',
-  bolo: '/images/bolo.jpg',
-  suco: '/images/suco.jpg',
-  sopa: '/images/sopa.jpg',
 };
 
 export const ItemIllustration: React.FC<ItemIllustrationProps> = ({

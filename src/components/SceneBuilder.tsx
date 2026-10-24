@@ -23,9 +23,13 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
     ? (world.completedTitle || `${world.shortName} Completo! 🏆`)
     : (world.shortName || world.title);
 
-  const headerSubtitle = world.sceneSubtitle || 'Toque nos itens para soletrar e montar';
+  const headerSubtitle = world.sceneSubtitle || 'Toque nas sombras misteriosas para soletrar e mobiliar o quarto';
   const successBanner = world.completedBanner || `${world.shortName} 100% Montado!`;
-  const sceneImageSrc = world.sceneImage || '/images/bedroom_scene.jpg';
+  
+  // Imagem base: Cenário Sombreado durante o jogo, Foto Completa ao finalizar 100%
+  const currentSceneImage = isRoomFinished
+    ? (world.sceneImage || '/images/bedroom_scene.jpg')
+    : (world.shadowedSceneImage || '/images/bedroom_scene_shadowed.jpg');
 
   return (
     <div className="w-full max-w-2xl lg:max-w-none mx-auto px-2 xs:px-3 sm:px-4 select-none">
@@ -75,80 +79,76 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
           </div>
         )}
 
-        {/* Vista Isométrica em Alta Resolução (100% Nítida e Visível) */}
-        <div className="relative rounded-2xl overflow-hidden border-2 border-sky-100 shadow-inner bg-sky-50 aspect-4/3 sm:aspect-16/10 max-h-[240px] sm:max-h-[300px]">
+        {/* Vista Isométrica: Sombreada durante o progresso (com stickers dos acertos) e Completa ao finalizar */}
+        <div className="relative rounded-2xl overflow-hidden border-2 border-sky-100 shadow-inner bg-sky-50 aspect-4/3 sm:aspect-16/10 max-h-[260px] sm:max-h-[320px] lg:max-h-[340px]">
           <img
-            src={sceneImageSrc}
+            key={currentSceneImage}
+            src={currentSceneImage}
             alt={world.title}
-            className="w-full h-full object-cover object-center select-none"
+            className="w-full h-full object-cover object-center select-none transition-all duration-700"
             draggable={false}
           />
 
-          {/* Camada Interativa dos Objetos do Cômodo (Sombreados no mistério, Coloridos ao concluir) */}
-          {items.map((item) => {
-            const isCompleted = !!completedItemIds[item.id];
-            const isCurrent = item.id === activeItemId;
-            const { x = 50, y = 50, size = 48 } = item.roomPlacement || {};
+          {/* Camada de Stickers sobre as Sombras (Apenas enquanto o quarto estiver sendo montado) */}
+          {!isRoomFinished &&
+            items.map((item) => {
+              const isCompleted = !!completedItemIds[item.id];
+              const isCurrent = item.id === activeItemId;
+              const { x = 50, y = 50, size = 48 } = item.roomPlacement || {};
+              const stickerSrc = item.stickerImage || `/images/stickers/${item.id}.png`;
 
-            return (
-              <button
-                key={`hotspot-${item.id}`}
-                onClick={() => onSelectItem(item)}
-                style={{
-                  left: `${x}%`,
-                  top: `${y}%`,
-                  width: `${size}px`,
-                  height: `${size}px`,
-                }}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 group ${
-                  isCurrent ? 'scale-110 z-20' : 'z-10 hover:scale-105'
-                }`}
-                title={isCompleted ? item.displayName : `Descubra este objeto: ${item.displayName}`}
-                aria-label={isCompleted ? item.displayName : `Objeto misterioso`}
-              >
-                {isCompleted ? (
-                  // Objeto Concluído: Pleno, Colorido e Nítido
-                  <div className="w-full h-full relative drop-shadow-md animate-pop-in">
-                    <ItemIllustration
-                      itemId={item.id}
-                      fallbackIcon={item.icon}
-                      className="w-full h-full object-contain select-none"
-                    />
-                    {isCurrent && (
-                      <span className="absolute -inset-1 rounded-full border-2 border-amber-400 animate-pulse pointer-events-none" />
-                    )}
-                  </div>
-                ) : (
-                  // Objeto Não Montado: Sombreado Misterioso (Silhouette) com Indicador de Mistério
-                  <div
-                    className={`w-full h-full relative flex items-center justify-center rounded-2xl border-2 border-dashed transition-all ${
-                      isCurrent
-                        ? 'border-amber-400 bg-amber-400/25 ring-2 ring-amber-300 shadow-sm'
-                        : 'border-sky-300/60 bg-sky-950/15 hover:border-sky-400 hover:bg-sky-950/25'
-                    }`}
-                  >
-                    {/* Silhueta Negra / Sombreada */}
-                    <div className="w-full h-full p-1 opacity-40 brightness-0 contrast-200">
-                      <ItemIllustration
-                        itemId={item.id}
-                        fallbackIcon={item.icon}
+              return (
+                <button
+                  key={`hotspot-${item.id}`}
+                  onClick={() => onSelectItem(item)}
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    width: `${size}px`,
+                    height: `${size}px`,
+                  }}
+                  className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 group ${
+                    isCurrent ? 'scale-110 z-20' : 'z-10 hover:scale-105'
+                  }`}
+                  title={isCompleted ? item.displayName : `Descubra este objeto: ${item.displayName}`}
+                  aria-label={isCompleted ? item.displayName : `Objeto misterioso`}
+                >
+                  {isCompleted ? (
+                    // Objeto Concluído: Sticker Nítido e Colorido Sobrepondo a Sombra com Perfeição
+                    <div className="w-full h-full relative drop-shadow-md animate-pop-in">
+                      <img
+                        src={stickerSrc}
+                        alt={item.displayName}
                         className="w-full h-full object-contain select-none"
+                        draggable={false}
                       />
+                      {isCurrent && (
+                        <span className="absolute -inset-1 rounded-full border-2 border-amber-400 animate-pulse pointer-events-none" />
+                      )}
                     </div>
-
-                    {/* Badge de Ponto de Interrogação */}
-                    <span
-                      className={`absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full text-[10px] font-black flex items-center justify-center shadow-xs ${
-                        isCurrent ? 'bg-amber-400 text-amber-950' : 'bg-sky-200 text-sky-800'
+                  ) : (
+                    // Objeto Misterioso (Sombra): Indicador Interativo Suave com '?'
+                    <div
+                      className={`w-full h-full relative flex items-center justify-center rounded-2xl transition-all ${
+                        isCurrent
+                          ? 'border-2 border-amber-400 bg-amber-400/20 ring-2 ring-amber-300 shadow-sm'
+                          : 'hover:bg-amber-400/10'
                       }`}
                     >
-                      ?
-                    </span>
-                  </div>
-                )}
-              </button>
-            );
-          })}
+                      <span
+                        className={`w-6 h-6 rounded-full text-xs font-black flex items-center justify-center shadow-xs transition-transform ${
+                          isCurrent
+                            ? 'bg-amber-400 text-amber-950 scale-110 animate-bounce'
+                            : 'bg-sky-200/90 text-sky-800 hover:scale-105'
+                        }`}
+                      >
+                        ?
+                      </span>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
         </div>
 
         {/* Esteira Seletora de Móveis e Brinquedos (8 Itens Táteis) */}

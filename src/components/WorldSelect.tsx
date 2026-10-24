@@ -71,11 +71,11 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
                 </div>
 
                 <div className="flex items-center gap-4">
-                  {/* Ícone 3D / Ilustração da Ilha */}
+                  {/* Ícone 3D / Ilustração da Ilha: Sombreada durante a montagem e Completa quando 100% decorada */}
                   <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white flex items-center justify-center text-4xl border-2 border-slate-200 shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
                     {world.sceneImage ? (
                       <img
-                        src={world.sceneImage}
+                        src={isFinished ? world.sceneImage : (world.shadowedSceneImage || world.sceneImage)}
                         alt={world.shortName}
                         className="w-full h-full object-cover object-center rounded-xl mx-auto block"
                       />

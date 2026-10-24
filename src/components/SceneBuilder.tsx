@@ -147,17 +147,17 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                   <ItemIllustration itemId={item.id} fallbackIcon={item.icon} className="w-full h-full object-contain" />
                 </div>
 
-                {/* Nome do Objeto */}
+                {/* Nome do Objeto (Só revelado após o acerto) */}
                 <span
                   className={`text-[9px] xs:text-[10px] sm:text-xs font-black uppercase tracking-wider truncate w-full text-center ${
                     isCompleted
                       ? 'text-emerald-950 font-extrabold'
                       : isCurrent
-                      ? 'text-amber-950 font-black'
+                      ? 'text-amber-900 font-extrabold tracking-widest'
                       : 'text-stone-400 font-extrabold tracking-widest'
                   }`}
                 >
-                  {isCompleted ? item.displayName : isCurrent ? item.displayName : '???'}
+                  {isCompleted ? item.displayName : '???'}
                 </span>
               </button>
             );

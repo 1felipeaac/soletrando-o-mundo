@@ -14,6 +14,9 @@ export interface ItemStage {
     label: string;
     description: string;
     gridArea?: string;
+    x?: number; // % da esquerda no cenário (0 a 100)
+    y?: number; // % do topo no cenário (0 a 100)
+    size?: number; // tamanho recomendado em px
   };
 }
 

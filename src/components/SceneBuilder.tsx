@@ -52,8 +52,31 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
           </span>
         </div>
 
-        {/* Vista Isométrica em Alta Resolução */}
-        <div className="relative rounded-2xl overflow-hidden border-2 border-sky-100 shadow-inner bg-sky-50 aspect-4/3 sm:aspect-16/10 max-h-[220px] sm:max-h-[280px]">
+        {/* Banner Comemorativo 100% Concluído (Posicionado ACIMA do Cenário para deixar o quarto 100% visível!) */}
+        {isRoomFinished && (
+          <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-300 p-3 sm:p-3.5 rounded-2xl border-2 border-amber-400 shadow-sm flex items-center justify-between gap-2 animate-pop-in">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/95 flex items-center justify-center shrink-0 shadow-2xs">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 fill-amber-400 animate-spin" />
+              </div>
+              <div>
+                <h3 className="font-black text-amber-950 text-xs sm:text-sm uppercase tracking-wide leading-tight">
+                  {successBanner}
+                </h3>
+                <p className="text-[10px] sm:text-xs font-extrabold text-amber-900/90 leading-tight">
+                  Tudo no lugar! O ambiente está decorado e pronto para brincar.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 bg-white/95 px-2.5 py-1 rounded-xl shrink-0 border border-amber-300 shadow-2xs">
+              <span className="text-base sm:text-lg">🏆</span>
+              <span className="text-xs font-black text-amber-950">100%</span>
+            </div>
+          </div>
+        )}
+
+        {/* Vista Isométrica em Alta Resolução (100% Nítida e Visível) */}
+        <div className="relative rounded-2xl overflow-hidden border-2 border-sky-100 shadow-inner bg-sky-50 aspect-4/3 sm:aspect-16/10 max-h-[240px] sm:max-h-[300px]">
           <img
             src={sceneImageSrc}
             alt={world.title}
@@ -61,17 +84,71 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
             draggable={false}
           />
 
-          {/* Overlay de Brilho / Conclusão */}
-          {isRoomFinished && (
-            <div className="absolute inset-0 bg-amber-400/20 backdrop-blur-[1px] flex items-center justify-center p-4">
-              <div className="bg-white/95 px-4 py-2 rounded-2xl shadow-lg border-2 border-amber-400 flex items-center gap-2 animate-pop-in">
-                <Sparkles className="w-5 h-5 text-amber-500 fill-amber-400 animate-spin" />
-                <span className="font-black text-amber-950 text-sm uppercase">
-                  {successBanner}
-                </span>
-              </div>
-            </div>
-          )}
+          {/* Camada Interativa dos Objetos do Cômodo (Sombreados no mistério, Coloridos ao concluir) */}
+          {items.map((item) => {
+            const isCompleted = !!completedItemIds[item.id];
+            const isCurrent = item.id === activeItemId;
+            const { x = 50, y = 50, size = 48 } = item.roomPlacement || {};
+
+            return (
+              <button
+                key={`hotspot-${item.id}`}
+                onClick={() => onSelectItem(item)}
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  width: `${size}px`,
+                  height: `${size}px`,
+                }}
+                className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 group ${
+                  isCurrent ? 'scale-110 z-20' : 'z-10 hover:scale-105'
+                }`}
+                title={isCompleted ? item.displayName : `Descubra este objeto: ${item.displayName}`}
+                aria-label={isCompleted ? item.displayName : `Objeto misterioso`}
+              >
+                {isCompleted ? (
+                  // Objeto Concluído: Pleno, Colorido e Nítido
+                  <div className="w-full h-full relative drop-shadow-md animate-pop-in">
+                    <ItemIllustration
+                      itemId={item.id}
+                      fallbackIcon={item.icon}
+                      className="w-full h-full object-contain select-none"
+                    />
+                    {isCurrent && (
+                      <span className="absolute -inset-1 rounded-full border-2 border-amber-400 animate-pulse pointer-events-none" />
+                    )}
+                  </div>
+                ) : (
+                  // Objeto Não Montado: Sombreado Misterioso (Silhouette) com Indicador de Mistério
+                  <div
+                    className={`w-full h-full relative flex items-center justify-center rounded-2xl border-2 border-dashed transition-all ${
+                      isCurrent
+                        ? 'border-amber-400 bg-amber-400/25 ring-2 ring-amber-300 shadow-sm'
+                        : 'border-sky-300/60 bg-sky-950/15 hover:border-sky-400 hover:bg-sky-950/25'
+                    }`}
+                  >
+                    {/* Silhueta Negra / Sombreada */}
+                    <div className="w-full h-full p-1 opacity-40 brightness-0 contrast-200">
+                      <ItemIllustration
+                        itemId={item.id}
+                        fallbackIcon={item.icon}
+                        className="w-full h-full object-contain select-none"
+                      />
+                    </div>
+
+                    {/* Badge de Ponto de Interrogação */}
+                    <span
+                      className={`absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full text-[10px] font-black flex items-center justify-center shadow-xs ${
+                        isCurrent ? 'bg-amber-400 text-amber-950' : 'bg-sky-200 text-sky-800'
+                      }`}
+                    >
+                      ?
+                    </span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Esteira Seletora de Móveis e Brinquedos (8 Itens Táteis) */}
@@ -89,10 +166,10 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                     ? 'bg-amber-100/90 border-amber-500 shadow-sm ring-2 ring-amber-400 scale-[1.02]'
                     : isCompleted
                     ? 'bg-white border-emerald-300 hover:border-emerald-400 shadow-2xs'
-                    : 'bg-stone-50 border-stone-200 opacity-70 hover:opacity-90'
+                    : 'bg-stone-100/80 border-dashed border-stone-300 opacity-80 hover:opacity-100'
                 }`}
-                title={item.displayName}
-                aria-label={`Objeto ${item.displayName}`}
+                title={isCompleted ? item.displayName : 'Objeto Misterioso'}
+                aria-label={isCompleted ? `Objeto ${item.displayName}` : `Objeto misterioso`}
               >
                 {/* Selo de Concluído */}
                 {isCompleted && (
@@ -101,10 +178,21 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                   </span>
                 )}
 
-                {/* Ilustração 3D Nítida do Objeto */}
+                {/* Selo de Mistério (Não Concluído) */}
+                {!isCompleted && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-slate-400 text-white rounded-full w-4 h-4 text-[10px] font-black flex items-center justify-center shadow-2xs z-10">
+                    ?
+                  </span>
+                )}
+
+                {/* Ilustração: Colorida se concluído, Sombreada no mistério */}
                 <div
                   className={`w-11 h-11 sm:w-13 sm:h-13 my-0.5 transition-transform flex items-center justify-center ${
-                    isCompleted ? 'scale-100' : isCurrent ? 'scale-105' : 'grayscale opacity-60'
+                    isCompleted
+                      ? 'scale-100'
+                      : isCurrent
+                      ? 'scale-105 brightness-0 opacity-40'
+                      : 'brightness-0 opacity-30'
                   }`}
                 >
                   <ItemIllustration itemId={item.id} fallbackIcon={item.icon} className="w-full h-full object-contain" />
@@ -113,14 +201,14 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                 {/* Nome do Objeto */}
                 <span
                   className={`text-[10px] sm:text-xs font-black uppercase tracking-wider truncate w-full text-center ${
-                    isCurrent
-                      ? 'text-amber-950 font-black'
-                      : isCompleted
+                    isCompleted
                       ? 'text-emerald-950 font-extrabold'
-                      : 'text-stone-500'
+                      : isCurrent
+                      ? 'text-amber-950 font-black'
+                      : 'text-stone-400 font-extrabold tracking-widest'
                   }`}
                 >
-                  {isCompleted || isCurrent ? item.displayName : '???'}
+                  {isCompleted ? item.displayName : isCurrent ? item.displayName : '???'}
                 </span>
               </button>
             );

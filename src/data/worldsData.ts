@@ -42,7 +42,7 @@ export const WORLDS_DATA: WorldRoom[] = [
         phoneticRule: '💡 O S entre duas vogais ganha o som de Z (ME-ZA)!',
         bnccCode: 'EF01LP08',
         category: 'furniture',
-        icon: '🪑',
+        icon: '🗄️',
         roomPlacement: {
           label: 'Mesa de Desenho',
           description: 'Ao lado da janela para aproveitar a luz do sol',

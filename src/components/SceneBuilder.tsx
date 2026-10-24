@@ -1,5 +1,6 @@
 import type { ItemStage } from '../types/game';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
+import { ItemIllustration } from './ItemIllustration';
 
 interface SceneBuilderProps {
   items: ItemStage[];
@@ -61,14 +62,14 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                   </span>
                 )}
 
-                {/* Ícone Grande do Objeto */}
-                <span
-                  className={`text-3xl sm:text-4xl my-1 transition-transform ${
+                {/* Ilustração Nítida do Objeto */}
+                <div
+                  className={`w-11 h-11 sm:w-12 sm:h-12 my-1 transition-transform flex items-center justify-center ${
                     isCompleted ? 'scale-105' : 'grayscale opacity-50'
                   }`}
                 >
-                  {item.icon}
-                </span>
+                  <ItemIllustration itemId={item.id} fallbackIcon={item.icon} className="w-full h-full object-contain" />
+                </div>
 
                 {/* Nome do Objeto */}
                 <span

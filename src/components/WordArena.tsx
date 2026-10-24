@@ -3,6 +3,7 @@ import type { ItemStage } from '../types/game';
 import { Volume2, Lightbulb, RotateCcw, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { soundService } from '../services/soundService';
 import { speechService } from '../services/speechService';
+import { ItemIllustration } from './ItemIllustration';
 import confetti from 'canvas-confetti';
 
 interface WordArenaProps {
@@ -88,20 +89,24 @@ export const WordArena: React.FC<WordArenaProps> = ({
 
     if (isMatch) {
       hasFinishedRef.current = true;
-      speechService.cancel();
-      soundService.playSnap();
-      soundService.playFanfare();
+      // Permite que o áudio da última sílaba termine de tocar com a voz natural
+      const timer = setTimeout(() => {
+        soundService.playSnap();
+        soundService.playFanfare();
 
-      try {
-        confetti({
-          particleCount: 60,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#f59e0b', '#10b981', '#3b82f6', '#ec4899'],
-        });
-      } catch {}
+        try {
+          confetti({
+            particleCount: 60,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#f59e0b', '#10b981', '#3b82f6', '#ec4899'],
+          });
+        } catch {}
 
-      onComplete(item.id);
+        onComplete(item.id);
+      }, 450);
+
+      return () => clearTimeout(timer);
     } else {
       // Inverteu as sílabas
       const invertedTarget = [...targetSyllables].reverse().join('');
@@ -207,9 +212,9 @@ export const WordArena: React.FC<WordArenaProps> = ({
 
         {/* Ilustração Grande do Objeto */}
         <div className="py-2 flex justify-center">
-          <span className="text-6xl sm:text-7xl animate-float-gentle drop-shadow-sm">
-            {item.icon}
-          </span>
+          <div className="w-28 h-28 sm:w-32 sm:h-32 animate-float-gentle drop-shadow-xs flex items-center justify-center">
+            <ItemIllustration itemId={item.id} fallbackIcon={item.icon} className="w-full h-full object-contain" />
+          </div>
         </div>
 
         {/* Pílula Pedagógica com Regra Fonética e BNCC */}

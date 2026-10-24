@@ -4,6 +4,7 @@
 class SpeechService {
   private ptVoice: SpeechSynthesisVoice | null = null;
   private currentAudio: HTMLAudioElement | null = null;
+  private isManuallyCancelled = false;
 
   constructor() {
     this.initVoices();
@@ -32,6 +33,7 @@ class SpeechService {
   }
 
   public cancel() {
+    this.isManuallyCancelled = true;
     if (this.currentAudio) {
       this.currentAudio.pause();
       this.currentAudio.currentTime = 0;
@@ -45,6 +47,7 @@ class SpeechService {
   private playAudioClip(src: string): Promise<boolean> {
     return new Promise((resolve) => {
       this.cancel();
+      this.isManuallyCancelled = false;
       const audio = new Audio(src);
       this.currentAudio = audio;
       audio.volume = 1.0;
@@ -56,11 +59,12 @@ class SpeechService {
 
       audio.onerror = () => {
         if (this.currentAudio === audio) this.currentAudio = null;
-        resolve(false);
+        resolve(this.isManuallyCancelled);
       };
 
-      audio.play().catch(() => {
-        resolve(false);
+      audio.play().catch((err: unknown) => {
+        const isAbort = (err as Error)?.name === 'AbortError' || this.isManuallyCancelled;
+        resolve(isAbort);
       });
     });
   }
@@ -69,7 +73,7 @@ class SpeechService {
   public async speakSyllable(syllable: string) {
     const clean = syllable.trim().toUpperCase();
     const ok = await this.playAudioClip(`/audio/syllables/${clean}.mp3`);
-    if (!ok) {
+    if (!ok && !this.isManuallyCancelled) {
       this.speakSyllableFallback(syllable);
     }
   }

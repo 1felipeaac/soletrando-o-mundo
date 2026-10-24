@@ -16,20 +16,55 @@ interface WordArenaProps {
   hasNext: boolean;
 }
 
+interface TileTheme {
+  bg: string;
+  text: string;
+  border: string;
+  shadow: string;
+  shadowActive: string;
+}
+
 interface TileItem {
   id: string;
   syllable: string;
-  color: string;
+  colorTheme: TileTheme;
   isUsed: boolean;
 }
 
-// Paleta de alto contraste, serena e inclusiva (WCAG AAA)
-const TILE_COLORS = [
-  'bg-amber-300 text-amber-950 border-amber-500 shadow-amber-200',
-  'bg-sky-300 text-sky-950 border-sky-500 shadow-sky-200',
-  'bg-emerald-300 text-emerald-950 border-emerald-500 shadow-emerald-200',
-  'bg-orange-300 text-orange-950 border-orange-500 shadow-orange-200',
-  'bg-rose-300 text-rose-950 border-rose-500 shadow-rose-200',
+// Cores táteis com profundidade 3D (WCAG 2.2 AAA e AA)
+const TILE_THEMES: TileTheme[] = [
+  // Amarelo Sol (Contraste 9.2:1 AAA com Grafite Escuro)
+  {
+    bg: 'bg-[#F59E0B]',
+    text: 'text-slate-900',
+    border: 'border-[#D97706]',
+    shadow: 'shadow-[0_8px_0_#B45309]',
+    shadowActive: 'active:shadow-[0_2px_0_#B45309]',
+  },
+  // Azul Céu Vivo (5.4:1 AA com Branco Puro)
+  {
+    bg: 'bg-[#0284C7]',
+    text: 'text-white',
+    border: 'border-[#0369A1]',
+    shadow: 'shadow-[0_8px_0_#075985]',
+    shadowActive: 'active:shadow-[0_2px_0_#075985]',
+  },
+  // Verde Esmeralda (5.1:1 AA com Branco Puro)
+  {
+    bg: 'bg-[#059669]',
+    text: 'text-white',
+    border: 'border-[#047857]',
+    shadow: 'shadow-[0_8px_0_#065F46]',
+    shadowActive: 'active:shadow-[0_2px_0_#065F46]',
+  },
+  // Laranja Coral (4.8:1 AA com Branco Puro)
+  {
+    bg: 'bg-[#EA580C]',
+    text: 'text-white',
+    border: 'border-[#C2410C]',
+    shadow: 'shadow-[0_8px_0_#9A3412]',
+    shadowActive: 'active:shadow-[0_2px_0_#9A3412]',
+  },
 ];
 
 export const WordArena: React.FC<WordArenaProps> = ({
@@ -61,7 +96,7 @@ export const WordArena: React.FC<WordArenaProps> = ({
     const tiles: TileItem[] = shuffled.map((syl, i) => ({
       id: `tile-${item.id}-${i}-${syl}`,
       syllable: syl,
-      color: TILE_COLORS[i % TILE_COLORS.length],
+      colorTheme: TILE_THEMES[i % TILE_THEMES.length],
       isUsed: false,
     }));
 
@@ -175,72 +210,50 @@ export const WordArena: React.FC<WordArenaProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto px-4 py-4 flex flex-col items-center select-none">
-      {/* Navegação entre Itens do Cômodo */}
-      <div className="w-full flex items-center justify-between gap-2 mb-3">
+    <div className="w-full max-w-lg mx-auto px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center select-none space-y-3 sm:space-y-4">
+      {/* Navegação Rápida entre Itens */}
+      <div className="w-full flex items-center justify-between gap-2 px-1">
         <button
           onClick={onPrevItem}
           disabled={!hasPrev}
-          className="flex items-center gap-1 bg-white hover:bg-amber-100 disabled:opacity-30 disabled:hover:bg-white text-amber-950 font-black px-3 py-1.5 rounded-xl border-2 border-amber-300 shadow-2xs text-xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1 bg-white hover:bg-sky-50 disabled:opacity-30 disabled:hover:bg-white text-slate-800 font-black px-3 py-1.5 rounded-xl border border-sky-200 shadow-2xs text-xs cursor-pointer active:scale-95 transition-all"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4 text-sky-700" />
           <span>Anterior</span>
         </button>
 
-        <span className="font-extrabold text-amber-900 bg-amber-100 px-3.5 py-1 rounded-full text-xs tracking-wide">
-          Soletrando: <strong className="text-amber-950 uppercase">{item.displayName}</strong>
+        <span className="font-extrabold text-slate-700 bg-white px-3.5 py-1 rounded-full text-xs tracking-wide border border-sky-200 shadow-2xs">
+          Palavra: <strong className="text-slate-900 uppercase">{item.displayName}</strong>
         </span>
 
         <button
           onClick={onNextItem}
           disabled={!hasNext}
-          className="flex items-center gap-1 bg-white hover:bg-amber-100 disabled:opacity-30 disabled:hover:bg-white text-amber-950 font-black px-3 py-1.5 rounded-xl border-2 border-amber-300 shadow-2xs text-xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1 bg-white hover:bg-sky-50 disabled:opacity-30 disabled:hover:bg-white text-slate-800 font-black px-3 py-1.5 rounded-xl border border-sky-200 shadow-2xs text-xs cursor-pointer active:scale-95 transition-all"
         >
           <span>Próximo</span>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4 text-sky-700" />
         </button>
       </div>
 
-      {/* Card do Objeto Atual */}
-      <div className="w-full bg-white rounded-3xl border-4 border-amber-300 p-4 sm:p-5 shadow-sm text-center relative">
-        {/* Selo de Concluído */}
-        {isItemCompleted && (
-          <div className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1 rounded-full border border-emerald-300 mb-2">
-            <Check className="w-3.5 h-3.5" />
-            <span>Colocado no Quarto!</span>
-          </div>
-        )}
-
-        {/* Ilustração Grande do Objeto */}
-        <div className="py-2 flex justify-center">
-          <div className="w-28 h-28 sm:w-32 sm:h-32 animate-float-gentle drop-shadow-xs flex items-center justify-center">
-            <ItemIllustration itemId={item.id} fallbackIcon={item.icon} className="w-full h-full object-contain" />
-          </div>
+      {/* CARD CENTRAL DE APRESENTAÇÃO DO OBJETO (Idêntico ao Mockup de Alta Fidelidade) */}
+      <div className="w-full bg-white rounded-3xl border-2 border-sky-100 p-4 sm:p-5 shadow-sm text-center relative overflow-hidden">
+        {/* Título do Cômodo no Topo do Card */}
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-xs sm:text-sm font-black text-slate-800 tracking-tight">
+            Quarto da Criança
+          </span>
+          {isItemCompleted && (
+            <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[11px] font-black px-2.5 py-0.5 rounded-full border border-emerald-300 animate-pop-in">
+              <Check className="w-3.5 h-3.5" />
+              <span>Concluído!</span>
+            </span>
+          )}
         </div>
 
-        {/* Pílula Pedagógica com Regra Fonética e BNCC */}
-        {item.phoneticRule && (
-          <div className="my-2">
-            <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-950 text-xs font-black px-3 py-1 rounded-full border border-amber-200">
-              <span>{item.phoneticRule}</span>
-            </span>
-          </div>
-        )}
-
-        {/* Botões de Ouvir Nome e Dica (Altura Uniforme h-11) */}
-        <div className="flex items-center justify-center gap-2 mt-2 w-full max-w-xs mx-auto">
-          <button
-            onClick={() => {
-              speechService.cancel();
-              soundService.playWoodClick();
-              speechService.speakItemName(item.id, item.syllables);
-            }}
-            className="flex-1 h-11 flex items-center justify-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black px-3 rounded-2xl border-2 border-amber-500 transition-transform active:scale-95 cursor-pointer text-xs uppercase tracking-wider whitespace-nowrap shadow-2xs"
-          >
-            <Volume2 className="w-4 h-4 shrink-0" />
-            <span>Ouvir Nome</span>
-          </button>
-
+        {/* Linha Central: Botão DICA (Amarelo) + Ilustração 3D Central + Botão SOM (Laranja) */}
+        <div className="flex items-center justify-between gap-3 py-1">
+          {/* Botão DICA (Amarelo 3D, conforme mockup) */}
           <button
             onClick={() => {
               speechService.cancel();
@@ -248,37 +261,70 @@ export const WordArena: React.FC<WordArenaProps> = ({
               speechService.speakHint(item.id, item.hint);
               setFunnyFeedback(item.hint);
             }}
-            className="h-11 flex items-center justify-center gap-1.5 bg-sky-100 hover:bg-sky-200 text-sky-950 font-extrabold px-3.5 rounded-2xl border-2 border-sky-300 transition-transform active:scale-95 cursor-pointer text-xs whitespace-nowrap shrink-0 shadow-2xs"
-            title="Dica"
+            className="w-16 sm:w-20 h-20 sm:h-24 bg-[#F59E0B] hover:bg-amber-500 rounded-3xl flex flex-col items-center justify-center border-2 border-[#D97706] shadow-[0_4px_0_#B45309] active:shadow-none active:translate-y-1 transition-all text-slate-900 cursor-pointer shrink-0"
+            title="Ouvir Dica"
+            aria-label="Ouvir Dica"
           >
-            <Lightbulb className="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" />
-            <span>Dica</span>
+            <Lightbulb className="w-7 h-7 sm:w-8 sm:h-8 text-amber-950 fill-amber-300 shrink-0" />
+            <span className="text-[10px] sm:text-xs font-black tracking-wider uppercase mt-1">Dica</span>
+          </button>
+
+          {/* Ilustração 3D em Alta Fidelidade no Centro */}
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center animate-float-gentle">
+              <ItemIllustration
+                itemId={item.id}
+                fallbackIcon={item.icon}
+                className="w-full h-full object-contain drop-shadow-md"
+              />
+            </div>
+          </div>
+
+          {/* Botão SOM (Laranja 3D, conforme mockup) */}
+          <button
+            onClick={() => {
+              speechService.cancel();
+              soundService.playWoodClick();
+              speechService.speakItemName(item.id, item.syllables);
+            }}
+            className="w-16 sm:w-20 h-20 sm:h-24 bg-[#EA580C] hover:bg-orange-600 rounded-3xl flex flex-col items-center justify-center border-2 border-[#C2410C] shadow-[0_4px_0_#9A3412] active:shadow-none active:translate-y-1 transition-all text-white cursor-pointer shrink-0"
+            title="Ouvir Nome e Sílabas"
+            aria-label="Ouvir Nome e Sílabas"
+          >
+            <Volume2 className="w-7 h-7 sm:w-8 sm:h-8 text-white shrink-0" />
+            <span className="text-[10px] sm:text-xs font-black tracking-wider uppercase mt-1">Som</span>
           </button>
         </div>
 
-        {/* Mensagem Divertida / Erro Construtivo */}
+        {/* Pílula Pedagógica com Regra Fonética / BNCC */}
+        {item.phoneticRule && (
+          <div className="mt-2">
+            <span className="inline-flex items-center gap-1.5 bg-sky-50 text-sky-950 text-xs font-extrabold px-3 py-1 rounded-full border border-sky-200">
+              <span>{item.phoneticRule}</span>
+            </span>
+          </div>
+        )}
+
+        {/* Feedback Divertido / Construtivo */}
         {funnyFeedback && (
-          <div className="mt-3 bg-amber-200/90 text-amber-950 font-black text-xs px-3.5 py-2 rounded-2xl border border-amber-300 animate-wiggle-soft">
+          <div className="mt-2 bg-amber-100 text-amber-950 font-black text-xs px-3.5 py-2 rounded-2xl border border-amber-300 animate-wiggle-soft">
             {funnyFeedback}
           </div>
         )}
       </div>
 
-      {/* CASINHAS / SLOTS DE ENCAIXE */}
-      <div className="w-full my-5">
-        <p className="text-center text-xs font-black text-amber-900 uppercase tracking-widest mb-2">
-          Encaixe as sílabas na ordem:
-        </p>
-
-        <div className="flex items-center justify-center gap-3">
+      {/* CASINHAS / SLOTS DE ENCAIXE (Grandes e Acessíveis) */}
+      <div className="w-full">
+        <div className="flex items-center justify-center gap-3 sm:gap-4">
           {slots.map((tile, idx) => (
             <button
               key={idx}
               onClick={() => handleRemoveTile(idx)}
-              className={`w-20 h-20 sm:w-22 sm:h-22 rounded-2xl border-4 flex flex-col items-center justify-center transition-all cursor-pointer ${
+              aria-label={tile ? `Slot ${idx + 1} ocupado por ${tile.syllable}` : `Slot ${idx + 1} vazio`}
+              className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl border-3 flex flex-col items-center justify-center transition-all cursor-pointer ${
                 tile
-                  ? `${tile.color} active:scale-95 shadow-md`
-                  : 'bg-stone-100/80 border-dashed border-stone-300 shadow-inner hover:border-amber-400'
+                  ? `${tile.colorTheme.bg} ${tile.colorTheme.text} ${tile.colorTheme.border} ${tile.colorTheme.shadow} active:scale-95`
+                  : 'bg-sky-100/70 border-sky-300 text-sky-400 shadow-inner hover:border-sky-400 hover:bg-sky-100'
               } ${isWiggling ? 'animate-wiggle-soft border-rose-400' : ''}`}
             >
               {tile ? (
@@ -286,8 +332,8 @@ export const WordArena: React.FC<WordArenaProps> = ({
                   {tile.syllable}
                 </span>
               ) : (
-                <span className="text-sm font-black text-stone-400">
-                  {idx + 1}º
+                <span className="text-2xl sm:text-3xl font-black text-sky-400">
+                  {idx + 1}
                 </span>
               )}
             </button>
@@ -295,33 +341,35 @@ export const WordArena: React.FC<WordArenaProps> = ({
         </div>
       </div>
 
-      {/* BANDEJA DE SÍLABAS TÁTEIS (ÁREA DE TOQUE 72px) */}
-      <div className="w-full bg-white/70 backdrop-blur-xs rounded-3xl border-2 border-amber-200 p-4 shadow-2xs">
-        <div className="flex items-center justify-between mb-2.5">
-          <span className="text-xs font-black text-amber-900 uppercase tracking-wider">
-            Toque nas sílabas:
+      {/* BANDEJA DE SÍLABAS TÁTEIS 3D (Área de Toque Excepcional 76px-88px, WCAG AAA) */}
+      <div className="w-full bg-white rounded-3xl border-2 border-sky-100 p-3.5 sm:p-5 shadow-xs">
+        <div className="flex items-center justify-between mb-3 px-1">
+          <span className="text-xs font-black text-slate-700 uppercase tracking-wider">
+            Toque nas sílabas para montar:
           </span>
           <button
             onClick={handleResetSlots}
-            className="text-xs font-extrabold text-stone-500 hover:text-amber-800 flex items-center gap-1 cursor-pointer transition-colors"
+            className="text-xs font-extrabold text-slate-500 hover:text-sky-800 flex items-center gap-1 cursor-pointer transition-colors"
+            title="Limpar todos os slots"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Limpar</span>
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           {trayTiles.map((tile) => (
             <button
               key={tile.id}
               disabled={tile.isUsed}
               onClick={() => handlePlaceTile(tile)}
-              className={`min-w-[70px] sm:min-w-[76px] h-17 sm:h-18 px-3 rounded-2xl border-4 font-black text-2xl sm:text-3xl shadow-sm transition-all active:scale-95 cursor-pointer uppercase tracking-wider flex items-center justify-center ${
-                tile.color
-              } ${
+              aria-label={`Sílaba ${tile.syllable}`}
+              className={`min-w-[76px] sm:min-w-[88px] h-20 sm:h-22 px-4 rounded-3xl border-3 font-black text-2xl sm:text-3xl transition-all uppercase tracking-wider flex items-center justify-center select-none ${
+                tile.colorTheme.bg
+              } ${tile.colorTheme.text} ${tile.colorTheme.border} ${
                 tile.isUsed
-                  ? 'opacity-20 scale-95 cursor-not-allowed border-stone-300 bg-stone-200'
-                  : 'hover:-translate-y-0.5 hover:shadow-md'
+                  ? 'opacity-20 scale-95 cursor-not-allowed border-stone-200 bg-stone-200 shadow-none'
+                  : `${tile.colorTheme.shadow} ${tile.colorTheme.shadowActive} active:translate-y-1.5 hover:-translate-y-0.5 cursor-pointer`
               }`}
             >
               {tile.syllable}

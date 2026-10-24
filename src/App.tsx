@@ -65,7 +65,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-slate-800 flex flex-col font-sans selection:bg-amber-200">
+    <div className="min-h-screen bg-gradient-to-b from-[#e8f4fc] via-[#f1f7fc] to-[#faf8f5] text-slate-800 flex flex-col font-sans selection:bg-amber-200">
       <Navbar
         currentView={currentView}
         onNavigate={setCurrentView}

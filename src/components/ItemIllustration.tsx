@@ -7,12 +7,40 @@ interface ItemIllustrationProps {
   className?: string;
 }
 
+const IMAGE_MAP: Record<string, string> = {
+  cama: '/images/cama.jpg',
+  mesa: '/images/mesa.jpg',
+  sofa: '/images/sofa.jpg',
+  bola: '/images/bola.jpg',
+  urso: '/images/urso.jpg',
+  porta: '/images/porta.jpg',
+  tapete: '/images/tapete.jpg',
+  abajur: '/images/abajur.jpg',
+  bolo: '/images/bolo.jpg',
+  suco: '/images/suco.jpg',
+};
+
 export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
   itemId,
   fallbackIcon,
   className = 'w-14 h-14',
 }) => {
-  switch (itemId.toLowerCase()) {
+  const cleanId = itemId.trim().toLowerCase();
+  const imageSrc = IMAGE_MAP[cleanId];
+
+  if (imageSrc) {
+    return (
+      <img
+        src={imageSrc}
+        alt={itemId}
+        className={`${className} object-contain rounded-2xl select-none`}
+        loading="lazy"
+        draggable={false}
+      />
+    );
+  }
+
+  switch (cleanId) {
     case 'mesa':
       return (
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>

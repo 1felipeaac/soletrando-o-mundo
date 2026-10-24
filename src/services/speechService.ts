@@ -118,10 +118,24 @@ class SpeechService {
   }
 
   // --- Fallbacks Web Speech API ---
+  private static readonly PHONETIC_MAP: Record<string, string> = {
+    UR: 'Úr',
+    POR: 'Pór',
+    JUR: 'Júr',
+    ÇÃ: 'Sã',
+    GAR: 'Gár',
+    FO: 'Fó',
+    LO: 'Lô',
+    SO: 'Só',
+    FA: 'Fá',
+    FÁ: 'Fá',
+  };
 
   private speakSyllableFallback(syllable: string) {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-    const utterance = new SpeechSynthesisUtterance(syllable);
+    const clean = syllable.trim().toUpperCase();
+    const spokenText = SpeechService.PHONETIC_MAP[clean] || syllable;
+    const utterance = new SpeechSynthesisUtterance(spokenText);
     utterance.lang = 'pt-BR';
     utterance.rate = 0.85;
     utterance.pitch = 1.1;

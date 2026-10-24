@@ -8,6 +8,11 @@ export const WORLDS_DATA: WorldRoom[] = [
     theme: 'casa',
     description: 'Decore todo o quarto da criança soletrando cada móvel e brinquedo!',
     icon: '🛏️',
+    sceneImage: '/images/bedroom_scene.jpg',
+    sceneSubtitle: 'Toque nos móveis para soletrar e decorar',
+    completedTitle: 'Quarto Completo! 🏆',
+    completedBanner: 'Quartinho 100% Montado!',
+    placementLabel: 'Colocado no Quarto!',
     color: {
       primary: 'bg-amber-500 text-white',
       accent: 'border-amber-400 bg-amber-50 text-amber-950',
@@ -160,6 +165,11 @@ export const WORLDS_DATA: WorldRoom[] = [
     theme: 'comida',
     description: 'Monte pratos deliciosos e saudáveis descobrindo o nome dos alimentos!',
     icon: '🍎',
+    sceneImage: '/images/kitchen_scene.jpg',
+    sceneSubtitle: 'Toque nos alimentos e utensílios para montar a mesa do lanche',
+    completedTitle: 'Cozinha Completa! 🍎',
+    completedBanner: 'Mesa do Lanche 100% Pronta!',
+    placementLabel: 'Pronto na Mesa!',
     color: {
       primary: 'bg-emerald-600 text-white',
       accent: 'border-emerald-400 bg-emerald-50 text-emerald-950',

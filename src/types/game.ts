@@ -24,6 +24,11 @@ export interface WorldRoom {
   theme: string;
   description: string;
   icon: string;
+  sceneImage?: string;
+  sceneSubtitle?: string;
+  completedTitle?: string;
+  completedBanner?: string;
+  placementLabel?: string;
   color: {
     primary: string;
     accent: string;

@@ -1,22 +1,31 @@
-import type { ItemStage } from '../types/game';
+import type { ItemStage, WorldRoom } from '../types/game';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 import { ItemIllustration } from './ItemIllustration';
 
 interface SceneBuilderProps {
-  items: ItemStage[];
+  world: WorldRoom;
   completedItemIds: Record<string, boolean>;
   activeItemId: string;
   onSelectItem: (item: ItemStage) => void;
 }
 
 export const SceneBuilder: React.FC<SceneBuilderProps> = ({
-  items,
+  world,
   completedItemIds,
   activeItemId,
   onSelectItem,
 }) => {
+  const { items } = world;
   const completedCount = items.filter((i) => completedItemIds[i.id]).length;
   const isRoomFinished = completedCount === items.length;
+
+  const headerTitle = isRoomFinished
+    ? (world.completedTitle || `${world.shortName} Completo! 🏆`)
+    : (world.shortName || world.title);
+
+  const headerSubtitle = world.sceneSubtitle || 'Toque nos itens para soletrar e montar';
+  const successBanner = world.completedBanner || `${world.shortName} 100% Montado!`;
+  const sceneImageSrc = world.sceneImage || '/images/bedroom_scene.jpg';
 
   return (
     <div className="w-full max-w-2xl mx-auto px-3 sm:px-4 select-none">
@@ -25,13 +34,15 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
         {/* Cabeçalho do Cenário */}
         <div className="flex items-center justify-between bg-sky-50/80 px-3.5 py-2 rounded-2xl border border-sky-100">
           <div className="flex items-center gap-2">
-            <span className="text-xl" role="img" aria-label="Quarto">🛏️</span>
+            <span className="text-xl" role="img" aria-label={world.shortName}>
+              {world.icon}
+            </span>
             <div>
               <h2 className="text-xs sm:text-sm font-black text-slate-800 uppercase tracking-wide leading-tight">
-                {isRoomFinished ? 'Quarto Completo! 🏆' : 'O Quarto da Criança'}
+                {headerTitle}
               </h2>
               <span className="text-[10px] sm:text-xs font-bold text-sky-700">
-                Toque nos móveis para soletrar e decorar
+                {headerSubtitle}
               </span>
             </div>
           </div>
@@ -44,8 +55,8 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
         {/* Vista Isométrica em Alta Resolução */}
         <div className="relative rounded-2xl overflow-hidden border-2 border-sky-100 shadow-inner bg-sky-50 aspect-4/3 sm:aspect-16/10 max-h-[220px] sm:max-h-[280px]">
           <img
-            src="/images/bedroom_scene.jpg"
-            alt="Quarto isométrico aconchegante da criança"
+            src={sceneImageSrc}
+            alt={world.title}
             className="w-full h-full object-cover object-center select-none"
             draggable={false}
           />
@@ -56,7 +67,7 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
               <div className="bg-white/95 px-4 py-2 rounded-2xl shadow-lg border-2 border-amber-400 flex items-center gap-2 animate-pop-in">
                 <Sparkles className="w-5 h-5 text-amber-500 fill-amber-400 animate-spin" />
                 <span className="font-black text-amber-950 text-sm uppercase">
-                  Quartinho 100% Montado!
+                  {successBanner}
                 </span>
               </div>
             </div>

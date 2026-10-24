@@ -88,7 +88,7 @@ export function App() {
           <div className="space-y-4">
             {/* Montador Visual do Cômodo (Scene Builder) */}
             <SceneBuilder
-              items={activeWorld.items}
+              world={activeWorld}
               completedItemIds={completedItemIds}
               activeItemId={activeItem.id}
               onSelectItem={handleSelectItem}
@@ -98,6 +98,8 @@ export function App() {
             <WordArena
               key={activeItem.id}
               item={activeItem}
+              worldTitle={activeWorld.title}
+              placementLabel={activeWorld.placementLabel}
               isItemCompleted={!!completedItemIds[activeItem.id]}
               onComplete={handleCompleteItem}
               onPrevItem={handlePrevItem}

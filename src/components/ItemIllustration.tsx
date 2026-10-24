@@ -18,6 +18,7 @@ const IMAGE_MAP: Record<string, string> = {
   abajur: '/images/abajur.jpg',
   bolo: '/images/bolo.jpg',
   suco: '/images/suco.jpg',
+  sopa: '/images/sopa.jpg',
 };
 
 export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
@@ -172,6 +173,128 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
           <circle cx="61" cy="40" r="3.5" fill="#1E293B" />
           <circle cx="40" cy="39" r="1" fill="#FFFFFF" />
           <circle cx="62" cy="39" r="1" fill="#FFFFFF" />
+        </svg>
+      );
+
+    case 'sopa':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+          <ellipse cx="50" cy="88" rx="36" ry="6" fill="#E2E8F0" />
+          {/* Tigela de cerâmica */}
+          <path d="M16 46C16 72 30 84 50 84C70 84 84 72 84 46H16Z" fill="#38BDF8" stroke="#0284C7" strokeWidth="2.5" />
+          {/* Borda superior da tigela */}
+          <ellipse cx="50" cy="46" rx="34" ry="12" fill="#E0F2FE" stroke="#0284C7" strokeWidth="2.5" />
+          {/* Superfície da sopa fumegante */}
+          <ellipse cx="50" cy="47" rx="30" ry="10" fill="#F59E0B" />
+          {/* Leguminhos na sopa */}
+          <circle cx="42" cy="46" r="2.5" fill="#EF4444" />
+          <circle cx="56" cy="48" r="2" fill="#10B981" />
+          <circle cx="49" cy="44" r="2" fill="#FEF08A" />
+          {/* Fumacinha suave subindo */}
+          <path d="M42 32C40 26 44 22 42 16" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+          <path d="M54 30C52 24 56 20 54 14" stroke="#CBD5E1" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+
+    case 'maca':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+          <ellipse cx="50" cy="88" rx="28" ry="6" fill="#E2E8F0" />
+          {/* Cabinho */}
+          <path d="M50 28C51 20 56 16 60 14" stroke="#78350F" strokeWidth="3" strokeLinecap="round" />
+          {/* Folha */}
+          <path d="M54 22C62 20 68 24 66 30C58 32 54 26 54 22Z" fill="#10B981" stroke="#047857" strokeWidth="1.5" />
+          {/* Corpo da maçã */}
+          <path
+            d="M50 32C42 22 20 25 20 48C20 70 38 84 50 84C62 84 80 70 80 48C80 25 58 22 50 32Z"
+            fill="#EF4444"
+            stroke="#B91C1C"
+            strokeWidth="2.5"
+          />
+          {/* Brilho da maçã */}
+          <path
+            d="M30 36C26 42 26 52 30 60"
+            stroke="#FCA5A5"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+          <circle cx="34" cy="36" r="2.5" fill="#FFFFFF" opacity="0.8" />
+        </svg>
+      );
+
+    case 'copo':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+          <ellipse cx="50" cy="88" rx="26" ry="6" fill="#E2E8F0" />
+          {/* Vidro do copo */}
+          <path d="M26 22L34 84C34 86 36 88 38 88H62C64 88 66 86 66 84L74 22H26Z" fill="#E0F2FE" stroke="#0284C7" strokeWidth="2.5" />
+          {/* Nível de água azul cristalino */}
+          <path d="M30 40L35 83C35 85 36.5 86 38.5 86H61.5C63.5 86 65 85 65 83L70 40C64 42 56 42 50 40C44 38 36 38 30 40Z" fill="#38BDF8" opacity="0.8" />
+          {/* Reflexo no vidro */}
+          <path d="M34 26L40 78" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0.8" />
+          <circle cx="56" cy="56" r="2" fill="#FFFFFF" opacity="0.7" />
+          <circle cx="48" cy="68" r="1.5" fill="#FFFFFF" opacity="0.6" />
+        </svg>
+      );
+
+    case 'prato':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+          <ellipse cx="50" cy="88" rx="42" ry="6" fill="#E2E8F0" />
+          {/* Prato cerâmico externo */}
+          <ellipse cx="50" cy="54" rx="44" ry="26" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="3" />
+          {/* Borda decorativa colorida */}
+          <ellipse cx="50" cy="54" rx="40" ry="23" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="2" />
+          {/* Centro fundo do prato */}
+          <ellipse cx="50" cy="56" rx="28" ry="15" fill="#FFFFFF" stroke="#FCD34D" strokeWidth="1.5" />
+          {/* Detalhe suave de brilho */}
+          <path d="M22 50C26 44 36 40 50 40" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+      );
+
+    case 'garfo':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+          <ellipse cx="50" cy="90" rx="16" ry="4" fill="#E2E8F0" />
+          {/* Cabo ergonômico com ponta arredondada */}
+          <path d="M47 48L46 84C46 87 48 89 50 89C52 89 54 87 54 84L53 48H47Z" fill="#F59E0B" stroke="#D97706" strokeWidth="2" />
+          {/* Base metálica dos dentes */}
+          <path d="M42 48H58V36C58 42 42 42 42 36V48Z" fill="#E2E8F0" stroke="#64748B" strokeWidth="2" />
+          {/* Dentes do garfo */}
+          <rect x="40" y="16" width="3.5" height="24" rx="1.5" fill="#E2E8F0" stroke="#64748B" strokeWidth="1.5" />
+          <rect x="46" y="14" width="3.5" height="26" rx="1.5" fill="#E2E8F0" stroke="#64748B" strokeWidth="1.5" />
+          <rect x="51" y="14" width="3.5" height="26" rx="1.5" fill="#E2E8F0" stroke="#64748B" strokeWidth="1.5" />
+          <rect x="57" y="16" width="3.5" height="24" rx="1.5" fill="#E2E8F0" stroke="#64748B" strokeWidth="1.5" />
+          {/* Brilho metálico */}
+          <line x1="48" y1="18" x2="48" y2="34" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      );
+
+    case 'banana':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+          <ellipse cx="50" cy="88" rx="36" ry="6" fill="#E2E8F0" />
+          {/* Banana descascada fofa */}
+          <path
+            d="M20 74C32 82 66 84 82 50C84 46 82 42 78 44C66 68 38 72 26 66L20 74Z"
+            fill="#FBBF24"
+            stroke="#D97706"
+            strokeWidth="2.5"
+          />
+          {/* Ponta da base */}
+          <circle cx="21" cy="71" r="3" fill="#78350F" />
+          {/* Fruta exposta suave */}
+          <path
+            d="M58 48C64 36 70 24 74 16C75 14 77 15 76 17C73 28 68 40 62 50L58 48Z"
+            fill="#FEF3C7"
+            stroke="#FDE68A"
+            strokeWidth="2"
+          />
+          {/* Casca aberta (pétalas) */}
+          <path d="M58 50C54 44 50 40 44 42C48 48 54 52 58 50Z" fill="#FBBF24" stroke="#D97706" strokeWidth="2" />
+          <path d="M68 44C74 40 80 38 84 42C80 46 74 48 68 44Z" fill="#FBBF24" stroke="#D97706" strokeWidth="2" />
+          {/* Detalhe de textura */}
+          <path d="M34 71C46 76 64 74 74 58" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
         </svg>
       );
 

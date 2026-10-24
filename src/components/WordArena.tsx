@@ -8,6 +8,8 @@ import confetti from 'canvas-confetti';
 
 interface WordArenaProps {
   item: ItemStage;
+  worldTitle?: string;
+  placementLabel?: string;
   isItemCompleted: boolean;
   onComplete: (itemId: string) => void;
   onPrevItem: () => void;
@@ -69,6 +71,8 @@ const TILE_THEMES: TileTheme[] = [
 
 export const WordArena: React.FC<WordArenaProps> = ({
   item,
+  worldTitle,
+  placementLabel,
   isItemCompleted,
   onComplete,
   onPrevItem,
@@ -241,12 +245,12 @@ export const WordArena: React.FC<WordArenaProps> = ({
         {/* Título do Cômodo no Topo do Card */}
         <div className="flex items-center justify-between mb-1">
           <span className="text-xs sm:text-sm font-black text-slate-800 tracking-tight">
-            Quarto da Criança
+            {worldTitle || 'Cômodo da Criança'}
           </span>
           {isItemCompleted && (
             <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[11px] font-black px-2.5 py-0.5 rounded-full border border-emerald-300 animate-pop-in">
               <Check className="w-3.5 h-3.5" />
-              <span>Concluído!</span>
+              <span>{placementLabel || 'Concluído!'}</span>
             </span>
           )}
         </div>

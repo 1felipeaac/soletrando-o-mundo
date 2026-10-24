@@ -8,7 +8,7 @@ export const WORLDS_DATA: WorldRoom[] = [
     theme: 'casa',
     description: 'Decore todo o quarto da criança soletrando cada móvel e brinquedo!',
     icon: '🛏️',
-    sceneImage: '/images/bedroom_scene.jpg',
+    sceneImage: '/images/bedroom_scene.jpg?v=2',
     sceneSubtitle: 'Descubra os objetos misteriosos abaixo para revelar o quarto!',
     completedTitle: 'Quarto Completo! 🏆',
     completedBanner: 'Quartinho 100% Montado!',

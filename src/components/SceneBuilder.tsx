@@ -79,7 +79,7 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
         {/* Vista Isométrica: Em Blur durante o progresso, e Nítida ao finalizar 100% */}
         <div className="relative rounded-2xl overflow-hidden border-2 border-sky-100 shadow-inner bg-sky-50 aspect-4/3 sm:aspect-16/10 max-h-[260px] sm:max-h-[320px] lg:max-h-[340px]">
           <img
-            src={world.sceneImage || '/images/bedroom_scene.jpg'}
+            src={world.sceneImage || '/images/bedroom_scene.jpg?v=2'}
             alt={world.title}
             className={`w-full h-full object-cover object-center select-none transition-all duration-700 ${
               isRoomFinished

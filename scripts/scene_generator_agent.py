@@ -1,49 +1,91 @@
 """
-Agente de Arte e Cenários - Soletrando o Mundo
-Lê os itens obrigatórios do worldsData.ts e gera prompts padronizados no Design System do jogo:
-- 3D Isometric Miniature Diorama
-- Textura suave de argila/low-poly (soft clay)
-- Paleta pastel calma (baixa estimulação sensorial)
-- Presença obrigatória de 100% dos itens cadastrados no cômodo
+Agente de Arte e Cenários Dinâmico - Soletrando o Mundo
+Lê os itens obrigatórios do worldsData.ts e gera prompts estruturados e 100% dinâmicos,
+utilizando variáveis e templates paramétricos por categoria, tema e posicionamento.
+Elimina a necessidade de manter dicionários estáticos gigantes para novos cômodos.
 """
 
 import os
 import re
 import sys
+import json
 
 WORLDS_DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "src", "data", "worldsData.ts")
 
-# Art Bible / Design System Guidelines
-DESIGN_SYSTEM_STYLE = (
-    "Cozy, calm 3D isometric children miniature diorama room for an educational app. "
-    "Soft clay and stylized low-poly render aesthetic with gentle rounded corners. "
-    "Low-stimulation sensory design: warm pastel palette (soft butter yellow, sky blue, sage green, cream, light wood). "
-    "Gentle morning sunlight streaming through a cozy window, soft diffused ambient occlusion shadows, peaceful atmosphere, high quality 3d render."
-)
-
-ITEM_VISUAL_DESCRIPTIONS = {
-    # Quarto (Bedroom)
-    "cama": "a cozy wooden children bed with a colorful pastel patchwork quilt and fluffy white pillow in the room",
-    "mesa": "a cute wooden children study desk table with a little drawer and colorful drawing supplies on it",
-    "sofa": "a comfortable soft yellow/terracotta children armchair sofa with a cute pastel cushion",
-    "bola": "a colorful round toy bouncing ball on the floor",
-    "urso": "an adorable plush teddy bear with friendly button eyes sitting happily",
-    "porta": "a warm wooden children room door with a white frame and golden round door handle on the wall",
-    "tapete": "a soft woven striped oval rug resting on the clean wooden parquet floor",
-    "abajur": "a warm glowing bedside table lamp (abajur) with tiny star perforations on its shade",
-    
-    # Cozinha (Kitchen)
-    "bolo": "a delicious round birthday cake with pastel frosting, sprinkles and a candle on a plate",
-    "suco": "a cute orange fruit juice box or glass with a bent striped straw",
-    "sopa": "a warm ceramic bowl of vegetable soup with a small wooden spoon resting inside",
-    "maca": "a shiny red apple with a tiny green leaf on its stem",
-    "copo": "a clear drinking cup with fresh water beside the plate",
-    "prato": "a colorful ceramic dining plate placed neatly on the table",
-    "garfo": "a small friendly children dining fork beside the plate",
-    "banana": "a ripe yellow sweet banana ready for snack time",
+# 1. Presets Dinâmicos de Ambientes por Tema
+THEME_ENVIRONMENTS = {
+    "casa": {
+        "room_type": "bedroom or playroom",
+        "walls": "soft pastel cyan-blue and butter-yellow walls with gentle trim",
+        "floor": "clean light wooden parquet floor",
+        "lighting": "gentle morning sunlight streaming through a white-framed window",
+        "palette": "warm butter yellow, sky blue, cream, light oak wood"
+    },
+    "comida": {
+        "room_type": "kitchen and snack dining area",
+        "walls": "soft pastel mint-green and creamy-yellow walls with cute kitchen shelving",
+        "floor": "warm checkered pastel tiled floor or light wooden floor",
+        "lighting": "warm sunny morning light with soft ambient glow",
+        "palette": "soft mint green, warm peach, lemon yellow, cream"
+    },
+    "natureza": {
+        "room_type": "forest meadow clearing",
+        "walls": "soft rolling pastel green grassy hills and gentle trees in the background",
+        "floor": "lush soft mossy ground with tiny pastel flowers",
+        "lighting": "dappled warm golden sunlight through tree canopies",
+        "palette": "sage green, sky blue, blossom pink, warm earth"
+    },
+    "escola": {
+        "room_type": "kindergarten playroom classroom",
+        "walls": "soft pastel lavender and cream walls with cute educational wall decor",
+        "floor": "smooth warm linoleum wood-look floor",
+        "lighting": "bright cheerful daylight from a large playroom window",
+        "palette": "soft primary pastels, warm wood, gentle sky blue"
+    },
+    "default": {
+        "room_type": "cozy diorama room",
+        "walls": "warm pastel colored walls with gentle details",
+        "floor": "clean light wooden floor",
+        "lighting": "gentle morning sunlight with soft diffused shadows",
+        "palette": "warm pastel tones, cream, light wood"
+    }
 }
 
+# 2. Templates Dinâmicos de Itens por Categoria
+CATEGORY_TEMPLATES = {
+    "furniture": "a cozy 3D clay {label} ({name}) with smooth rounded edges, positioned {placement}",
+    "toy": "an adorable, friendly 3D clay toy {label} ({name}) with playful details, positioned {placement}",
+    "food": "a delicious and appetizing 3D clay {label} ({name}) made for kids, placed {placement}",
+    "decoration": "a charming 3D clay decorative {label} ({name}) with gentle warm accents, placed {placement}",
+    "structure": "a welcoming 3D clay architectural {label} ({name}) with soft pastel trim, positioned {placement}",
+    "utensil": "a cute child-friendly 3D clay utensil {label} ({name}) with smooth rounded edges, placed {placement}",
+    "animal": "an adorable friendly 3D clay {label} ({name}) with cute button eyes, sitting {placement}",
+    "plant": "a sweet potted 3D clay {label} ({name}) with soft green leaves, placed {placement}",
+    "clothing": "a cute 3D clay piece of clothing {label} ({name}) neatly placed {placement}",
+    "vehicle": "a cheerful toy 3D clay vehicle {label} ({name}) parked {placement}",
+    "default": "a lovely 3D clay {label} ({name}) with stylized soft textures, positioned {placement}"
+}
+
+# 3. Master Templates Paramétricos
+SCENE_MASTER_TEMPLATE = (
+    "Cozy, calm 3D isometric children {room_type} miniature diorama for an educational app. "
+    "Soft clay and stylized low-poly render aesthetic with gentle rounded corners. "
+    "Low-stimulation sensory design: palette of {palette}. "
+    "{walls}, {floor}, {lighting}, soft diffused ambient occlusion shadows, peaceful atmosphere, high quality 3d render. "
+    "The scene MUST visibly and harmoniously include all of the following {item_count} items: {items_sentence}. "
+    "All items are colorful, clean, beautifully detailed, welcoming and easy for a 5-year-old child to spot."
+)
+
+SHADOWED_MASTER_TEMPLATE = (
+    "Isometric view of the exact same {room_type} diorama, with the same {walls}, {floor}, and {lighting}. "
+    "CRITICAL PUZZLE MECHANIC: Every single one of the {item_count} items ({items_names}) is replaced by a dark neutral mystery silhouette/shadow shape in its exact position, "
+    "creating an inviting puzzle mystery for children to guess where each object belongs. "
+    "Clean minimal, soft clay render style, soft ambient occlusion shadows, peaceful and safe atmosphere."
+)
+
+
 def load_worlds_data():
+    """Lê e parseia dinamicamente os mundos e itens do worldsData.ts"""
     if not os.path.exists(WORLDS_DATA_PATH):
         print(f"Error: Could not find {WORLDS_DATA_PATH}")
         return []
@@ -51,77 +93,167 @@ def load_worlds_data():
     with open(WORLDS_DATA_PATH, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Extrai blocos de cômodos
-    world_blocks = re.findall(r'id:\s*(\d+),\s*title:\s*[\'"]([^\'"]+)[\'"].*?items:\s*\[(.*?)\n\s*\]', content, re.DOTALL)
+    # Divide os mundos pelos blocos id: 1, id: 2, etc.
+    world_sections = re.split(r'\n\s*\{\s*\n\s*id:\s*(\d+)', content)
     worlds = []
 
-    for wid, title, items_raw in world_blocks:
+    for i in range(1, len(world_sections), 2):
+        wid = int(world_sections[i])
+        body = world_sections[i + 1]
+
+        title_m = re.search(r"title:\s*['\"]([^'\"]+)['\"]", body)
+        short_m = re.search(r"shortName:\s*['\"]([^'\"]+)['\"]", body)
+        theme_m = re.search(r"theme:\s*['\"]([^'\"]+)['\"]", body)
+
+        # Localiza o bloco de items
+        items_match = re.search(r"items:\s*\[(.*?)\]\s*,\s*(\n\s*\}|\n\s*items|\n\s*color|\Z)", body, re.DOTALL)
+        if not items_match:
+            items_match = re.search(r"items:\s*\[(.*)", body, re.DOTALL)
+
+        items_raw = items_match.group(1) if items_match else ""
+
+        # Divide os itens por blocos
+        item_chunks = re.split(r'\n\s*\{\s*\n\s*id:\s*', "\n" + items_raw)
         items = []
-        item_matches = re.finditer(r'id:\s*[\'"]([^\'"]+)[\'"].*?displayName:\s*[\'"]([^\'"]+)[\'"].*?hint:\s*[\'"]([^\'"]+)[\'"]', items_raw, re.DOTALL)
-        for im in item_matches:
-            items.append({
-                "id": im.group(1),
-                "displayName": im.group(2),
-                "hint": im.group(3)
-            })
+
+        for chunk in item_chunks:
+            if not chunk.strip():
+                continue
+            chunk = "id: " + chunk
+            iid_m = re.search(r"id:\s*['\"]([^'\"]+)['\"]", chunk)
+            name_m = re.search(r"name:\s*['\"]([^'\"]+)['\"]", chunk)
+            disp_m = re.search(r"displayName:\s*['\"]([^'\"]+)['\"]", chunk)
+            cat_m = re.search(r"category:\s*['\"]([^'\"]+)['\"]", chunk)
+            hint_m = re.search(r"hint:\s*['\"]([^'\"]+)['\"]", chunk)
+            label_m = re.search(r"label:\s*['\"]([^'\"]+)['\"]", chunk)
+            desc_m = re.search(r"description:\s*['\"]([^'\"]+)['\"]", chunk)
+            vprompt_m = re.search(r"visualPrompt:\s*['\"]([^'\"]+)['\"]", chunk)
+
+            if iid_m and disp_m:
+                items.append({
+                    "id": iid_m.group(1),
+                    "name": name_m.group(1) if name_m else iid_m.group(1),
+                    "displayName": disp_m.group(1),
+                    "category": cat_m.group(1) if cat_m else "default",
+                    "hint": hint_m.group(1) if hint_m else "",
+                    "label": label_m.group(1) if label_m else disp_m.group(1),
+                    "placement": desc_m.group(1) if desc_m else "in the scene",
+                    "visualPrompt": vprompt_m.group(1) if vprompt_m else None
+                })
+
         worlds.append({
-            "id": int(wid),
-            "title": title,
+            "id": wid,
+            "title": title_m.group(1) if title_m else f"Mundo {wid}",
+            "shortName": short_m.group(1) if short_m else f"Mundo {wid}",
+            "theme": theme_m.group(1) if theme_m else "default",
             "items": items
         })
 
     return worlds
 
+
+def build_item_visual_description(item):
+    """Gera a descrição visual do item de forma dinâmica a partir de suas variáveis e metadados."""
+    # 1. Se houver override explícito no item, utiliza com prioridade máxima
+    if item.get("visualPrompt"):
+        return item["visualPrompt"]
+
+    category = item.get("category", "default")
+    template = CATEGORY_TEMPLATES.get(category, CATEGORY_TEMPLATES["default"])
+
+    label = item.get("label") or item.get("displayName") or item.get("name")
+    name = item.get("name") or item.get("id")
+    placement = item.get("placement") or "in the scene"
+
+    # Interpolação dinâmica de variáveis
+    return template.format(
+        label=label,
+        name=name,
+        placement=placement
+    )
+
+
 def generate_scene_prompts(world_id=1):
+    """Constrói os prompts da cena completa e da cena sombreada para o mundo especificado."""
     worlds = load_worlds_data()
     target_world = next((w for w in worlds if w["id"] == world_id), None)
     if not target_world:
         print(f"World {world_id} not found!")
         return None
 
-    items = target_world["items"]
-    item_ids = [it["id"] for it in items]
-    item_descriptions = []
-    for it in items:
-        iid = it["id"]
-        desc = ITEM_VISUAL_DESCRIPTIONS.get(iid, f"a cute {iid}")
-        item_descriptions.append(desc)
+    theme_key = target_world.get("theme", "default")
+    env = THEME_ENVIRONMENTS.get(theme_key, THEME_ENVIRONMENTS["default"])
 
+    items = target_world["items"]
+    item_names = [it["name"] for it in items]
+    item_descriptions = [build_item_visual_description(it) for it in items]
     items_sentence = ", ".join(item_descriptions)
 
-    # 1. Prompt da Cena Completa (Full Scene)
-    full_prompt = (
-        f"{DESIGN_SYSTEM_STYLE} "
-        f"The room MUST visibly include all of the following items in harmonious positions: {items_sentence}. "
-        f"All items are colorful, clean, beautifully detailed, welcoming and easy for a 5-year-old child to spot."
+    # Variáveis interpoladas no master template da cena completa
+    full_prompt = SCENE_MASTER_TEMPLATE.format(
+        room_type=env["room_type"],
+        palette=env["palette"],
+        walls=env["walls"],
+        floor=env["floor"],
+        lighting=env["lighting"],
+        item_count=len(items),
+        items_sentence=items_sentence
     )
 
-    # 2. Prompt da Cena Sombreada / Mistério (Shadowed Mystery Scene)
-    shadowed_prompt = (
-        f"Isometric view of the exact same room diorama, with the same walls, clean wooden parquet floor, and warm sunlight from the window. "
-        f"CRITICAL DETAIL: Every single one of the {len(items)} items ({', '.join(item_ids)}) is replaced by a dark neutral mystery silhouette/shadow shape in its exact position on the floor and walls, "
-        f"creating an inviting puzzle mystery for children to guess where each object belongs. "
-        f"Clean minimal, soft clay render style, soft ambient occlusion shadows, peaceful and safe atmosphere."
+    # Variáveis interpoladas no master template da cena sombreada
+    shadowed_prompt = SHADOWED_MASTER_TEMPLATE.format(
+        room_type=env["room_type"],
+        walls=env["walls"],
+        floor=env["floor"],
+        lighting=env["lighting"],
+        item_count=len(items),
+        items_names=", ".join(item_names)
     )
 
     return {
         "world_id": world_id,
         "title": target_world["title"],
-        "items": item_ids,
+        "shortName": target_world["shortName"],
+        "theme": theme_key,
+        "items": [it["id"] for it in items],
+        "item_details": [
+            {
+                "id": it["id"],
+                "displayName": it["displayName"],
+                "category": it["category"],
+                "description": desc
+            }
+            for it, desc in zip(items, item_descriptions)
+        ],
         "full_scene_prompt": full_prompt,
         "shadowed_scene_prompt": shadowed_prompt
     }
 
+
 if __name__ == "__main__":
-    world_id = int(sys.argv[1]) if len(sys.argv) > 1 else 1
-    prompts = generate_scene_prompts(world_id)
-    if prompts:
-        print(f"\\n=======================================================")
-        print(f" AGENTE DE CENÁRIOS: {prompts['title']} (Mundo {prompts['world_id']})")
-        print(f" Itens Obrigatórios ({len(prompts['items'])}): {', '.join(prompts['items'])}")
-        print(f"=======================================================\\n")
-        print("--- PROMPT CENA COMPLETA (FULL SCENE) ---")
-        print(prompts["full_scene_prompt"])
-        print("\\n--- PROMPT CENA SOMBREADA (SHADOWED SCENE) ---")
-        print(prompts["shadowed_scene_prompt"])
-        print("\\n=======================================================")
+    if len(sys.argv) > 1 and sys.argv[1] == "--all":
+        worlds = load_worlds_data()
+        for w in worlds:
+            prompts = generate_scene_prompts(w["id"])
+            print(f"\n{'='*60}")
+            print(f" MUNDO {prompts['world_id']}: {prompts['title']} ({prompts['theme']})")
+            print(f" Itens ({len(prompts['items'])}): {', '.join(prompts['items'])}")
+            print(f"{'='*60}\n")
+            print(">> FULL SCENE PROMPT:\n", prompts["full_scene_prompt"])
+            print("\n>> SHADOWED SCENE PROMPT:\n", prompts["shadowed_scene_prompt"])
+    else:
+        world_id = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+        prompts = generate_scene_prompts(world_id)
+        if prompts:
+            print(f"\n{'='*60}")
+            print(f" AGENTE DE CENÁRIOS DINÂMICO: {prompts['title']} (Mundo {prompts['world_id']})")
+            print(f" Tema: {prompts['theme']} | Itens ({len(prompts['items'])}): {', '.join(prompts['items'])}")
+            print(f"{'='*60}\n")
+            print("--- ITENS GERADOS DINAMICAMENTE A PARTIR DAS VARIÁVEIS ---")
+            for it in prompts["item_details"]:
+                print(f" * [{it['category'].upper()}] {it['displayName']}: {it['description']}")
+            print(f"\n--- PROMPT CENA COMPLETA (FULL SCENE) ---")
+            print(prompts["full_scene_prompt"])
+            print(f"\n--- PROMPT CENA SOMBREADA (SHADOWED SCENE) ---")
+            print(prompts["shadowed_scene_prompt"])
+            print(f"\n{'='*60}")

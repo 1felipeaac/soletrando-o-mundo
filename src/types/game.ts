@@ -10,6 +10,7 @@ export interface ItemStage {
   category: 'furniture' | 'toy' | 'decoration' | 'structure' | 'food' | 'animal';
   icon: string;
   stickerImage?: string;
+  visualPrompt?: string; // Prompt visual descritivo opcional para o gerador de imagens
   // Posição no cenário do cômodo (porcentagem ou layout)
   roomPlacement: {
     label: string;

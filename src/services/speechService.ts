@@ -72,35 +72,49 @@ class SpeechService {
   // Toca a sílaba com voz acolhedora
   public async speakSyllable(syllable: string) {
     const clean = syllable.trim().toUpperCase();
-    const ok = await this.playAudioClip(`/audio/syllables/${clean}.mp3`);
+    let ok = await this.playAudioClip(`/audio/syllables/${clean}.mp3`);
+    if (!ok && !this.isManuallyCancelled) {
+      // Tenta versão sem acento se houver
+      const normalized = clean.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (normalized !== clean) {
+        ok = await this.playAudioClip(`/audio/syllables/${normalized}.mp3`);
+      }
+    }
     if (!ok && !this.isManuallyCancelled) {
       this.speakSyllableFallback(syllable);
     }
   }
 
-  // Toca o nome do objeto (ex: Cama, Mesa)
-  public async speakItemName(itemName: string, syllables: string[]) {
-    const clean = itemName.trim().toLowerCase();
+  // Toca o nome do objeto (ex: Cama, Mesa) com cadência calma
+  public async speakItemName(itemId: string, syllables: string[]) {
+    const clean = itemId.trim().toLowerCase();
     const ok = await this.playAudioClip(`/audio/items/${clean}.mp3`);
-    if (!ok) {
+    if (!ok && !this.isManuallyCancelled) {
       // Encadeia as sílabas com ritmo calmo
       for (const s of syllables) {
+        if (this.isManuallyCancelled) break;
         await this.playAudioClip(`/audio/syllables/${s.toUpperCase()}.mp3`);
         await new Promise((r) => setTimeout(r, 220));
       }
-      await this.speakFallbackUtterance(itemName);
     }
   }
 
   // Feedback com humor para sílabas invertidas
   public async speakInverted(formed: string, targetName: string) {
-    const phrase = `${formed}! Ih, virou ${formed}! Que engraçado! Vamos trocar para formar ${targetName}?`;
-    this.speakFallbackUtterance(phrase);
+    const ok = await this.playAudioClip('/audio/feedback/inverted.mp3');
+    if (!ok && !this.isManuallyCancelled) {
+      const phrase = `${formed}! Ih, virou ${formed}! Que engraçado! Vamos trocar para formar ${targetName}?`;
+      this.speakFallbackUtterance(phrase);
+    }
   }
 
-  // Fala da dica descritiva do objeto
-  public async speakHint(hintText: string) {
-    this.speakFallbackUtterance(hintText);
+  // Fala da dica descritiva do objeto (áudio neural gravado de estúdio)
+  public async speakHint(itemId: string, fallbackHint?: string) {
+    const clean = itemId.trim().toLowerCase();
+    const ok = await this.playAudioClip(`/audio/hints/${clean}.mp3`);
+    if (!ok && !this.isManuallyCancelled && fallbackHint) {
+      this.speakFallbackUtterance(fallbackHint);
+    }
   }
 
   // --- Fallbacks Web Speech API ---

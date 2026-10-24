@@ -119,6 +119,7 @@ export const WordArena: React.FC<WordArenaProps> = ({
         setIsWiggling(true);
         soundService.playBoing();
         setFunnyFeedback(`Quase lá! Ouça a dica: ${item.hint}`);
+        speechService.speakHint(item.id, item.hint);
         setTimeout(() => setIsWiggling(false), 500);
       }
     }
@@ -232,7 +233,7 @@ export const WordArena: React.FC<WordArenaProps> = ({
             onClick={() => {
               speechService.cancel();
               soundService.playWoodClick();
-              speechService.speakItemName(item.name, item.syllables);
+              speechService.speakItemName(item.id, item.syllables);
             }}
             className="flex-1 h-11 flex items-center justify-center gap-1.5 bg-amber-400 hover:bg-amber-500 text-amber-950 font-black px-3 rounded-2xl border-2 border-amber-500 transition-transform active:scale-95 cursor-pointer text-xs uppercase tracking-wider whitespace-nowrap shadow-2xs"
           >
@@ -244,7 +245,7 @@ export const WordArena: React.FC<WordArenaProps> = ({
             onClick={() => {
               speechService.cancel();
               soundService.playWoodClick();
-              speechService.speakHint(item.hint);
+              speechService.speakHint(item.id, item.hint);
               setFunnyFeedback(item.hint);
             }}
             className="h-11 flex items-center justify-center gap-1.5 bg-sky-100 hover:bg-sky-200 text-sky-950 font-extrabold px-3.5 rounded-2xl border-2 border-sky-300 transition-transform active:scale-95 cursor-pointer text-xs whitespace-nowrap shrink-0 shadow-2xs"

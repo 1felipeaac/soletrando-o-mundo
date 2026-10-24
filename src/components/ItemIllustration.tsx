@@ -19,11 +19,10 @@ const IMAGE_MAP: Record<string, string> = {
   bolo: '/images/stickers/bolo.png',
   suco: '/images/stickers/suco.png',
   sopa: '/images/stickers/sopa.png',
-  // Preservados para outros cômodos e expansões
-  sofa: '/images/sofa.jpg',
-  bola: '/images/bola.jpg',
-  porta: '/images/porta.jpg',
-  abajur: '/images/abajur.jpg',
+  sofa: '/images/stickers/sofa.png',
+  bola: '/images/stickers/bola.png',
+  porta: '/images/stickers/porta.png',
+  abajur: '/images/stickers/abajur.png',
 };
 
 export const ItemIllustration: React.FC<ItemIllustrationProps> = ({

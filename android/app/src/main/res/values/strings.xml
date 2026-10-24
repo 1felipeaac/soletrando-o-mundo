@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Soletrando o Mundo</string>
+    <string name="title_activity_main">Soletrando o Mundo</string>
+    <string name="package_name">com.felipecoelho.soletrando</string>
+    <string name="custom_url_scheme">com.felipecoelho.soletrando</string>
+</resources>

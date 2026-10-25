@@ -1,0 +1,67 @@
+# 📜 Registro de Decisões Técnicas e Pedagógicas (ADR)
+## Soletrando o Mundo 🌍
+
+Este documento registra o histórico de decisões arquiteturais, de design e pedagógicas tomadas durante o desenvolvimento do aplicativo.
+
+---
+
+### ADR 01: Independência Absoluta do Projeto
+- **Data:** 24/10/2026
+- **Contexto:** O projeto estava inicialmente sendo concebido junto ao repositório de Pokemon.
+- **Decisão:** Separar o **Soletrando o Mundo** em um projeto e repositório 100% independentes no GitHub (\1felipeaac/soletrando-o-mundo\), com identidade visual autoral, marcas próprias e foco comercial/educativo.
+- **Consequência:** Nenhuma dependência, código ou asset de terceiros/marcas externas no projeto.
+
+---
+
+### ADR 02: Voz Neural de Estúdio (\pt-BR-FranciscaNeural\) vs. Síntese do Navegador
+- **Data:** 24/10/2026
+- **Contexto:** A API padrão \window.speechSynthesis\ do navegador produz vozes robóticas, com entonação metálica e pronúncia inconsistente de sílabas e fonemas do português brasileiro.
+- **Decisão:** Banir o uso de vozes sintetizadas em tempo real pelo navegador. Todo o conteúdo fonético (sílabas, palavras completas, dicas afetivas e reforço pedagógico) é pré-gerado em alta fidelidade via Microsoft Edge TTS Neural com a voz acolhedora da Francisca (\pt-BR-FranciscaNeural\).
+- **Consequência:** Experiência afetiva humanizada de estúdio, garantia de pronúncia perfeita e funcionamento 100% offline via PWA.
+
+---
+
+### ADR 03: Baixa Estimulação Sensorial (Neuroeducação & Diretrizes SBP)
+- **Data:** 24/10/2026
+- **Contexto:** Aplicativos infantis convencionais usam hiperestimulação (cores neon, transições frenéticas, buzinas estridentes, cronômetros de pressão), gerando ansiedade e sobrecarga cognitiva em crianças de 4 a 6 anos.
+- **Decisão:** Adotar design calmo e acolhedor:
+  - Estilo visual de massinha/argila 3D (diorama isométrico suave).
+  - Paleta em tons pastel quentes e iluminação solar difusa.
+  - Efeitos sonoros orgânicos gerados via Web Audio API (toques de madeira, sinos mornos).
+  - Sem contadores de tempo, sem punição por erro e sem elementos piscantes.
+
+---
+
+### ADR 04: Mecânica de Revelação do Cenário (Foco/Desfoque vs. Stickers)
+- **Data:** 24/10/2026
+- **Contexto:** A ideia inicial de sobrepor stickers recortados sobre sombras criava poluição visual e inconsistência de iluminação/recorte.
+- **Decisão:** O cômodo 3D inicia com um desfoque suave (\lur-md scale-105\). Na esteira inferior, os 8 objetos aparecem como mistério (\???\) até serem soletrados. Ao completar o 8º item do mundo, o desfoque é removido suavemente (\ilter-none scale-100\), revelando o cômodo 100% nítido e iluminado com comemoração.
+- **Consequência:** Interface limpa, sensação lúdica de "foco" e clareza para a criança, mantendo a integridade da arte 3D.
+
+---
+
+### ADR 05: Coerência Absoluta entre worldsData.ts e a Arte 3D
+- **Data:** 24/10/2026
+- **Contexto:** A imagem gerada por IA precisa obrigatoriamente conter todos os itens que a criança soletra no cômodo.
+- **Decisão:** Todos os 8 itens listados no \worldsData.ts\ (Quarto: cama, mesa, sofá, bola, urso, porta, tapete, abajur) DEVEM estar presentes de forma reconhecível no diorama 3D. Elementos extras funcionam apenas como decoração de fundo secundária.
+
+---
+
+### ADR 06: Gerador Dinâmico de Cenários com Templates Semânticos
+- **Data:** 24/10/2026
+- **Contexto:** Dicionários estáticos manuais não escalariam conforme novos mundos e cômodos fossem criados.
+- **Decisão:** O script \scripts/scene_generator_agent.py\ adota templates dinâmicos por categoria (\urniture\, \	oy\, \ood\, etc.) e presets por tema (\casa\, \comida\, \escola\), gerando prompts fotográficos consistentes sem código duplicado.
+
+---
+
+### ADR 07: Estratégia de Cache do Service Worker (PWA v2) e Netlify
+- **Data:** 24/10/2026
+- **Contexto:** O Service Worker PWA com estratégia \Cache First\ impedia os navegadores de verem imagens atualizadas com o mesmo nome de arquivo. Além disso, o parser de TOML do Netlify rejeitou arquivos com UTF-8 BOM.
+- **Decisão:** 
+  1. Implementar cache-busting em URLs de imagem (\/images/bedroom_scene.jpg?v=2\).
+  2. Incrementar a versão do cache no SW para \soletrando-mundo-v2\.
+  3. Adicionar cabeçalho \
+o-cache\ para o \/sw.js\ no \
+etlify.toml\.
+  4. Garantir codificação UTF-8 pura estrita sem BOM em todos os arquivos de configuração (\
+etlify.toml\, \_redirects\).

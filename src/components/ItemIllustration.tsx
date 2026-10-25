@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 // Ilustrações vetoriais acessíveis, amigáveis e não-hiperestimulantes
 // Garante representação inequívoca de cada objeto do mundo infantil.
 
@@ -8,21 +10,81 @@ interface ItemIllustrationProps {
 }
 
 const IMAGE_MAP: Record<string, string> = {
-  cama: '/images/stickers/cama.png',
-  mesa: '/images/stickers/mesa.png',
-  urso: '/images/stickers/urso.png',
-  tapete: '/images/stickers/tapete.png',
-  relogio: '/images/stickers/relogio.png',
-  quadro: '/images/stickers/quadro.png',
-  janela: '/images/stickers/janela.png',
-  banco: '/images/stickers/banco.png',
-  bolo: '/images/stickers/bolo.png',
-  suco: '/images/stickers/suco.png',
-  sopa: '/images/stickers/sopa.png',
-  sofa: '/images/stickers/sofa.png',
-  bola: '/images/stickers/bola.png',
-  porta: '/images/stickers/porta.png',
-  abajur: '/images/stickers/abajur.png',
+  // Quarto Mágico (8 itens)
+  cama: '/images/cama.jpg',
+  mesa: '/images/mesa.jpg',
+  sofa: '/images/sofa.jpg',
+  bola: '/images/bola.jpg',
+  urso: '/images/urso.jpg',
+  porta: '/images/porta.jpg',
+  tapete: '/images/tapete.jpg',
+  abajur: '/images/abajur.jpg',
+
+  // A Cozinha (8 itens)
+  bolo: '/images/bolo.jpg',
+  suco: '/images/suco.jpg',
+  sopa: '/images/sopa.jpg',
+  maca: '/images/maca.jpg',
+  copo: '/images/copo.jpg',
+  prato: '/images/prato.jpg',
+  garfo: '/images/garfo.jpg',
+  banana: '/images/banana.jpg',
+
+  // A Sala de Estar (8 itens)
+  vaso: '/images/vaso.jpg',
+  foto: '/images/foto.jpg',
+  pufe: '/images/pufe.jpg',
+  janela: '/images/janela.jpg',
+  relogio: '/images/relogio.jpg',
+  almofada: '/images/almofada.jpg',
+  cortina: '/images/cortina.jpg',
+  radio: '/images/radio.jpg',
+  // Legados sala
+  livro: '/images/livro.jpg',
+  quadro: '/images/quadro.jpg',
+  planta: '/images/planta.jpg',
+
+  // O Banheiro (8 itens)
+  pia: '/images/pia.jpg',
+  pato: '/images/pato.jpg',
+  sabao: '/images/sabao.jpg',
+  pote: '/images/pote.jpg',
+  tubo: '/images/tubo.jpg',
+  escova: '/images/escova.jpg',
+  pente: '/images/pente.jpg',
+  bacia: '/images/bacia.jpg',
+  // Legados banheiro
+  toalha: '/images/toalha.jpg',
+  espelho: '/images/espelho.jpg',
+  banheira: '/images/banheira.jpg',
+
+  // O Jardim (8 itens)
+  rosa: '/images/rosa.jpg',
+  gato: '/images/gato.jpg',
+  muro: '/images/muro.jpg',
+  sapo: '/images/sapo.jpg',
+  arvore: '/images/arvore.jpg',
+  regador: '/images/regador.jpg',
+  balanco: '/images/balanco.jpg',
+  cerca: '/images/cerca.jpg',
+  // Legados jardim
+  grama: '/images/grama.jpg',
+  passaro: '/images/passaro.jpg',
+  borboleta: '/images/borboleta.jpg',
+
+  // Bônus da Casa (8 itens)
+  sapato: '/images/sapato.jpg',
+  bota: '/images/bota.jpg',
+  laco: '/images/laco.jpg',
+  sacola: '/images/sacola.jpg',
+  bone: '/images/bone.jpg',
+  casaco: '/images/casaco.jpg',
+  meia: '/images/meia.jpg',
+  chave: '/images/chave.jpg',
+  // Legados bônus
+  vassoura: '/images/vassoura.jpg',
+  balde: '/images/balde.jpg',
+  mochila: '/images/mochila.jpg',
 };
 
 export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
@@ -30,15 +92,17 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
   fallbackIcon,
   className = 'w-14 h-14',
 }) => {
+  const [hasError, setHasError] = useState(false);
   const cleanId = itemId.trim().toLowerCase();
   const imageSrc = IMAGE_MAP[cleanId];
   const combinedClassName = `${className} object-contain object-center mx-auto block`;
 
-  if (imageSrc) {
+  if (imageSrc && !hasError) {
     return (
       <img
         src={imageSrc}
         alt={itemId}
+        onError={() => setHasError(true)}
         className={`${combinedClassName} rounded-2xl select-none`}
         loading="lazy"
         draggable={false}

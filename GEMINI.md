@@ -88,9 +88,22 @@ soletrando-o-mundo/
    - Cozinha (8 itens): \olo\, \suco\, \sopa\, \maca\, \copo\, \prato\, \garfo\ e \anana\.
 
 3. **Áudio 100% Neural de Estúdio:**
-   - NUNCA use a API nativa \speechSynthesis\ do navegador.
-   - Sempre utilize os arquivos de áudio gravados com \pt-BR-FranciscaNeural\ via \speechService.ts\.
+   - NUNCA use a API nativa `speechSynthesis` do navegador.
+   - Sempre utilize os arquivos de áudio gravados com `pt-BR-FranciscaNeural` via `speechService.ts`.
    - Ao tocar o botão SOM, execute as sílabas com intervalo de 700ms entre cada uma e pausa de 250ms antes da palavra inteira.
+
+4. **Humanização vs. Estilização Gráfica / Logomarcas:**
+   - **Frutas, verduras e alimentos naturais:** NUNCA devem ter olhos, boca ou rostos (sempre formas naturais de alimento em massinha 3D).
+   - **Objetos manufaturados e utensílios:** O objeto em si NÃO deve ser humanizado (o copo ou a mesa não têm olhos ou boca como parte de seu corpo). Porém, é permitida estilização da peça onde rostinhos apareçam exclusivamente como **estampa decorativa impressa, adorno ou logomarca infantil** (como a estampa de nuvenzinha na lateral do copo).
+   - **Animais e brinquedos que representam animais:** (ex: urso de pelúcia, pato de borracha, pássaro, borboleta) possuem olhos e boca amigáveis.
+   - Em prompts para itens inanimados, especificar: "inanimate object, no anthropomorphic face on the object itself; any cute face motif allowed only as printed decal/logo decoration".
+
+5. **Pontuação 1:1 e Desbloqueio Progressivo por ZPD:**
+   - **Pontuação Tangível 1:1:** Cada palavra soletrada com sucesso confere exatamente **1 estrela** (relação biunívoca concreta 1:1 para crianças de 4 a 6 anos; nunca use multiplicadores como `* 40`). A Navbar exibe diretamente `⭐ X / 48`.
+   - **Desbloqueio Progressivo:** Baseado na Zona de Desenvolvimento Proximal (ZPD) e Maestria Parcial (~70% do cômodo anterior): Quarto (0 ⭐), Cozinha (5 ⭐), Sala (12 ⭐), Banheiro (20 ⭐), Jardim (28 ⭐) e Bônus (36 ⭐).
+   - **Design de Bloqueio Não-Punitivo:** Cômodos bloqueados usam estética acolhedora com borda pontilhada e desfoque suave. Toques em cômodos bloqueados tocam som leve de mola (`playBoing()`) e mensagem de encorajamento, preservando a baixa estimulação sensorial.
+
+
 
 ---
 

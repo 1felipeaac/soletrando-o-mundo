@@ -1,5 +1,5 @@
 // Service Worker para Soletrando o Mundo (PWA Offline)
-const CACHE_NAME = 'soletrando-mundo-v2';
+const CACHE_NAME = 'soletrando-mundo-v4';
 
 const STATIC_ASSETS = [
   '/',
@@ -10,7 +10,12 @@ const STATIC_ASSETS = [
   '/icons/icon-512.svg',
   '/images/bedroom_scene.jpg?v=2',
   '/images/bedroom_scene.jpg',
+  '/images/kitchen_scene.jpg?v=2',
   '/images/kitchen_scene.jpg',
+  '/images/living_room_scene.jpg?v=1',
+  '/images/bathroom_scene.jpg?v=1',
+  '/images/garden_scene.jpg?v=1',
+  '/images/house_bonus_scene.jpg?v=1',
   '/audio/feedback/inverted.mp3',
   '/audio/feedback/welcome.mp3',
   '/audio/feedback/almost.mp3'
@@ -45,6 +50,15 @@ self.addEventListener('fetch', (event) => {
 
   // Somente tratar requisições do mesmo domínio ou áudio/imagens locais
   if (event.request.method !== 'GET') return;
+
+  // Ignora requisições de desenvolvimento do Vite (HMR, módulos virtuais, tokens)
+  if (
+    url.pathname.startsWith('/@') ||
+    url.pathname.startsWith('/node_modules') ||
+    url.searchParams.has('token')
+  ) {
+    return;
+  }
 
   // Requisições de navegação (HTML): Network first com fallback de cache
   if (event.request.mode === 'navigate') {

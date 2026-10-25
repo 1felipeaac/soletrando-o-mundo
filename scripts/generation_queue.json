@@ -1,0 +1,247 @@
+[
+  {
+    "id": "bathroom_scene",
+    "type": "scene",
+    "aspect_ratio": "4:3",
+    "target_file": "public/images/bathroom_scene.jpg",
+    "prompt": "Cozy, calm 3D isometric children bathroom miniature room diorama for an educational app. Low angle isometric perspective, cutaway diorama view showing floor and two walls. Soft clay and stylized claymation aesthetic with gentle rounded corners. Low-stimulation sensory design: palette of seafoam blue, gentle cyan, clean white, pastel yellow. Soft pastel seafoam-blue tiles and warm white walls, gentle light-teal checkered tile floor with soft round bath mat, bright, soft morning light with clean pastel reflections, soft diffused shadows, peaceful atmosphere, high quality 3d render. The scene visibly and harmoniously includes: 1) a ceramic white clay sink vanity with chrome faucet (pia), 2) an adorable friendly yellow rubber duck toy (pato) with cute button eyes and orange beak, 3) a pastel pink bar of soap in a small soap dish with tiny clay bubbles (sabao), 4) a cute mint-green shampoo/lotion jar pot on a wall shelf (pote), 5) a small blue-and-white squeezable toothpaste tube on the counter (tubo), 6) a child toothbrush with soft white bristles standing in a cup (escova), 7) a pastel lavender hair comb on the counter (pente), 8) a round pastel turquoise baby bath tub basin with clear water (bacia). Strict rule: All furniture, utensils, and bottles are strictly inanimate with NO eyes, NO mouths, NO faces. Only the yellow rubber duck has cute cartoon eyes. CRITICAL: Absolutely NO text, NO labels, NO words, NO letters, NO typography anywhere in the image. High-end clean 3D clay diorama."
+  },
+  {
+    "id": "garden_scene",
+    "type": "scene",
+    "aspect_ratio": "4:3",
+    "target_file": "public/images/garden_scene.jpg",
+    "prompt": "Cozy, calm 3D isometric children backyard garden diorama for an educational app. Low angle isometric perspective, cutaway diorama view showing lush green lawn and sky. Soft clay and stylized claymation aesthetic with gentle rounded corners. Low-stimulation sensory design: palette of meadow green, soft terracotta, pastel sky blue, sunny buttercup yellow. Lush soft green grass lawn, small stone path, gentle morning sunshine with soft breeze atmosphere, soft diffused shadows, peaceful atmosphere, high quality 3d render. The scene visibly and harmoniously includes: 1) a blooming pink clay rose flower in a flowerbed (rosa), 2) an adorable friendly ginger kitten sitting on a wall (gato) with cute eyes and smile, 3) a low whitewashed rustic brick wall (muro), 4) a cute friendly little green frog (sapo) sitting near plants, 5) a large charming shade tree with lush green clay foliage (arvore), 6) a pastel blue child watering can (regador), 7) a wooden plank swing hanging from a tree branch (balanco), 8) a clean white picket fence section (cerca). Strict rule: Inanimate objects, plants, fences, and tools have NO eyes, NO mouth, NO face. Only the kitten and frog have cute friendly faces. CRITICAL: Absolutely NO text, NO labels, NO words, NO typography anywhere in the image."
+  },
+  {
+    "id": "house_bonus_scene",
+    "type": "scene",
+    "aspect_ratio": "4:3",
+    "target_file": "public/images/house_bonus_scene.jpg",
+    "prompt": "Cozy, calm 3D isometric children home entryway and hallway diorama for an educational app. Low angle isometric perspective, cutaway diorama view showing wooden floor, doorway and hallway wall. Soft clay and stylized claymation aesthetic with gentle rounded corners. Low-stimulation sensory design: palette of warm peach, oatmeal cream, soft honey oak wood, pastel terracotta. Warm peach walls, wooden coat rack with pegs, clean polished light wooden parquet floor, cozy warm ambient morning lighting, soft diffused shadows, high quality 3d render. The scene visibly and harmoniously includes: 1) a pair of cute colorful children sneakers on the floor (sapato), 2) a pair of bright yellow rain boots on a boot tray (bota), 3) a pastel pink ribbon bow on a hall console table (laco), 4) a pastel cloth shopping tote bag hanging on a wooden hook (sacola), 5) a colorful baseball cap hanging on a peg (bone), 6) a warm hooded winter coat on a wooden coat hanger (casaco), 7) a pair of folded striped pastel socks on a bench (meia), 8) a golden brass house key hanging on a key hook (chave). Strict rule: Strictly inanimate objects, clothing, and furniture with NO eyes, NO mouth, NO face. CRITICAL: Absolutely NO text, NO labels, NO words, NO typography anywhere in the image."
+  },
+  {
+    "id": "vaso",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/vaso.jpg",
+    "prompt": "A stylized 3D clay ceramic flower vase with a gentle leafy green houseplant, smooth clay texture, strictly natural plant and ceramic pot with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, subtle contact shadow, 1:1 single object."
+  },
+  {
+    "id": "foto",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/foto.jpg",
+    "prompt": "A stylized 3D clay wooden picture frame containing a sweet minimalist child clay portrait drawing of a smiling family, smooth clay texture, inanimate photo frame with NO face on the frame itself, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "pufe",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/pufe.jpg",
+    "prompt": "A stylized 3D clay round soft pouf floor cushion ottoman in warm pastel mustard yellow with cute subtle seam details, smooth clay texture, strictly inanimate furniture with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "janela",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/janela.jpg",
+    "prompt": "A stylized 3D clay white window frame with soft pastel curtains tied to the sides showing a calm blue sky and a puffy white clay cloud, smooth clay texture, strictly inanimate with NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "relogio",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/relogio.jpg",
+    "prompt": "A stylized 3D clay round wall clock in pastel mint green with clean hands pointing to 3 o clock and simple dot markings, smooth clay texture, strictly inanimate object with NO eyes, NO mouth, NO cartoon face on the clock, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "almofada",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/almofada.jpg",
+    "prompt": "A stylized 3D clay soft square throw pillow cushion in pastel coral pink with gentle rounded corners and a subtle clay button, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "cortina",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/cortina.jpg",
+    "prompt": "A stylized 3D clay pair of flowing pastel curtains on a cute wooden curtain rod with wooden rings, smooth clay folds texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "radio",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/radio.jpg",
+    "prompt": "A stylized 3D clay retro toy radio in pastel sky-blue and cream with a round speaker grill, an antenna and two dials, smooth clay texture, inanimate stylized piece of equipment with NO anthropomorphic face (small printed star decal decoration allowed), isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "pia",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/pia.jpg",
+    "prompt": "A stylized 3D clay children bathroom sink vanity in clean white ceramic with a cute chrome tap faucet and pastel mint cabinet base, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "pato",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/pato.jpg",
+    "prompt": "An adorable stylized 3D clay yellow rubber duck toy with cute round black button eyes, bright orange beak and a friendly sweet smile, smooth tactile polymer clay texture, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "sabao",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/sabao.jpg",
+    "prompt": "A stylized 3D clay pastel pink bar of soap resting on a cute white ceramic soap dish with a few glossy clay bubbles, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "pote",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/pote.jpg",
+    "prompt": "A stylized 3D clay cosmetic cream lotion jar pot in pastel mint green with a round screw cap lid, smooth clay texture, strictly inanimate container with NO anthropomorphic face (subtle printed flower logo decal allowed), isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "tubo",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/tubo.jpg",
+    "prompt": "A stylized 3D clay squeezable toothpaste tube in pastel blue and white with a swirl of fresh toothpaste, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "escova",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/escova.jpg",
+    "prompt": "A stylized 3D clay children toothbrush with a pastel handle and soft white clay bristles, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "pente",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/pente.jpg",
+    "prompt": "A stylized 3D clay wide-tooth hair comb in pastel lavender, smooth clay texture, strictly inanimate utensil with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "bacia",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/bacia.jpg",
+    "prompt": "A stylized 3D clay round baby bath tub basin in pastel turquoise filled with clear clean water and gentle clay suds, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "rosa",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/rosa.jpg",
+    "prompt": "A stylized 3D clay blooming pink rose flower with delicate layered petals and a fresh green stem with two leaves, smooth clay texture, strictly natural flower with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "gato",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/gato.jpg",
+    "prompt": "An adorable stylized 3D clay ginger tabby kitten sitting happily with friendly cute eyes, tiny pink nose, whiskers and a cheerful gentle smile, soft tactile clay texture, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "muro",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/muro.jpg",
+    "prompt": "A stylized 3D clay miniature whitewashed brick garden wall section with a tiny patch of green clay moss on top, smooth clay texture, strictly inanimate structure with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "sapo",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/sapo.jpg",
+    "prompt": "An adorable stylized 3D clay friendly green tree frog sitting on a small green lily pad with cheerful big cartoon eyes and a sweet smile, smooth tactile clay texture, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "arvore",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/arvore.jpg",
+    "prompt": "A stylized 3D clay miniature tree with a sturdy brown clay trunk and a lush puffy green canopy, smooth clay texture, strictly natural plant with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "regador",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/regador.jpg",
+    "prompt": "A stylized 3D clay child gardening watering can in pastel sky-blue with a rounded handle and sprinkler spout, smooth clay texture, strictly inanimate tool with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "balanco",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/balanco.jpg",
+    "prompt": "A stylized 3D clay wooden tree swing with a smooth wooden plank seat and two sturdy textured rope cords, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "cerca",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/cerca.jpg",
+    "prompt": "A stylized 3D clay section of a white picket fence with rounded slat tops, smooth clay texture, strictly inanimate structure with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "sapato",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/sapato.jpg",
+    "prompt": "A stylized 3D clay pair of colorful children sneakers with pastel accents and neat clay laces, smooth clay texture, strictly inanimate footwear with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "bota",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/bota.jpg",
+    "prompt": "A stylized 3D clay pair of bright sunny yellow rubber rain boots with sturdy textured soles, smooth clay texture, strictly inanimate footwear with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "laco",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/laco.jpg",
+    "prompt": "A stylized 3D clay beautiful satin ribbon bow in pastel pink with elegant loops and tails, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "sacola",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/sacola.jpg",
+    "prompt": "A stylized 3D clay reusable shopping tote bag in pastel canvas with sturdy loop handles, smooth clay texture, strictly inanimate bag with NO anthropomorphic face (subtle printed leaf logo decal allowed), isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "bone",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/bone.jpg",
+    "prompt": "A stylized 3D clay children baseball cap in pastel teal and coral with a curved brim, smooth clay texture, strictly inanimate clothing with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "casaco",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/casaco.jpg",
+    "prompt": "A stylized 3D clay cozy hooded winter duffle coat in warm oatmeal clay with wooden toggle buttons, smooth clay texture, strictly inanimate clothing with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "meia",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/meia.jpg",
+    "prompt": "A stylized 3D clay pair of folded striped pastel cotton socks, smooth knitted clay texture, strictly inanimate clothing with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  },
+  {
+    "id": "chave",
+    "type": "item",
+    "aspect_ratio": "1:1",
+    "target_file": "public/images/chave.jpg",
+    "prompt": "A stylized 3D clay golden brass house key with a circular head on a cute round key ring, smooth clay texture, strictly inanimate utility with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+  }
+]

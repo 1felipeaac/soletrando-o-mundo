@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import type { WorldRoom } from '../types/game';
 import { Star, ChevronRight, Sparkles, Lock } from 'lucide-react';
+import { soundService } from '../services/soundService';
 
 interface WorldSelectProps {
   worlds: WorldRoom[];
@@ -12,6 +14,24 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
   completedItemIds,
   onSelectWorld,
 }) => {
+  const [lockedNoticeId, setLockedNoticeId] = useState<number | null>(null);
+
+  // Total de estrelas conquistadas pelo jogador (1 por item completado)
+  const totalStarsEarned = Object.keys(completedItemIds).filter((id) => completedItemIds[id]).length;
+
+  const handleCardClick = (world: WorldRoom, isLocked: boolean) => {
+    if (isLocked) {
+      soundService.playBoing();
+      setLockedNoticeId(world.id);
+      setTimeout(() => {
+        setLockedNoticeId((curr) => (curr === world.id ? null : curr));
+      }, 4000);
+      return;
+    }
+    soundService.playWoodClick();
+    onSelectWorld(world.id);
+  };
+
   return (
     <div className="w-full max-w-xl sm:max-w-2xl mx-auto px-3 sm:px-4 py-4 sm:py-6 select-none space-y-4 sm:space-y-5">
       {/* Título de Boas-Vindas */}
@@ -33,7 +53,51 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
         {worlds.map((world, index) => {
           const completedCount = world.items.filter((i) => completedItemIds[i.id]).length;
           const isFinished = completedCount === world.items.length;
-          const isFirst = index === 0;
+
+          // Parâmetro de Desbloqueio por Estrelas (Threshold Progressivo)
+          const requiredStars = world.requiredStars ?? 0;
+          const isLocked = totalStarsEarned < requiredStars;
+          const missingStars = Math.max(0, requiredStars - totalStarsEarned);
+
+          // Paletas de cores suaves por tema
+          const THEME_STYLES: Record<string, { card: string; pin: string; bar: string }> = {
+            casa: {
+              card: 'bg-gradient-to-br from-amber-50 via-white to-orange-50 border-amber-300 hover:border-amber-400',
+              pin: 'bg-amber-500',
+              bar: 'bg-amber-500',
+            },
+            comida: {
+              card: 'bg-gradient-to-br from-emerald-50 via-white to-teal-50 border-emerald-300 hover:border-emerald-400',
+              pin: 'bg-emerald-600',
+              bar: 'bg-emerald-500',
+            },
+            sala: {
+              card: 'bg-gradient-to-br from-violet-50 via-white to-purple-50 border-violet-300 hover:border-violet-400',
+              pin: 'bg-violet-600',
+              bar: 'bg-violet-500',
+            },
+            banheiro: {
+              card: 'bg-gradient-to-br from-cyan-50 via-white to-sky-50 border-cyan-300 hover:border-cyan-400',
+              pin: 'bg-cyan-600',
+              bar: 'bg-cyan-500',
+            },
+            jardim: {
+              card: 'bg-gradient-to-br from-lime-50 via-white to-green-50 border-lime-300 hover:border-lime-400',
+              pin: 'bg-lime-600',
+              bar: 'bg-lime-500',
+            },
+            bonus: {
+              card: 'bg-gradient-to-br from-rose-50 via-white to-pink-50 border-rose-300 hover:border-rose-400',
+              pin: 'bg-rose-500',
+              bar: 'bg-rose-500',
+            },
+          };
+
+          const style = THEME_STYLES[world.theme] || {
+            card: 'bg-gradient-to-br from-sky-50 via-white to-blue-50 border-sky-300 hover:border-sky-400',
+            pin: 'bg-sky-500',
+            bar: 'bg-sky-500',
+          };
 
           return (
             <div key={world.id} className="w-full flex flex-col items-center">
@@ -51,40 +115,66 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
 
               {/* Card / Ilha do Mundo */}
               <div
-                onClick={() => onSelectWorld(world.id)}
-                className={`w-full rounded-3xl p-4 sm:p-5 shadow-sm border-3 transition-all cursor-pointer active:scale-98 group relative overflow-hidden ${
-                  isFirst
-                    ? 'bg-gradient-to-br from-sky-50 via-white to-blue-50 border-sky-300 hover:border-sky-400'
-                    : 'bg-gradient-to-br from-emerald-50 via-white to-teal-50 border-emerald-300 hover:border-emerald-400'
+                onClick={() => handleCardClick(world, isLocked)}
+                className={`w-full rounded-3xl p-4 sm:p-5 border-3 transition-all cursor-pointer relative overflow-hidden ${
+                  isLocked
+                    ? 'bg-gradient-to-br from-slate-50 via-white to-amber-50/40 border-dashed border-amber-300 hover:border-amber-400 opacity-90 shadow-xs'
+                    : `${style.card} shadow-sm active:scale-98 group`
                 }`}
               >
                 {/* Pin Flutuante de Estrela (como no mockup) */}
                 <div className="flex items-center justify-between gap-3 mb-2">
-                  <div className="inline-flex items-center gap-1.5 bg-sky-500 text-white font-black text-xs px-3 py-1 rounded-full shadow-xs">
-                    <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
-                    <span>Mundo {world.id}</span>
-                  </div>
+                  {isLocked ? (
+                    <div className="inline-flex items-center gap-1.5 bg-slate-600 text-white font-black text-xs px-3 py-1 rounded-full shadow-xs">
+                      <Lock className="w-3.5 h-3.5 text-amber-300" />
+                      <span>Mundo {world.id}</span>
+                    </div>
+                  ) : (
+                    <div className={`inline-flex items-center gap-1.5 ${style.pin} text-white font-black text-xs px-3 py-1 rounded-full shadow-xs`}>
+                      <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                      <span>Mundo {world.id}</span>
+                    </div>
+                  )}
 
-                  <span className="bg-white/90 text-slate-800 text-xs font-black px-3 py-1 rounded-xl border border-slate-200 shadow-2xs">
-                    ⭐ {completedCount} de {world.items.length} estrelas
-                  </span>
+                  {isLocked ? (
+                    <span className="bg-amber-100/90 text-amber-950 text-xs font-black px-3 py-1 rounded-xl border border-amber-200 shadow-2xs flex items-center gap-1.5">
+                      <Lock className="w-3.5 h-3.5 text-amber-700" />
+                      <span>Precisa de {requiredStars} ⭐ (Falta{missingStars > 1 ? 'm' : ''} {missingStars})</span>
+                    </span>
+                  ) : (
+                    <span className="bg-white/90 text-slate-800 text-xs font-black px-3 py-1 rounded-xl border border-slate-200 shadow-2xs">
+                      ⭐ {completedCount} de {world.items.length} estrelas
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-4">
-                  {/* Ícone 3D / Ilustração da Ilha: Sombreada durante a montagem e Completa quando 100% decorada */}
-                  <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white flex items-center justify-center text-4xl border-2 border-slate-200 shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+                  {/* Ícone 3D / Ilustração da Ilha */}
+                  <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white flex items-center justify-center text-4xl border-2 border-slate-200 shrink-0 shadow-xs group-hover:scale-105 transition-transform overflow-hidden relative">
                     {world.sceneImage ? (
                       <img
                         src={world.sceneImage}
                         alt={world.shortName}
                         className={`w-full h-full object-cover object-center rounded-xl mx-auto block transition-all duration-500 ${
-                          isFinished ? 'filter-none scale-100' : 'blur-[2px] scale-105'
+                          isLocked
+                            ? 'blur-[3px] opacity-60 scale-105'
+                            : isFinished
+                            ? 'filter-none scale-100'
+                            : 'blur-[2px] scale-105'
                         }`}
                       />
                     ) : (
-                      <span role="img" aria-label={world.shortName}>
+                      <span role="img" aria-label={world.shortName} className={isLocked ? 'opacity-40' : ''}>
                         {world.icon}
                       </span>
+                    )}
+
+                    {isLocked && (
+                      <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-[1px] flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-amber-400 border border-amber-500 shadow-xs flex items-center justify-center">
+                          <Lock className="w-4 h-4 text-amber-950" />
+                        </div>
+                      </div>
                     )}
                   </div>
 
@@ -97,29 +187,40 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
                       {world.description}
                     </p>
 
-                    {/* Barra de Progresso Acessível */}
-                    <div className="flex items-center gap-2 mt-2.5">
-                      <div className="flex-1 max-w-[140px] bg-slate-200 rounded-full h-2.5 overflow-hidden border border-slate-300">
-                        <div
-                          className={`h-full rounded-full transition-all ${
-                            isFirst ? 'bg-sky-500' : 'bg-emerald-500'
-                          }`}
-                          style={{
-                            width: `${(completedCount / world.items.length) * 100}%`,
-                          }}
-                        />
+                    {/* Barra de Progresso ou Indicador de Desbloqueio */}
+                    {isLocked ? (
+                      <div className="flex items-center gap-1.5 mt-2.5 text-amber-800 font-bold text-xs">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <span>Colete mais {missingStars} estrelinha{missingStars > 1 ? 's' : ''} para liberar!</span>
                       </div>
-                      <span className="text-[11px] font-black text-slate-700">
-                        {Math.round((completedCount / world.items.length) * 100)}%
-                      </span>
-                    </div>
+                    ) : (
+                      <div className="flex items-center gap-2 mt-2.5">
+                        <div className="flex-1 max-w-[140px] bg-slate-200 rounded-full h-2.5 overflow-hidden border border-slate-300">
+                          <div
+                            className={`h-full rounded-full transition-all ${style.bar}`}
+                            style={{
+                              width: `${(completedCount / world.items.length) * 100}%`,
+                            }}
+                          />
+                        </div>
+                        <span className="text-[11px] font-black text-slate-700">
+                          {Math.round((completedCount / world.items.length) * 100)}%
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Botão de Entrada */}
+                  {/* Botão de Entrada ou Cadeado */}
                   <div className="shrink-0 flex items-center">
-                    <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-2xs group-hover:bg-sky-500 group-hover:text-white group-hover:border-sky-600 flex items-center justify-center text-slate-700 transition-colors">
-                      <ChevronRight className="w-5 h-5" />
-                    </div>
+                    {isLocked ? (
+                      <div className="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-200 shadow-2xs flex items-center justify-center text-amber-800">
+                        <Lock className="w-4 h-4" />
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 shadow-2xs group-hover:bg-sky-500 group-hover:text-white group-hover:border-sky-600 flex items-center justify-center text-slate-700 transition-colors">
+                        <ChevronRight className="w-5 h-5" />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -130,12 +231,22 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
                     <span>Toque para rever</span>
                   </div>
                 )}
+
+                {/* Aviso Acolhedor se Clicar em Mundo Bloqueado */}
+                {isLocked && lockedNoticeId === world.id && (
+                  <div className="mt-3 p-2.5 rounded-2xl bg-amber-100/90 border-2 border-amber-300 text-amber-950 text-xs font-black flex items-center gap-2 animate-bounce-gentle">
+                    <span className="text-base shrink-0">✨</span>
+                    <span>
+                      Quase lá! Conquiste mais {missingStars} {missingStars === 1 ? 'estrelinha' : 'estrelinhas'} nos cômodos anteriores para abrir {world.shortName}!
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
 
-        {/* Próximo Mundo Futuro (Ilha Bloqueada - Mundo 3) */}
+        {/* Próximo Mundo Futuro (Ilha Bloqueada - Mundo 7) */}
         <div className="w-full flex flex-col items-center opacity-75">
           {/* Ponte */}
           <div className="w-8 h-8 my-1 bg-[#B45309] border-x-2 border-[#78350F] rounded-xs shadow-inner flex flex-col justify-around py-0.5">
@@ -150,13 +261,13 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
               </div>
               <div>
                 <span className="text-[11px] font-black uppercase text-amber-700 tracking-wider">
-                  Mundo 3 • Em Breve
+                  Mundo 7 • Em Breve
                 </span>
                 <h4 className="text-sm sm:text-base font-black text-slate-800">
                   A Floresta Encantada
                 </h4>
                 <p className="text-xs text-slate-500">
-                  Complete os cômodos para desbloquear novos animais!
+                  Complete todos os cômodos da casa para desbloquear a aventura na floresta!
                 </p>
               </div>
             </div>

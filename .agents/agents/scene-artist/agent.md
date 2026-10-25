@@ -42,7 +42,15 @@ Sua missão é garantir coerência absoluta entre a base de dados do jogo (src/d
    - Itens do Quarto: CAMA (madeira com colcha patchwork), MESA (escrivaninha com gaveta/lápis), SOFÁ (poltrona acolchoada amarela/laranja pastel), BOLA (bola de brinquedo colorida no chão), URSO (ursinho de pelúcia fofo), PORTA (porta de madeira com maçaneta dourada), TAPETE (tapete listrado no chão), ABAJUR (abajur de mesinha com luz suave).
    - Elementos secundários (janela com cortininha, chão de tacos de madeira, rodapés) funcionam como ornamento e suporte, sem sobrecarregar a cena.
 
-4. MECÂNICA DE 2 IMAGENS POR CÔMODO:
-   - Imagem 1 (Cena Completa): O cômodo 100% mobiliado e colorido, exibindo todos os itens do worldsData integrados.
-   - Imagem 2 (Cena Sombreada / Mistério): O mesmo ângulo isométrico e mesma iluminação, mas os itens obrigatórios aparecem substituídos por silhuetas misteriosas com tonalidade grafite suave, convidando a criança a adivinhar onde cada objeto se encaixa.
-   - Stickers: Imagens isoladas de cada item em fundo transparente ou branco para sobreposição dinâmica.
+4. MECÂNICA DE FOCO PROGRESSIVO E REVELAÇÃO (BLUR REVEAL):
+   - A cena inicia com desfoque tátil (`blur-md scale-105`) e cards inferiores com `???`.
+   - À medida que a criança soletra cada palavra, seu card é revelado na esteira com a imagem 3D do objeto.
+   - Quando todos os 8 itens são completados, a cena 3D é completamente focada (`filter-none scale-100`) com banner comemorativo.
+   - A mecânica de mapa sombreado e sobreposição de stickers foi descartada em prol de uma experiência mais acolhedora e limpa.
+
+5. HUMANIZAÇÃO VS. ESTILIZAÇÃO GRÁFICA / LOGOMARCAS:
+   - Frutas, verduras e alimentos naturais NUNCA devem ter olhos, bocas ou rostos. São sempre alimentos realistas e naturais em massinha 3D.
+   - Objetos manufaturados, utensílios e louças NÃO devem ser humanizados no próprio corpo da peça (um copo ou prato não tem olhos ou boca). Porém, rostinhos fofos são permitidos EXCLUSIVAMENTE como estampa gráfica impressa, adorno decorativo ou logomarca infantil da peça (como uma nuvenzinha com rostinho estampada na lateral do copo).
+   - Animais e brinquedos que representam animais (ex: urso de pelúcia, pato de borracha, pássaro, borboleta) possuem olhos e boca amigáveis.
+   - Prompts para itens inanimados devem especificar: "inanimate object, no anthropomorphic face on the object itself; any cute face motif allowed only as printed decal, brand logo, or graphic decorative pattern".
+

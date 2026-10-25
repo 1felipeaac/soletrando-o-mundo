@@ -8,7 +8,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 VOICE = "pt-BR-FranciscaNeural"
 
-# Sílabas especiais / faltantes necessárias para o vocabulário
+# Sílabas especiais / acentuadas / codas necessárias para pronúncia fonética cristalina
 SPECIAL_SYLLABLES = {
     "UR": "Úr",
     "POR": "Pór",
@@ -16,15 +16,55 @@ SPECIAL_SYLLABLES = {
     "FA": "Fá",
     "FÁ": "Fá",
     "ÇÃ": "Sã",
+    "SA_TIL": "Sã",
     "GAR": "Gár",
     "FO": "Fó",
     "LO": "Lô",
     "NA": "Ná",
+    # Sala
+    "VRO": "Vrô",
+    "QUA": "Quá",
+    "DRO": "Drô",
+    "LÓ": "Ló",
+    "GIO": "Jio",
+    "PLAN": "Plan",
+    "COR": "Cór",
+    "RÁ": "Rá",
+    "DIO": "Diu",
+    # Banheiro
+    "BÃO": "Bão",
+    "LHA": "Lha",
+    "ES": "És",
+    "LHO": "Lho",
+    "PEN": "Pên",
+    "NHEI": "Nhei",
+    # Jardim
+    "ÁR": "Ár",
+    "VO": "Vô",
+    "GRA": "Grá",
+    "DOR": "Dór",
+    "LAN": "Lan",
+    "ÇO": "Ssu",
+    "CER": "Sér",
+    "PÁS": "Pás",
+    "BOR": "Bór",
+    # Bônus
+    "CHA": "Xá",
+    "VAS": "Vás",
+    "SOU": "Sou",
+    "BAL": "Báu",
+    "CHI": "Xí",
+    "NÉ": "Né",
+    "MEI": "Mei",
+    # Distratores específicos
+    "PU": "Pú",
+    "RU": "Rú",
+    "CU": "Cú",
 }
 
-# Itens dos Mundos 1 e 2
+# 48 Itens de Minha Casa (Quarto, Cozinha, Sala, Banheiro, Jardim, Bônus)
 ITEMS_AUDIO = [
-    # Mundo 1: O Quarto
+    # 🛏️ Mundo 1: O Quarto
     {
         "id": "cama",
         "clean_word": "Cama.",
@@ -41,7 +81,7 @@ ITEMS_AUDIO = [
         "id": "sofa",
         "clean_word": "Sofá.",
         "spoken_name": "Só... fá! Sofá!",
-        "hint": "Aquele assento macio e fofinho para ler uma história."
+        "hint": "Assento fofinho com almofadas para sentar e ouvir historinhas."
     },
     {
         "id": "bola",
@@ -73,7 +113,8 @@ ITEMS_AUDIO = [
         "spoken_name": "A... ba... jur! Abajur!",
         "hint": "Uma luzinha suave na mesinha para afastar o medo do escuro."
     },
-    # Mundo 2: A Cozinha
+
+    # 🍎 Mundo 2: A Cozinha
     {
         "id": "bolo",
         "clean_word": "Bolo.",
@@ -122,6 +163,206 @@ ITEMS_AUDIO = [
         "spoken_name": "Ba... na... na! Banana!",
         "hint": "Fruta amarela de casca fácil de puxar, o lanche favorito do macaco!"
     },
+
+    # 🛋️ Mundo 3: A Sala de Estar
+    {
+        "id": "livro",
+        "clean_word": "Livro.",
+        "spoken_name": "Li... vro! Livro!",
+        "hint": "Guarda historinhas mágicas e desenhos coloridos para ler."
+    },
+    {
+        "id": "quadro",
+        "clean_word": "Quadro.",
+        "spoken_name": "Qua... dro! Quadro!",
+        "hint": "Uma pintura bonita pendurada na parede para enfeitar."
+    },
+    {
+        "id": "janela",
+        "clean_word": "Janela.",
+        "spoken_name": "Ja... ne... la! Janela!",
+        "hint": "Por onde entra a luz do sol quentinha e o vento fresco."
+    },
+    {
+        "id": "relogio",
+        "clean_word": "Relógio.",
+        "spoken_name": "Re... ló... gio! Relógio!",
+        "hint": "Faz tique-taque na parede para avisar as horas do dia."
+    },
+    {
+        "id": "planta",
+        "clean_word": "Planta.",
+        "spoken_name": "Plan... ta! Planta!",
+        "hint": "Tem folhinhas verdes no vasinho e adora um pouco de água."
+    },
+    {
+        "id": "almofada",
+        "clean_word": "Almofada.",
+        "spoken_name": "Al... mo... fa... da! Almofada!",
+        "hint": "Fofinha e macia na poltrona para encostar as costas."
+    },
+    {
+        "id": "cortina",
+        "clean_word": "Cortina.",
+        "spoken_name": "Cor... ti... na! Cortina!",
+        "hint": "Tecido leve na janela que balança suave com o vento."
+    },
+    {
+        "id": "radio",
+        "clean_word": "Rádio.",
+        "spoken_name": "Rá... dio! Rádio!",
+        "hint": "Toca músicas alegres e historinhas para animar o dia."
+    },
+
+    # 🛁 Mundo 4: O Banheiro
+    {
+        "id": "pia",
+        "clean_word": "Pia.",
+        "spoken_name": "Pi... a! Pia!",
+        "hint": "Onde lavamos as mãozinhas com sabão e escovamos os dentes."
+    },
+    {
+        "id": "sabao",
+        "clean_word": "Sabão.",
+        "spoken_name": "Sa... bão! Sabão!",
+        "hint": "Faz bolhas coloridas e deixa as mãozinhas limpas e cheirosas."
+    },
+    {
+        "id": "toalha",
+        "clean_word": "Toalha.",
+        "spoken_name": "To... a... lha! Toalha!",
+        "hint": "Macia e felpuda para secar o corpinho depois do banho."
+    },
+    {
+        "id": "espelho",
+        "clean_word": "Espelho.",
+        "spoken_name": "Es... pe... lho! Espelho!",
+        "hint": "Mostra o seu reflexo quando você sorri para ele."
+    },
+    {
+        "id": "escova",
+        "clean_word": "Escova.",
+        "spoken_name": "Es... co... va! Escova!",
+        "hint": "Com cerdas macias para limpar os dentes com pasta."
+    },
+    {
+        "id": "pente",
+        "clean_word": "Pente.",
+        "spoken_name": "Pen... te! Pente!",
+        "hint": "Tem dentinhos alinhados para desembaraçar os fios de cabelo."
+    },
+    {
+        "id": "banheira",
+        "clean_word": "Banheira.",
+        "spoken_name": "Ba... nhei... ra! Banheira!",
+        "hint": "Cheia de água quentinha e espuma para um banho bem gostoso."
+    },
+    {
+        "id": "pato",
+        "clean_word": "Pato.",
+        "spoken_name": "Pa... to! Pato!",
+        "hint": "Amiguinho amarelo de borracha que boia na água da banheira."
+    },
+
+    # 🌳 Mundo 5: O Jardim
+    {
+        "id": "rosa",
+        "clean_word": "Rosa.",
+        "spoken_name": "Ró... za! Rosa!",
+        "hint": "Flor perfumada com pétalas delicadas que cresce no canteiro."
+    },
+    {
+        "id": "arvore",
+        "clean_word": "Árvore.",
+        "spoken_name": "Ár... vo... re! Árvore!",
+        "hint": "Tem tronco forte de madeira e copa verde cheia de folhas e sombra."
+    },
+    {
+        "id": "grama",
+        "clean_word": "Grama.",
+        "spoken_name": "Gra... ma! Grama!",
+        "hint": "Tapete verde e macio da natureza onde pisamos descalços."
+    },
+    {
+        "id": "regador",
+        "clean_word": "Regador.",
+        "spoken_name": "Re... ga... dor! Regador!",
+        "hint": "Tem bico com furinhos para dar banho de chuva nas plantinhas."
+    },
+    {
+        "id": "balanco",
+        "clean_word": "Balanço.",
+        "spoken_name": "Ba... lan... ço! Balanço!",
+        "hint": "Preso no galho da árvore para ir bem alto e sentir o vento no rosto."
+    },
+    {
+        "id": "cerca",
+        "clean_word": "Cerca.",
+        "spoken_name": "Sér... ca! Cerca!",
+        "hint": "Feita de tábuas de madeira branquinha contornando o quintal."
+    },
+    {
+        "id": "passaro",
+        "clean_word": "Pássaro.",
+        "spoken_name": "Pás... sa... ro! Pássaro!",
+        "hint": "Tem asinhas coloridas, canta bonito no galho e voa no céu."
+    },
+    {
+        "id": "borboleta",
+        "clean_word": "Borboleta.",
+        "spoken_name": "Bor... bo... le... ta! Borboleta!",
+        "hint": "Bate asas coloridas bem levinho e pousa suavemente nas flores."
+    },
+
+    # 🎒 Mundo 6: Bônus da Casa
+    {
+        "id": "chave",
+        "clean_word": "Chave.",
+        "spoken_name": "Chá... ve! Chave!",
+        "hint": "De metal, gira na fechadura da porta para abrir e fechar a casa."
+    },
+    {
+        "id": "sapato",
+        "clean_word": "Sapato.",
+        "spoken_name": "Sa... pa... to! Sapato!",
+        "hint": "Calçamos nos pezinhos com meias para passear com segurança."
+    },
+    {
+        "id": "vassoura",
+        "clean_word": "Vassoura.",
+        "spoken_name": "Vas... sou... ra! Vassoura!",
+        "hint": "Tem cerdas e cabo longo para varrer o chão e deixar tudo limpo."
+    },
+    {
+        "id": "balde",
+        "clean_word": "Balde.",
+        "spoken_name": "Bál... de! Balde!",
+        "hint": "Tem alça e serve para carregar água e ajudar na limpeza."
+    },
+    {
+        "id": "mochila",
+        "clean_word": "Mochila.",
+        "spoken_name": "Mo... chi... la! Mochila!",
+        "hint": "Colocamos nas costas com cadernos e estojo para ir à escola."
+    },
+    {
+        "id": "bone",
+        "clean_word": "Boné.",
+        "spoken_name": "Bô... né! Boné!",
+        "hint": "Tem aba na frente e protege a cabecinha do sol quente."
+    },
+    {
+        "id": "casaco",
+        "clean_word": "Casaco.",
+        "spoken_name": "Ca... za... co! Casaco!",
+        "hint": "Quentinho com mangas longas para vestir nos dias de frio."
+    },
+    {
+        "id": "meia",
+        "clean_word": "Meia.",
+        "spoken_name": "Mêi... a! Meia!",
+        "hint": "De algodão macio para esquentar os pés antes de calçar o sapato."
+    },
 ]
 
 async def generate_file(text: str, filepath: str, rate: str = "+0%"):
@@ -129,7 +370,7 @@ async def generate_file(text: str, filepath: str, rate: str = "+0%"):
     await communicate.save(filepath)
 
 async def main():
-    print("⚡ SINCRONIZANDO ÁUDIOS NEURAIS (Soletrando o Mundo)")
+    print("⚡ SINCRONIZANDO ÁUDIOS NEURAIS (Soletrando o Mundo - 48 Itens)")
     
     syllables_dir = os.path.join("public", "audio", "syllables")
     items_dir = os.path.join("public", "audio", "items")
@@ -185,7 +426,7 @@ async def main():
         else:
             print(f"  ✓ Dica de {item['id']} já existe.")
 
-    print("\n✨ Sincronização concluída com sucesso!")
+    print("\n✨ Sincronização de todos os áudios concluída com sucesso!")
 
 if __name__ == "__main__":
     asyncio.run(main())

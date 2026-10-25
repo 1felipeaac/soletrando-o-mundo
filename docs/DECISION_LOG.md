@@ -63,5 +63,21 @@ Este documento registra o histórico de decisões arquiteturais, de design e ped
   3. Adicionar cabeçalho \
 o-cache\ para o \/sw.js\ no \
 etlify.toml\.
-  4. Garantir codificação UTF-8 pura estrita sem BOM em todos os arquivos de configuração (\
-etlify.toml\, \_redirects\).
+  4. Garantir codificação UTF-8 pura estrita sem BOM em todos os arquivos de configuração (`netlify.toml`, `_redirects`).
+
+---
+
+### ADR 08: Contagem de Estrelas 1:1 e Mecânica de Desbloqueio Progressivo por ZPD
+- **Data:** 25/10/2026
+- **Contexto:** A interface inicial utilizava um multiplicador legado de pontuação (`* 40`), exibindo números na casa dos milhares (ex: `1040 (26/48)`) ao lado do ícone de estrela, o que gerava confusão e incompatibilidade cognitiva com o público-alvo (4 a 6 anos). Além disso, não havia portão gradual para desbloqueio dos 6 novos cômodos da casa.
+- **Decisão:**
+  1. Adotar correspondência biunívoca direta 1:1: cada palavra soletrada equivale a **1 estrela** (total de 48 estrelas na casa), exibida na Navbar como `⭐ 26 / 48`.
+  2. Implementar desbloqueio progressivo baseado na Zona de Desenvolvimento Proximal (ZPD) e Maestria Parcial (60% a 75% das estrelas do cômodo anterior):
+     - Quarto: 0 ⭐
+     - Cozinha: 5 ⭐
+     - Sala: 12 ⭐
+     - Banheiro: 20 ⭐
+     - Jardim: 28 ⭐
+     - Bônus: 36 ⭐
+  3. Design de bloqueio não-punitivo: bordas pontilhadas suaves, selo indicando estrelas restantes e aviso acolhedor com som leve de mola ao toque, sem travar a persistência infantil.
+- **Consequência:** Interface 100% clara e tangível para crianças em alfabetização, preservando a autonomia e a baixa estimulação sensorial.

@@ -7,9 +7,9 @@ export interface ItemStage {
   hint: string;
   phoneticRule?: string;
   bnccCode: string;
-  category: 'furniture' | 'toy' | 'decoration' | 'structure' | 'food' | 'animal';
+  category: 'furniture' | 'toy' | 'decoration' | 'structure' | 'food' | 'animal' | 'plant' | 'utensil' | 'clothing';
   icon: string;
-  stickerImage?: string;
+  image?: string;
   visualPrompt?: string; // Prompt visual descritivo opcional para o gerador de imagens
   // Posição no cenário do cômodo (porcentagem ou layout)
   roomPlacement: {
@@ -29,8 +29,8 @@ export interface WorldRoom {
   theme: string;
   description: string;
   icon: string;
+  requiredStars?: number; // Estrelas globais necessárias para desbloquear
   sceneImage?: string;
-  shadowedSceneImage?: string;
   sceneSubtitle?: string;
   completedTitle?: string;
   completedBanner?: string;

@@ -32,6 +32,9 @@ export function App() {
 
   const handleSelectWorld = (worldId: number) => {
     const world = WORLDS_DATA.find((w) => w.id === worldId) || WORLDS_DATA[0];
+    if (world.requiredStars && progress.starsCount < world.requiredStars) {
+      return;
+    }
     setActiveWorldId(worldId);
     setActiveItemId(world.items[0].id);
     setCurrentView('room');

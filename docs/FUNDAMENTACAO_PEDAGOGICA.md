@@ -76,6 +76,22 @@ Este documento reúne a base científica, os pilares pedagógicos e as diretrize
 
 ---
 
+### Pilar 6: Maestria Parcial, Zona de Desenvolvimento Proximal (ZPD) e Pontuação 1:1
+* **Autores e Obras de Referência:**
+  * **Lev Vygotsky** (1978) — *Mind in Society: The Development of Higher Psychological Processes*. Harvard University Press.
+  * **Adele Diamond** (2013) — *Executive Functions*. Annual Review of Psychology.
+  * **Maria Montessori** (1949/2017) — *Mente Absorvente*. Kuan Yin.
+* **Fundamentação:**
+  * **Tolerância à Frustração e Córtex Pré-Frontal:** O controle inibitório e a flexibilidade cognitiva em crianças de 4 a 6 anos estão em plena maturação. Impor portões de "100% de acerto estrito" gera estresse tóxico e bloqueio cognitivo frente à menor dificuldade fonética.
+  * **Zona de Desenvolvimento Proximal (ZPD):** A criança precisa de desafios ao alcance de suas competências emergentes. Ao exigir entre 60% e 75% das estrelas do cômodo anterior para desbloquear o próximo, o jogo valida o esforço real, mantém o fluxo motivacional (*flow*) e abre espaço para a *revisitabilidade autônoma* (a criança retorna por vontade própria para completar 8/8 e ver a cena nítida).
+  * **Contagem Tangível 1:1 vs. Hiperinflação de Pontos:** Na Educação Infantil e no 1º ano da BNCC, números na casa das centenas ou milhares são abstrações sem correspondência concreta. Uma estrela (`⭐`) atribuída para cada palavra soletrada com sucesso estabelece uma relação biunívoca concreta (1 palavra = 1 estrela), permitindo que a criança compreenda exatamente quanto conquistou e quanto falta.
+* **Aplicação no Jogo:**
+  * Cada palavra concluída soma 1 estrela no placar global (ex: `⭐ 26 / 48`).
+  * Desbloqueio progressivo suave: Quarto (0 ⭐), Cozinha (5 ⭐), Sala (12 ⭐), Banheiro (20 ⭐), Jardim (28 ⭐), Bônus (36 ⭐).
+  * Bloqueios acolhedores: cards em tons suaves com borda pontilhada, sem cadeados metálicos agressivos, acompanhados de áudio sereno de mola e mensagens afetuosas de incentivo ao toque.
+
+---
+
 ## 2. Alinhamento Oficial com a Base Nacional Comum Curricular (BNCC)
 
 O aplicativo desenvolve e avalia competências estipuladas na BNCC para a Educação Infantil e o Ciclo de Alfabetização:

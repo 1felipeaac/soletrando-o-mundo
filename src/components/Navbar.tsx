@@ -81,11 +81,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Badge de Estrelas / Pontuação */}
-          <div className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3.5 py-1.5 rounded-full border border-sky-200 shadow-xs">
+          {/* Badge de Estrelas / Pontuação 1:1 */}
+          <div
+            className="flex items-center gap-1.5 bg-white px-2.5 sm:px-3.5 py-1.5 rounded-full border border-sky-200 shadow-xs"
+            title={`${starsCount} de ${totalItems} estrelas conquistadas`}
+          >
             <Star className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0 drop-shadow-2xs" />
             <span className="text-xs sm:text-sm font-black text-slate-800">
-              {starsCount * 40 || starsCount} <span className="text-slate-400 font-semibold text-[10px] sm:text-[11px]">({starsCount}/{totalItems})</span>
+              {starsCount} <span className="text-slate-400 font-semibold text-[10px] sm:text-[11px]">/ {totalItems}</span>
             </span>
           </div>
 

@@ -21,29 +21,43 @@
 
 ---
 
-## 🏡 Mundos & Vocabulário
+## 🏡 Os 6 Cômodos da Casa (48 Objetos Únicos)
 
-### 🛏️ Mundo 1: Minha Casa — O Quarto Mágico
-Contém os 8 itens oficiais integrados harmoniosamente ao diorama 3D:
-1. **CAMA** (`CA` - `MA`): Silabação simples consoante-vogal.
-2. **MESA** (`ME` - `SA`): S intervocálico com som de Z.
-3. **SOFÁ** (`SO` - `FÁ`): Oxítona com acento agudo.
-4. **BOLA** (`BO` - `LA`): Vogais abertas e articulação labial fácil.
-5. **URSO** (`UR` - `SO`): Coda silábica em R.
-6. **PORTA** (`POR` - `TA`): Fechamento labial com coda consonantal.
-7. **TAPETE** (`TA` - `PE` - `TE`): Trissílabo cadenciado.
-8. **ABAJUR** (`A` - `BA` - `JUR`): Vogal inicial isolada e coda em JUR.
+Inspirado na distribuição espacial do livro infantil *"O que tem lá em casa?"* (*All Things at Home*), o jogo organiza 48 palavras em 6 ambientes familiares:
 
-### 🍎 Mundo 2: A Cozinha — Hora do Lanche
-Trabalha alimentos saudáveis e utensílios cotidianos:
-1. **BOLO** (`BO` - `LO`)
-2. **SUCO** (`SU` - `CO`)
-3. **SOPA** (`SO` - `PA`)
-4. **MAÇÃ** (`MA` - `ÇÃ`)
-5. **COPO** (`CO` - `PO`)
-6. **PRATO** (`PRA` - `TO`)
-7. **GARFO** (`GAR` - `FO`)
-8. **BANANA** (`BA` - `NA` - `NA`)
+1. **🛏️ Mundo 1: O Quarto Mágico (8 itens):** `cama`, `mesa`, `sofa`, `bola`, `urso`, `porta`, `tapete`, `abajur`.
+2. **🍎 Mundo 2: A Cozinha — Hora do Lanche (8 itens):** `bolo`, `suco`, `sopa`, `maca`, `copo`, `prato`, `garfo`, `banana`.
+3. **🛋️ Mundo 3: A Sala de Estar (8 itens):** `vaso`, `foto`, `pufe`, `janela`, `relogio`, `almofada`, `cortina`, `radio`.
+4. **🛁 Mundo 4: O Banheiro — Banho & Cuidado (8 itens):** `pia`, `pato`, `sabao`, `pote`, `tubo`, `escova`, `pente`, `bacia`.
+5. **🌳 Mundo 5: O Jardim — Ao Redor de Casa (8 itens):** `rosa`, `gato`, `muro`, `sapo`, `arvore`, `regador`, `balanco`, `cerca`.
+6. **🎒 Mundo 6: Bônus da Casa — Achados & Utilidades (8 itens):** `sapato`, `bota`, `laco`, `sacola`, `bone`, `casaco`, `meia`, `chave`.
+
+---
+
+## ⭐ Sistema de Pontuação 1:1 & Mecânica de Desbloqueio Progressivo
+
+### 1. Pontuação Direta e Tangível (1:1)
+- Cada palavra soletrada com sucesso confere exatamente **1 estrela dourada (`⭐`)**.
+- A barra de navegação superior (`Navbar`) exibe a contagem real: **`⭐ X / 48`** (ex: `⭐ 26 / 48`).
+- **Por que 1:1 em vez de milhares de pontos?**  
+  Crianças de 4 a 6 anos estão na fase inicial de numeramento (Educação Infantil e 1º ano da BNCC). Multiplicadores artificiais (como 1000 pontos) geram sobrecarga abstrata e perdem o sentido pedagógico. A conquista de **1 estrela por vitória** torna o progresso tangível, visual e comemorável.
+
+### 2. Parâmetros de Desbloqueio dos Cômodos (Maestria Parcial e ZPD)
+
+| Cômodo | Estrelas Necessárias | % de Exigência | Justificativa Neuroeducativa |
+|---|:---:|:---:|---|
+| **1. Quarto Mágico** | **0 ⭐** | 0% | Ponto de partida seguro, acolhedor e sempre aberto. |
+| **2. Cozinha** | **5 ⭐** | ~62% do Quarto | Exige 5 das 8 palavras simples do quarto para avançar. |
+| **3. Sala de Estar** | **12 ⭐** | ~75% acumulado | Consolida sílabas canônicas de ambos os cômodos anteriores. |
+| **4. Banheiro** | **20 ⭐** | ~83% acumulado | Ritmo sustentado com palavras do universo de autocuidado e higiene. |
+| **5. Jardim** | **28 ⭐** | ~77% acumulado | Abre o ambiente externo com fauna e flora após sólida base. |
+| **6. Bônus da Casa** | **36 ⭐** | 75% da Casa | Recompensa de maestria ao completar 3/4 de todo o vocabulário da casa. |
+
+### 3. Por que adotar a Maestria Parcial (60% a 75%) e não 100% Estrito?
+1. **Zona de Desenvolvimento Proximal (Lev Vygotsky):** Crianças pequenas possuem curvas de atenção e maturidade fonética variadas. Se exigíssemos 100% (8 de 8 palavras) para abrir a fase seguinte, uma única dificuldade motora ou fonética em uma palavra travaria o jogo inteiro.
+2. **Prevenção do Bloqueio Cognitivo e Frustração Aversiva:** Quando uma criança empaca, travar seu avanço gera estresse (cortisol) e abandono do aplicativo. Com ~70% de exigência, ela sente a alegria da vitória, transita para novos estímulos e constrói autoconfiança.
+3. **Revisitabilidade Autônoma (*Replay Value*):** Crianças adoram retornar aos cômodos anteriores quando estão mais seguras para conquistar as estrelas que faltavam e ver o cômodo desfoque atingir 100% de nitidez.
+4. **Design Não-Punitivo:** Cômodos bloqueados não usam cadeados de ferro ou sons de erro. Apresentam um contorno suave pontilhado, miniatura fosca com selo dourado discreto (*"Precisa de 12 ⭐ (Faltam 4)"*), e ao tocar, tocam um som suave de mola com uma mensagem encorajadora: *"Quase lá! Conquiste mais 4 estrelinhas para abrir!"*.
 
 ---
 

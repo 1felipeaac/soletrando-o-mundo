@@ -37,6 +37,7 @@ SPECIAL_SYLLABLES = {
     "ES": "És",
     "LHO": "Lho",
     "PEN": "Pên",
+    "PEL": "Pél",
     "NHEI": "Nhei",
     # Jardim
     "ÁR": "Ár",
@@ -81,7 +82,7 @@ ITEMS_AUDIO = [
         "id": "sofa",
         "clean_word": "Sofá.",
         "spoken_name": "Só... fá! Sofá!",
-        "hint": "Assento fofinho com almofadas para sentar e ouvir historinhas."
+        "hint": "Grande, confortável e macio no centro da sala para toda a família sentar."
     },
     {
         "id": "bola",
@@ -199,7 +200,7 @@ ITEMS_AUDIO = [
         "id": "almofada",
         "clean_word": "Almofada.",
         "spoken_name": "Al... mo... fa... da! Almofada!",
-        "hint": "Fofinha e macia na poltrona para encostar as costas."
+        "hint": "Fofinha e macia no sofá para encostar as costas."
     },
     {
         "id": "cortina",
@@ -362,6 +363,78 @@ ITEMS_AUDIO = [
         "clean_word": "Meia.",
         "spoken_name": "Mêi... a! Meia!",
         "hint": "De algodão macio para esquentar os pés antes de calçar o sapato."
+    },
+    {
+        "id": "pufe",
+        "clean_word": "Pufe.",
+        "spoken_name": "Pú... fe! Pufe!",
+        "hint": "Assento baixinho e macio no cantinho para ler historinhas."
+    },
+    {
+        "id": "vaso",
+        "clean_word": "Vaso.",
+        "spoken_name": "Vá... zo! Vaso!",
+        "hint": "Feito de cerâmica para colocar plantinhas com água."
+    },
+    {
+        "id": "foto",
+        "clean_word": "Foto.",
+        "spoken_name": "Fó... to! Foto!",
+        "hint": "Um retrato de família sorrindo para enfeitar a parede."
+    },
+    {
+        "id": "pote",
+        "clean_word": "Pote.",
+        "spoken_name": "Pó... te! Pote!",
+        "hint": "Guarda creminho e xampu cheiroso para o banho."
+    },
+    {
+        "id": "papel",
+        "clean_word": "Papel.",
+        "spoken_name": "Pa... pél! Papel!",
+        "hint": "Rolinho branquinho e macio de papel para a higiene do banheiro."
+    },
+    {
+        "id": "bacia",
+        "clean_word": "Bacia.",
+        "spoken_name": "Ba... cí... a! Bacia!",
+        "hint": "Redondinha com água quentinha para lavar os pezinhos e brincar."
+    },
+    {
+        "id": "gato",
+        "clean_word": "Gato.",
+        "spoken_name": "Gá... to! Gato!",
+        "hint": "Amiguinho de quatro patas que sobe no muro e faz miau."
+    },
+    {
+        "id": "muro",
+        "clean_word": "Muro.",
+        "spoken_name": "Mú... ro! Muro!",
+        "hint": "Parede branquinha de tijolos que cerca o quintal."
+    },
+    {
+        "id": "sapo",
+        "clean_word": "Sapo.",
+        "spoken_name": "Sá... po! Sapo!",
+        "hint": "Verdinho, pula bem alto perto das plantinhas do jardim."
+    },
+    {
+        "id": "bota",
+        "clean_word": "Bota.",
+        "spoken_name": "Bó... ta! Bota!",
+        "hint": "Calçado de cano alto para pular em poças de água na chuva."
+    },
+    {
+        "id": "laco",
+        "clean_word": "Laço.",
+        "spoken_name": "Lá... so! Laço!",
+        "hint": "De fita de cetim bonita para prender no cabelo ou no presente."
+    },
+    {
+        "id": "sacola",
+        "clean_word": "Sacola.",
+        "spoken_name": "Sa... có... la! Sacola!",
+        "hint": "Com alças para carregar as comprinhas da feira ou brinquedos."
     },
 ]
 

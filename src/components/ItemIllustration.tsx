@@ -13,7 +13,7 @@ const IMAGE_MAP: Record<string, string> = {
   // Quarto Mágico (8 itens)
   cama: '/images/cama.jpg',
   mesa: '/images/mesa.jpg',
-  sofa: '/images/sofa.jpg',
+  pufe: '/images/pufe.jpg',
   bola: '/images/bola.jpg',
   urso: '/images/urso.jpg',
   porta: '/images/porta.jpg',
@@ -33,7 +33,7 @@ const IMAGE_MAP: Record<string, string> = {
   // A Sala de Estar (8 itens)
   vaso: '/images/vaso.jpg',
   foto: '/images/foto.jpg',
-  pufe: '/images/pufe.jpg',
+  sofa: '/images/sofa.jpg',
   janela: '/images/janela.jpg',
   relogio: '/images/relogio.jpg',
   almofada: '/images/almofada.jpg',
@@ -49,11 +49,12 @@ const IMAGE_MAP: Record<string, string> = {
   pato: '/images/pato.jpg',
   sabao: '/images/sabao.jpg',
   pote: '/images/pote.jpg',
-  tubo: '/images/tubo.jpg',
+  papel: '/images/papel.jpg',
   escova: '/images/escova.jpg',
   pente: '/images/pente.jpg',
   bacia: '/images/bacia.jpg',
   // Legados banheiro
+  tubo: '/images/tubo.jpg',
   toalha: '/images/toalha.jpg',
   espelho: '/images/espelho.jpg',
   banheira: '/images/banheira.jpg',
@@ -364,6 +365,38 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
           <path d="M68 44C74 40 80 38 84 42C80 46 74 48 68 44Z" fill="#FBBF24" stroke="#D97706" strokeWidth="2" />
           {/* Detalhe de textura */}
           <path d="M34 71C46 76 64 74 74 58" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+    case 'pufe':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
+          <ellipse cx="50" cy="86" rx="36" ry="7" fill="#E2E8F0" />
+          {/* Corpo do Pufe redondo em massinha */}
+          <ellipse cx="50" cy="58" rx="36" ry="24" fill="#F59E0B" stroke="#B45309" strokeWidth="2.5" />
+          <ellipse cx="50" cy="50" rx="34" ry="20" fill="#FBBF24" />
+          {/* Gomos e costuras do pufe */}
+          <path d="M50 30C42 42 42 58 50 70" stroke="#D97706" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M26 40C34 46 38 54 36 66" stroke="#D97706" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M74 40C66 46 62 54 64 66" stroke="#D97706" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Botão central do pufe */}
+          <circle cx="50" cy="48" r="4.5" fill="#B45309" />
+          <circle cx="50" cy="48" r="2.5" fill="#FEF3C7" />
+        </svg>
+      );
+
+    case 'papel':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
+          <ellipse cx="50" cy="88" rx="28" ry="6" fill="#E2E8F0" />
+          {/* Rolo de papel higiênico branco e fofinho */}
+          <rect x="30" y="26" width="40" height="50" rx="6" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="2.5" />
+          {/* Folha soltando suavemente */}
+          <path d="M70 34V68C70 72 64 74 60 74H48" stroke="#CBD5E1" strokeWidth="2" strokeDasharray="3 2" fill="none" />
+          <path d="M30 60V78C30 82 36 84 42 84H56V66" fill="#FFFFFF" stroke="#94A3B8" strokeWidth="2" />
+          {/* Topo do rolo */}
+          <ellipse cx="50" cy="26" rx="20" ry="8" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="2.5" />
+          {/* Tubo de papelão central */}
+          <ellipse cx="50" cy="26" rx="7" ry="3" fill="#D97706" stroke="#B45309" strokeWidth="1.5" />
         </svg>
       );
 

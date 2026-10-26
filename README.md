@@ -25,10 +25,10 @@
 
 Inspirado na distribuição espacial do livro infantil *"O que tem lá em casa?"* (*All Things at Home*), o jogo organiza 48 palavras em 6 ambientes familiares:
 
-1. **🛏️ Mundo 1: O Quarto Mágico (8 itens):** `cama`, `mesa`, `sofa`, `bola`, `urso`, `porta`, `tapete`, `abajur`.
+1. **🛏️ Mundo 1: O Quarto Mágico (8 itens):** `cama`, `mesa`, `pufe`, `bola`, `urso`, `porta`, `tapete`, `abajur`.
 2. **🍎 Mundo 2: A Cozinha — Hora do Lanche (8 itens):** `bolo`, `suco`, `sopa`, `maca`, `copo`, `prato`, `garfo`, `banana`.
-3. **🛋️ Mundo 3: A Sala de Estar (8 itens):** `vaso`, `foto`, `pufe`, `janela`, `relogio`, `almofada`, `cortina`, `radio`.
-4. **🛁 Mundo 4: O Banheiro — Banho & Cuidado (8 itens):** `pia`, `pato`, `sabao`, `pote`, `tubo`, `escova`, `pente`, `bacia`.
+3. **🛋️ Mundo 3: A Sala de Estar (8 itens):** `vaso`, `foto`, `sofa`, `janela`, `relogio`, `almofada`, `cortina`, `radio`.
+4. **🛁 Mundo 4: O Banheiro — Banho & Cuidado (8 itens):** `pia`, `pato`, `sabao`, `pote`, `papel`, `escova`, `pente`, `bacia`.
 5. **🌳 Mundo 5: O Jardim — Ao Redor de Casa (8 itens):** `rosa`, `gato`, `muro`, `sapo`, `arvore`, `regador`, `balanco`, `cerca`.
 6. **🎒 Mundo 6: Bônus da Casa — Achados & Utilidades (8 itens):** `sapato`, `bota`, `laco`, `sacola`, `bone`, `casaco`, `meia`, `chave`.
 

@@ -25,4 +25,9 @@ dist-ssr
 
 # Agent files
 AGENTS.md
+GEMINI.md
+.agents/
 
+# Python cache
+__pycache__/
+*.pyc

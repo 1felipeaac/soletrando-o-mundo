@@ -1,10 +1,24 @@
 [
   {
+    "id": "bedroom_scene",
+    "type": "scene",
+    "aspect_ratio": "4:3",
+    "target_file": "public/images/bedroom_scene.jpg",
+    "prompt": "Cozy, calm 3D isometric children bedroom miniature diorama for an educational app. Low angle isometric perspective, cutaway diorama view showing wooden floor and two walls. Soft clay and stylized claymation aesthetic with gentle rounded corners. Low-stimulation sensory design: palette of soft butter yellow, sky blue, cream, light oak wood. Soft pastel cyan-blue and butter-yellow walls, clean light wooden parquet floor, gentle morning sunlight streaming through a white-framed window, soft diffused shadows, peaceful atmosphere, high quality 3d render. The scene visibly and harmoniously includes all 8 items: 1) a cozy child bed with soft colorful quilt (cama), 2) a cute wooden drawing desk with pencils (mesa), 3) a round warm yellow clay pouf ottoman floor cushion (pufe) in the corner, 4) a colorful striped toy ball on the floor (bola), 5) an adorable brown teddy bear with friendly button eyes (urso) sitting on the bed, 6) a welcoming wooden door with knob (porta), 7) a pastel striped cozy floor rug (tapete), 8) a charming nightstand table lamp with soft warm glow (abajur). Strict rule: All furniture, utensils, and objects are strictly inanimate with NO eyes, NO mouth, NO face. Only the teddy bear has cute friendly eyes. CRITICAL: Absolutely NO text, NO labels, NO words, NO letters, NO typography anywhere in the image. High-end clean 3D clay diorama."
+  },
+  {
+    "id": "living_room_scene",
+    "type": "scene",
+    "aspect_ratio": "4:3",
+    "target_file": "public/images/living_room_scene.jpg",
+    "prompt": "Cozy, calm 3D isometric children living room miniature diorama for an educational app. Low angle isometric perspective, cutaway diorama view showing wooden floor and two walls. Soft clay and stylized claymation aesthetic with gentle rounded corners. Low-stimulation sensory design: palette of soft lavender, warm cream, honey oak wood, soft coral, butter yellow. Soft pastel lavender and cream walls, warm honey-toned wooden plank floor, gentle morning daylight shining through a window, soft diffused shadows, peaceful atmosphere, high quality 3d render. The scene visibly and harmoniously includes all 8 items: 1) a cozy wide 3D clay family couch sofa (sofa) in pastel cream and lavender with rounded armrests, 2) a soft square throw pillow cushion (almofada) in coral pink resting on the family sofa, 3) a ceramic clay vase with a leafy green plant (vaso) on a wooden plant stand, 4) a wooden picture frame with an abstract minimalist child family drawing (foto) hanging on the wall, 5) a white-framed sunny window (janela), 6) soft pastel curtains (cortina) hanging by the window, 7) a round pastel wall clock (relogio) with simple hands, 8) a cute toy radio (radio) on a small wooden side table. Strict rule: All furniture, utensils, and objects are strictly inanimate with NO eyes, NO mouth, NO face. CRITICAL: Absolutely NO text, NO labels, NO words, NO letters, NO typography anywhere in the image. High-end clean 3D clay diorama."
+  },
+  {
     "id": "bathroom_scene",
     "type": "scene",
     "aspect_ratio": "4:3",
     "target_file": "public/images/bathroom_scene.jpg",
-    "prompt": "Cozy, calm 3D isometric children bathroom miniature room diorama for an educational app. Low angle isometric perspective, cutaway diorama view showing floor and two walls. Soft clay and stylized claymation aesthetic with gentle rounded corners. Low-stimulation sensory design: palette of seafoam blue, gentle cyan, clean white, pastel yellow. Soft pastel seafoam-blue tiles and warm white walls, gentle light-teal checkered tile floor with soft round bath mat, bright, soft morning light with clean pastel reflections, soft diffused shadows, peaceful atmosphere, high quality 3d render. The scene visibly and harmoniously includes: 1) a ceramic white clay sink vanity with chrome faucet (pia), 2) an adorable friendly yellow rubber duck toy (pato) with cute button eyes and orange beak, 3) a pastel pink bar of soap in a small soap dish with tiny clay bubbles (sabao), 4) a cute mint-green shampoo/lotion jar pot on a wall shelf (pote), 5) a small blue-and-white squeezable toothpaste tube on the counter (tubo), 6) a child toothbrush with soft white bristles standing in a cup (escova), 7) a pastel lavender hair comb on the counter (pente), 8) a round pastel turquoise baby bath tub basin with clear water (bacia). Strict rule: All furniture, utensils, and bottles are strictly inanimate with NO eyes, NO mouths, NO faces. Only the yellow rubber duck has cute cartoon eyes. CRITICAL: Absolutely NO text, NO labels, NO words, NO letters, NO typography anywhere in the image. High-end clean 3D clay diorama."
+    "prompt": "Cozy, calm 3D isometric children bathroom miniature room diorama for an educational app. Low angle isometric perspective, cutaway diorama view showing floor and two walls. Soft clay and stylized claymation aesthetic with gentle rounded corners. Low-stimulation sensory design: palette of seafoam blue, gentle cyan, clean white, pastel yellow. Soft pastel seafoam-blue tiles and warm white walls, gentle light-teal checkered tile floor with soft round bath mat, bright, soft morning light with clean pastel reflections, soft diffused shadows, peaceful atmosphere, high quality 3d render. The scene visibly and harmoniously includes all 8 items: 1) a ceramic white clay sink vanity with chrome faucet (pia), 2) an adorable friendly yellow rubber duck toy (pato) with cute button eyes and orange beak, 3) a pastel pink bar of soap in a small soap dish with tiny clay bubbles (sabao), 4) a cute mint-green shampoo/lotion jar pot on a wall shelf (pote), 5) a clean white toilet paper roll on a holder beside the vanity (papel), 6) a child toothbrush with soft white bristles standing in a cup (escova), 7) a pastel lavender hair comb on the counter (pente), 8) a round pastel turquoise baby bath tub basin with clear water (bacia). Strict rule: All furniture, utensils, and bottles are strictly inanimate with NO eyes, NO mouths, NO faces. Only the yellow rubber duck has cute cartoon eyes. CRITICAL: Absolutely NO text, NO labels, NO words, NO letters, NO typography anywhere in the image. High-end clean 3D clay diorama."
   },
   {
     "id": "garden_scene",
@@ -105,11 +119,11 @@
     "prompt": "A stylized 3D clay cosmetic cream lotion jar pot in pastel mint green with a round screw cap lid, smooth clay texture, strictly inanimate container with NO anthropomorphic face (subtle printed flower logo decal allowed), isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
   },
   {
-    "id": "tubo",
+    "id": "papel",
     "type": "item",
     "aspect_ratio": "1:1",
-    "target_file": "public/images/tubo.jpg",
-    "prompt": "A stylized 3D clay squeezable toothpaste tube in pastel blue and white with a swirl of fresh toothpaste, smooth clay texture, strictly inanimate with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, 1:1 single object."
+    "target_file": "public/images/papel.jpg",
+    "prompt": "A stylized 3D clay roll of soft white toilet paper with a clean cardboard tube center and gentle perforated sheet edge, smooth tactile polymer clay texture, strictly inanimate hygienic item with NO eyes, NO mouth, NO face, isolated on pure clean neutral white background, soft studio lighting, subtle contact shadow underneath, 1:1 single object."
   },
   {
     "id": "escova",

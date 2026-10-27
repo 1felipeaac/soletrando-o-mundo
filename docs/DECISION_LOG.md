@@ -81,3 +81,15 @@ etlify.toml\.
      - Bônus: 36 ⭐
   3. Design de bloqueio não-punitivo: bordas pontilhadas suaves, selo indicando estrelas restantes e aviso acolhedor com som leve de mola ao toque, sem travar a persistência infantil.
 - **Consequência:** Interface 100% clara e tangível para crianças em alfabetização, preservando a autonomia e a baixa estimulação sensorial.
+
+
+---
+
+### ADR 09: Arquitetura Híbrida de Geração de Imagens (Plataforma Nativa + Fallback via API Key)
+- **Data:** 27/10/2026
+- **Contexto:** A geração massiva de dezenas de itens em alta resolução atinge periodicamente os limites semanais da cota nativa da plataforma Antigravity (`gemini-3.1-flash-image`).
+- **Decisão:** Adotar uma estratégia de geração híbrida e resiliente:
+  1. **Motor Primário (Nativo da Plataforma):** Prioridade total ao uso das cotas integradas da plataforma Antigravity via agente `scene-artist`, sem consumir créditos ou tokens do usuário.
+  2. **Motor Secundário (Fallback Híbrido via API Key):** Em caso de esgotamento de cota (`429 RESOURCE_EXHAUSTED`), se houver uma chave `GEMINI_API_KEY` cadastrada no arquivo `.env` (gitignored), o sistema alterna suavemente para a geração via SDK `google-genai` com `imagen-3.0-generate-002` / `gemini-*-image`.
+  3. **Persistência de Fila e Timer Reativo:** Quando ambos atingem seus tetos, o sistema preserva a fila estruturada em `scripts/generation_queue.json` e agenda um timer de despertar automático sem perda de progresso.
+- **Consequência:** Máxima economia para o desenvolvedor, alta disponibilidade de geração e zero risco de regressão estética ou vazamento de chaves.

@@ -13,16 +13,26 @@ VOICE = "pt-BR-FranciscaNeural"
 SPECIAL_SYLLABLES = {
     # Sibilantes Canônicas (S inicial tem som de Ç /s/, nunca /z/)
     "SA": "Ssá!",
-    "SO": "Ssó!",
+    "SO": "Ssô.",
     "SU": "Ssú!",
     "SE": "Ssé!",
     "SI": "Ssí!",
     # Sibilantes Intervocálicas (S entre duas vogais ganha som de Z /z/)
     "SA_Z": "Zá!",
     "SO_Z": "Zó!",
-    # Sílabas Róticas Suaves e Acolhedoras (tom calmo fechado, sem ataque gutural estridente)
+    # Oposição Fonológica de Timbre Vocálico (Aberto /ɔ, ɛ/ vs. Fechado /o, e/)
+    "BO": "Bô.",
+    "BO_OPEN": "Bó.",
+    "CO": "Cô.",
+    "CO_OPEN": "Có.",
+    "PO": "Pô.",
+    "PO_OPEN": "Pó.",
     "RO": "Rô.",
+    "RO_OPEN": "Ró.",
     "RE": "Rê.",
+    "PE": "Pê.",
+    "ME": "Mê.",
+    "TE": "Tê.",
     # Ditongos Nasais Decrescentes (Til [ɐ̃w̃], sem monotongar em 'bom')
     "BÃO": "Bãum!",
     "UR": "Úr",
@@ -43,7 +53,7 @@ SPECIAL_SYLLABLES = {
     "LÓ": "Ló",
     "GIO": "Jio",
     "PLAN": "Plan",
-    "COR": "Cór",
+    "COR": "Côr",
     "RÁ": "Rá",
     "DIO": "Diu",
     # Banheiro
@@ -57,7 +67,7 @@ SPECIAL_SYLLABLES = {
     "ÁR": "Ár",
     "VO": "Vô",
     "GRA": "Grá",
-    "DOR": "Dór",
+    "DOR": "Dôr.",
     "LAN": "Lan",
     "ÇO": "Ssu",
     "CER": "Sér",
@@ -95,7 +105,7 @@ ITEMS_AUDIO = [
     {
         "id": "sofa",
         "clean_word": "Sofá.",
-        "spoken_name": "Ssó... fá! Sofá!",
+        "spoken_name": "Ssô... fá! Sofá!",
         "hint": "Grande, confortável e macio no centro da sala para toda a família sentar."
     },
     {
@@ -219,7 +229,7 @@ ITEMS_AUDIO = [
     {
         "id": "cortina",
         "clean_word": "Cortina.",
-        "spoken_name": "Cor... ti... na! Cortina!",
+        "spoken_name": "Côr... ti... na! Cortina!",
         "hint": "Tecido leve na janela que balança suave com o vento."
     },
     {
@@ -257,7 +267,7 @@ ITEMS_AUDIO = [
     {
         "id": "escova",
         "clean_word": "Escova.",
-        "spoken_name": "Es... co... va! Escova!",
+        "spoken_name": "Es... cô... va! Escova!",
         "hint": "Com cerdas macias para limpar os dentes com pasta."
     },
     {
@@ -301,7 +311,7 @@ ITEMS_AUDIO = [
     {
         "id": "regador",
         "clean_word": "Regador.",
-        "spoken_name": "Re... ga... dor! Regador!",
+        "spoken_name": "Re... ga... dôr! Regador!",
         "hint": "Tem bico com furinhos para dar banho de chuva nas plantinhas."
     },
     {
@@ -497,8 +507,16 @@ async def main():
 
     force_all = "--force" in sys.argv
     phonetics_mode = force_all or "--phonetics" in sys.argv or True
-    FORCE_REGENERATE_SYLLABLES = {"SA", "SO", "SU", "SE", "SI", "BÃO", "SA_Z", "SO_Z", "RO", "RE"}
-    FORCE_REGENERATE_ITEMS = {"sofa", "suco", "sopa", "sabao", "sapo", "sapato", "sacola", "muro", "arvore"}
+    FORCE_REGENERATE_SYLLABLES = {
+        "SA", "SO", "SU", "SE", "SI", "BÃO", "SA_Z", "SO_Z",
+        "RO", "RO_OPEN", "RE",
+        "BO", "BO_OPEN", "CO", "CO_OPEN", "PO", "PO_OPEN",
+        "DOR", "COR", "PE", "ME", "TE"
+    }
+    FORCE_REGENERATE_ITEMS = {
+        "sofa", "suco", "sopa", "sabao", "sapo", "sapato", "sacola", "muro", "arvore",
+        "regador", "cortina", "escova", "bola", "bolo"
+    }
 
     # 1. Sílabas Especiais / Faltantes
     print("\n📖 Verificando Sílabas Especiais...")

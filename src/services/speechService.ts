@@ -59,6 +59,31 @@ class SpeechService {
       if (okZ) return true;
     }
 
+    // Oposição Fonológica de Timbre Vocálico (Aberto /ɔ/ vs. Fechado /o/):
+    // BO aberto [bɔ] em BOLA e BOTA (diferente de BOLO e BONÉ, que são fechados [bo])
+    // CO aberto [kɔ] em COPO e SACOLA (diferente de ESCOVA, que é fechado [ko])
+    // PO aberto [pɔ] em POTE (diferente de COPO e SAPO)
+    // RO aberto [ʁɔ] em ROSA (diferente de MURO)
+    if (contextItemId) {
+      const cid = contextItemId.trim().toLowerCase();
+      if (clean === 'BO' && ['bola', 'bota'].includes(cid)) {
+        const okOpen = await this.playAudioClip('/audio/syllables/BO_OPEN.mp3');
+        if (okOpen) return true;
+      }
+      if (clean === 'CO' && ['copo', 'sacola'].includes(cid)) {
+        const okOpen = await this.playAudioClip('/audio/syllables/CO_OPEN.mp3');
+        if (okOpen) return true;
+      }
+      if (clean === 'PO' && cid === 'pote') {
+        const okOpen = await this.playAudioClip('/audio/syllables/PO_OPEN.mp3');
+        if (okOpen) return true;
+      }
+      if (clean === 'RO' && cid === 'rosa') {
+        const okOpen = await this.playAudioClip('/audio/syllables/RO_OPEN.mp3');
+        if (okOpen) return true;
+      }
+    }
+
     // 1. Tenta o arquivo direto (ex: /audio/syllables/CA.mp3, SA.mp3 com som de Ç, RO.mp3, RE.mp3)
     let ok = await this.playAudioClip(`/audio/syllables/${clean}.mp3`);
 

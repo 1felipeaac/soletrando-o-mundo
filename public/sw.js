@@ -1,5 +1,5 @@
 // Service Worker para Soletrando o Mundo (PWA Offline)
-const CACHE_NAME = 'soletrando-mundo-v8';
+const CACHE_NAME = 'soletrando-mundo-v9';
 
 const STATIC_ASSETS = [
   '/',
@@ -34,7 +34,15 @@ const STATIC_ASSETS = [
   '/images/balanco.jpg',
   '/images/cerca.jpg',
   '/audio/syllables/RO.mp3',
+  '/audio/syllables/RO_OPEN.mp3',
   '/audio/syllables/RE.mp3',
+  '/audio/syllables/BO.mp3',
+  '/audio/syllables/BO_OPEN.mp3',
+  '/audio/syllables/CO.mp3',
+  '/audio/syllables/CO_OPEN.mp3',
+  '/audio/syllables/PO.mp3',
+  '/audio/syllables/PO_OPEN.mp3',
+  '/audio/syllables/DOR.mp3',
   '/audio/feedback/inverted.mp3',
   '/audio/feedback/welcome.mp3',
   '/audio/feedback/almost.mp3'

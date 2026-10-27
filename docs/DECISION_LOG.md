@@ -107,3 +107,20 @@ etlify.toml\.
   2. **Sílabas Isoladas Limpas e Acolhedoras:** As sílabas isoladas `RO` e `RE` são sintetizadas canonicamente como `"Rô."` e `"Rê."` (com pontuação suave e tom acolhedor de baixa estimulação sensorial), garantindo que a criança ouça a consoante R diretamente sem qualquer intrusão espúria de vogais prévias ("uro"/"are"). A coarticulação do tepe alveolar pertence estritamente ao fluxo prosódico contínuo da palavra intervocálica (`Mú-ro!`, `Ár-vo-re!`).
   3. **Adoção das 5 Diretrizes Fonotáticas do PB:** Formalizar as regras de Redução Vocálica, Palatização de T/D, Vocalização de L, S Intervocálico (/z/) e Róticos (Tepe [ɾ] vs. R forte) na documentação técnica e pedagógica do projeto.
 - **Consequência:** Fidelidade fonoaudiológica e alinhamento rigoroso à BNCC na alfabetização fônica infantil, eliminando distorções fonéticas no aprendizado da leitura e escrita.
+
+---
+
+### ADR 11: Mapeamento Fonológico de Timbre Vocálico Médio (/ɔ/ Aberto vs. /o/ Fechado) em Homógrafos Silábicos
+- **Data:** 27/10/2026
+- **Contexto:** No português brasileiro, o subsistema de vogais médias possui oposição fonêmica contrastiva distintiva (/ɔ/ aberto vs. /o/ fechado, ex: *bola* [ˈbɔ.lɐ] vs. *bolo* [ˈbo.lu], conforme Câmara Jr., 1970). Como a escrita silábica compartilha o mesmo par de grafemas (ex: `BO`), a síntese estática única forçava um dos vocábulos a soar com timbre incorreto (*"Bô-la"* ou *"Bó-lo"*). Da mesma forma, sufixos derivacionais oxítonos como *-dor* em *regador* estavam sendo sintetizados abertos (*"Re-ga-dór"*) em vez de fechados [doʁ] (*"Re-ga-dôr"*), devido a acentuação inadequada em `SPECIAL_SYLLABLES`.
+- **Decisão:**
+  1. **Correção de Regador & Sufixos:** No `SPECIAL_SYLLABLES`, corrigir `DOR` de `"Dór"` para `"Dôr."`, garantindo a terminação oxítona fechada [doʁ]. No áudio do objeto, ajustar `spoken_name` para `"Re... ga... dôr! Regador!"`.
+  2. **Arquitetura de Variantes de Timbre:** Criar variantes contextuais de timbre aberto:
+     - `BO_OPEN.mp3` ("Bó.") para *bola* e *bota* vs. `BO.mp3` ("Bô.") para *bolo* e *boné*.
+     - `CO_OPEN.mp3` ("Có.") para *copo* e *sacola* vs. `CO.mp3` ("Cô.") para *escova*.
+     - `PO_OPEN.mp3` ("Pó.") para *pote* vs. `PO.mp3` ("Pô.") para *copo* e *sapo*.
+     - `RO_OPEN.mp3` ("Ró.") para *rosa* vs. `RO.mp3` ("Rô.") para *muro*.
+     - `SO.mp3` corrigido para timbre fechado `"Ssô."` em *sopa* e *sofá*.
+     - `COR.mp3` corrigido para timbre fechado `"Côr"` em *cortina*.
+  3. **Despacho Dinâmico no `speechService.ts`:** Mapear o `contextItemId` para tocar automaticamente a variante aberta ou fechada correspondente à palavra em soletração.
+- **Consequência:** Fidelidade fônica absoluta em todas as vogais médias tônicas do jogo, alinhando a percepção auditiva da criança à norma culta falada do PB e às diretrizes da BNCC.

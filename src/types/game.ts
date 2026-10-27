@@ -29,6 +29,7 @@ export interface WorldRoom {
   theme: string;
   description: string;
   icon: string;
+  hidden?: boolean; // Oculta o mundo temporariamente da navegação/mapa
   requiredStars?: number; // Estrelas globais necessárias para desbloquear
   sceneImage?: string;
   sceneSubtitle?: string;

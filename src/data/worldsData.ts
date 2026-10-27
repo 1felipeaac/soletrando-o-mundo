@@ -1,6 +1,6 @@
 import type { WorldRoom } from '../types/game';
 
-export const WORLDS_DATA: WorldRoom[] = [
+export const ALL_WORLDS_DATA: WorldRoom[] = [
   {
     id: 1,
     title: 'Minha Casa: O Quarto Mágico',
@@ -924,6 +924,7 @@ export const WORLDS_DATA: WorldRoom[] = [
     title: 'Bônus da Casa: Achados & Utilidades',
     shortName: 'O Bônus',
     theme: 'bonus',
+    hidden: true, // Oculto temporariamente até a liberação de cota para os 8 itens de massinha 3D
     description: 'Descubra roupas, utilidades e sapatos que usamos todos os dias!',
     icon: '🎒',
     requiredStars: 36,
@@ -1102,4 +1103,8 @@ export const WORLDS_DATA: WorldRoom[] = [
     ],
   },
 ];
+
+// O Bônus da Casa fica oculto na navegação até que as ilustrações 3D de massinha sejam geradas pela IA
+export const WORLDS_DATA: WorldRoom[] = ALL_WORLDS_DATA.filter((world) => !world.hidden);
+
 

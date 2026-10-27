@@ -36,3 +36,7 @@ GEMINI.md
 __pycache__/
 *.pyc
 scratch/
+
+# Local guidelines
+diretrizez.md
+diretizes.md

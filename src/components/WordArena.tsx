@@ -128,8 +128,8 @@ export const WordArena: React.FC<WordArenaProps> = ({
 
     if (isMatch) {
       hasFinishedRef.current = true;
-      // Permite que o áudio da última sílaba termine de tocar com a voz natural
-      const timer = setTimeout(() => {
+      // Permite que o áudio da última sílaba termine de tocar com a voz natural (550ms)
+      const timer = setTimeout(async () => {
         soundService.playSnap();
         soundService.playFanfare();
 
@@ -143,24 +143,32 @@ export const WordArena: React.FC<WordArenaProps> = ({
         } catch {}
 
         onComplete(item.id);
-      }, 450);
+
+        // Pronuncia a palavra inteira e depois a voz de parabenização acolhedora
+        await speechService.speakSuccess(item.id);
+      }, 550);
 
       return () => clearTimeout(timer);
     } else {
-      // Inverteu as sílabas
+      // Inverteu as sílabas ou errou a última sílaba
       const invertedTarget = [...targetSyllables].reverse().join('');
       const formedWord = filledSyllables.join('');
 
-      if (formedWord === invertedTarget) {
-        setFunnyFeedback(`Ih, virou ${filledSyllables.join('-')}! 😂 Vamos trocar de lugar?`);
-        speechService.speakInverted(filledSyllables.join('-'), item.displayName);
-      } else {
-        setIsWiggling(true);
-        soundService.playBoing();
-        setFunnyFeedback(`Quase lá! Ouça a dica: ${item.hint}`);
-        speechService.speakHint(item.id, item.hint);
-        setTimeout(() => setIsWiggling(false), 500);
-      }
+      // Aguarda a última sílaba inserida soar completamente (800ms) antes de intervir com a dica
+      const timer = setTimeout(() => {
+        if (formedWord === invertedTarget) {
+          setFunnyFeedback(`Ih, virou ${filledSyllables.join('-')}! 😂 Vamos trocar de lugar?`);
+          speechService.speakInverted(filledSyllables.join('-'), item.displayName);
+        } else {
+          setIsWiggling(true);
+          soundService.playBoing();
+          setFunnyFeedback(`Quase lá! Ouça a dica: ${item.hint}`);
+          speechService.speakHint(item.id, item.hint);
+          setTimeout(() => setIsWiggling(false), 500);
+        }
+      }, 800);
+
+      return () => clearTimeout(timer);
     }
   }, [slots, item, onComplete]);
 
@@ -214,7 +222,10 @@ export const WordArena: React.FC<WordArenaProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg lg:max-w-xl mx-auto px-2 xs:px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center select-none space-y-3 sm:space-y-4">
+    <div
+      id="spelling-arena"
+      className="w-full max-w-lg lg:max-w-xl mx-auto px-2 xs:px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center select-none space-y-3 sm:space-y-4"
+    >
       {/* Navegação Rápida entre Itens */}
       <div className="w-full flex items-center justify-between gap-2 px-1">
         <button

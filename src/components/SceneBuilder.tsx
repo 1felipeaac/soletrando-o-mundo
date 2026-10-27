@@ -1,5 +1,5 @@
 import type { ItemStage, WorldRoom } from '../types/game';
-import { Sparkles, CheckCircle2 } from 'lucide-react';
+import { Sparkles, CheckCircle2, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 import { ItemIllustration } from './ItemIllustration';
 
 interface SceneBuilderProps {
@@ -7,6 +7,13 @@ interface SceneBuilderProps {
   completedItemIds: Record<string, boolean>;
   activeItemId: string;
   onSelectItem: (item: ItemStage) => void;
+  onPrevWorld?: () => void;
+  onNextWorld?: () => void;
+  hasPrevWorld?: boolean;
+  hasNextWorld?: boolean;
+  prevWorldName?: string;
+  nextWorldName?: string;
+  isNextWorldLocked?: boolean;
 }
 
 export const SceneBuilder: React.FC<SceneBuilderProps> = ({
@@ -14,6 +21,13 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
   completedItemIds,
   activeItemId,
   onSelectItem,
+  onPrevWorld,
+  onNextWorld,
+  hasPrevWorld,
+  hasNextWorld,
+  prevWorldName,
+  nextWorldName,
+  isNextWorldLocked,
 }) => {
   const { items } = world;
   const completedCount = items.filter((i) => completedItemIds[i.id]).length;
@@ -32,36 +46,77 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
     <div className="w-full max-w-2xl lg:max-w-none mx-auto px-2 xs:px-3 sm:px-4 select-none">
       {/* Moldura do Cenário Isométrico Vivo (Como no Mockup de Alta Fidelidade) */}
       <div className="bg-white rounded-3xl border-3 border-sky-200 p-3 xs:p-3.5 sm:p-4 shadow-sm relative overflow-hidden space-y-3">
-        {/* Cabeçalho do Cenário */}
-        <div className="flex items-center justify-between bg-sky-50/80 px-3.5 py-2 rounded-2xl border border-sky-100">
-          <div className="flex items-center gap-2">
-            <span className="text-xl" role="img" aria-label={world.shortName}>
+        {/* Cabeçalho do Cenário com Navegação Sequencial de Cômodos */}
+        <div className="flex items-center justify-between bg-sky-50/80 px-2.5 xs:px-3 sm:px-3.5 py-2 rounded-2xl border border-sky-100 gap-2">
+          {/* Seta para o Cômodo Anterior */}
+          {onPrevWorld && (
+            <button
+              onClick={onPrevWorld}
+              disabled={!hasPrevWorld}
+              className="flex items-center gap-1 bg-white hover:bg-sky-50 disabled:opacity-25 disabled:hover:bg-white text-sky-950 font-black px-2.5 py-1.5 rounded-xl border border-sky-200 shadow-2xs text-[11px] sm:text-xs cursor-pointer active:scale-95 transition-all shrink-0"
+              title={prevWorldName ? `Ir para ${prevWorldName}` : 'Sem cômodo anterior'}
+              aria-label="Ir para cômodo anterior"
+            >
+              <ChevronLeft className="w-4 h-4 text-sky-700 shrink-0" />
+              <span className="hidden sm:inline">{prevWorldName || 'Anterior'}</span>
+            </button>
+          )}
+
+          {/* Identificação Central do Cômodo */}
+          <div className="flex items-center gap-2 min-w-0 text-center justify-center flex-1">
+            <span className="text-xl sm:text-2xl shrink-0" role="img" aria-label={world.shortName}>
               {world.icon}
             </span>
-            <div>
-              <h2 className="text-xs sm:text-sm font-black text-slate-800 uppercase tracking-wide leading-tight">
+            <div className="min-w-0">
+              <h2 className="text-xs sm:text-sm font-black text-slate-800 uppercase tracking-wide leading-tight truncate">
                 {headerTitle}
               </h2>
-              <span className="text-[10px] sm:text-xs font-bold text-sky-700">
+              <span className="text-[10px] sm:text-xs font-bold text-sky-700 block truncate">
                 {headerSubtitle}
               </span>
             </div>
           </div>
 
-          <span className="bg-white text-slate-800 text-xs font-black px-3 py-1 rounded-xl border border-sky-200 shadow-2xs">
-            {completedCount}/{items.length} Revelados
-          </span>
+          {/* Seta para o Próximo Cômodo */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="hidden md:inline-block bg-white text-slate-800 text-xs font-black px-2.5 py-1 rounded-xl border border-sky-200 shadow-2xs">
+              {completedCount}/{items.length}
+            </span>
+
+            {onNextWorld && (
+              <button
+                onClick={onNextWorld}
+                disabled={!hasNextWorld}
+                className="flex items-center gap-1 bg-white hover:bg-sky-50 disabled:opacity-25 disabled:hover:bg-white text-sky-950 font-black px-2.5 py-1.5 rounded-xl border border-sky-200 shadow-2xs text-[11px] sm:text-xs cursor-pointer active:scale-95 transition-all shrink-0"
+                title={
+                  isNextWorldLocked
+                    ? `Próximo: ${nextWorldName} (Bloqueado)`
+                    : nextWorldName
+                    ? `Ir para ${nextWorldName}`
+                    : 'Sem próximo cômodo'
+                }
+                aria-label="Ir para próximo cômodo"
+              >
+                <span className="hidden sm:inline">{nextWorldName || 'Próximo'}</span>
+                {isNextWorldLocked ? (
+                  <Lock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-sky-700 shrink-0" />
+                )}
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Banner Comemorativo 100% Concluído (Posicionado ACIMA do Cenário) */}
+        {/* Banner Comemorativo 100% Concluído com Atalho para Próximo Cômodo */}
         {isRoomFinished && (
-          <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-300 p-3 sm:p-3.5 rounded-2xl border-2 border-amber-400 shadow-sm flex items-center justify-between gap-2 animate-pop-in">
-            <div className="flex items-center gap-2.5">
+          <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-300 p-3 sm:p-3.5 rounded-2xl border-2 border-amber-400 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-2.5 animate-pop-in">
+            <div className="flex items-center gap-2.5 w-full sm:w-auto">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/95 flex items-center justify-center shrink-0 shadow-2xs">
                 <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 fill-amber-400 animate-spin" />
               </div>
-              <div>
-                <h3 className="font-black text-amber-950 text-xs sm:text-sm uppercase tracking-wide leading-tight">
+              <div className="min-w-0 flex-1">
+                <h3 className="font-black text-amber-950 text-xs sm:text-sm uppercase tracking-wide leading-tight truncate">
                   {successBanner}
                 </h3>
                 <p className="text-[10px] sm:text-xs font-extrabold text-amber-900/90 leading-tight">
@@ -69,9 +124,22 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-1 bg-white/95 px-2.5 py-1 rounded-xl shrink-0 border border-amber-300 shadow-2xs">
-              <span className="text-base sm:text-lg">🏆</span>
-              <span className="text-xs font-black text-amber-950">100%</span>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <div className="flex items-center gap-1 bg-white/95 px-2.5 py-1 rounded-xl shrink-0 border border-amber-300 shadow-2xs">
+                <span className="text-base sm:text-lg">🏆</span>
+                <span className="text-xs font-black text-amber-950">100%</span>
+              </div>
+
+              {hasNextWorld && onNextWorld && (
+                <button
+                  onClick={onNextWorld}
+                  className="flex items-center gap-1.5 bg-amber-900 hover:bg-amber-950 text-white font-black text-xs px-3 py-1.5 rounded-xl shadow-xs cursor-pointer active:scale-95 transition-all shrink-0"
+                >
+                  <span>{nextWorldName || 'Próximo Cômodo'}</span>
+                  <ChevronRight className="w-4 h-4 text-amber-200" />
+                </button>
+              )}
             </div>
           </div>
         )}

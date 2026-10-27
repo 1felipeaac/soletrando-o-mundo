@@ -1,5 +1,5 @@
 // Service Worker para Soletrando o Mundo (PWA Offline)
-const CACHE_NAME = 'soletrando-mundo-v10';
+const CACHE_NAME = 'soletrando-mundo-v11';
 
 const STATIC_ASSETS = [
   '/',
@@ -47,7 +47,8 @@ const STATIC_ASSETS = [
   '/audio/syllables/DOR.mp3',
   '/audio/feedback/inverted.mp3',
   '/audio/feedback/welcome.mp3',
-  '/audio/feedback/almost.mp3'
+  '/audio/feedback/almost.mp3',
+  '/audio/feedback/parabens.mp3'
 ];
 
 self.addEventListener('install', (event) => {

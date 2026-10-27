@@ -649,6 +649,18 @@ async def main():
     else:
         print("  ✓ Sílaba RE_TEPE já existe.")
 
+    # 6. Áudio de Parabenização Acolhedora
+    print("\n🎉 Verificando Áudios de Celebração...")
+    feedback_dir = os.path.join("public", "audio", "feedback")
+    os.makedirs(feedback_dir, exist_ok=True)
+    parabens_dest = os.path.join(feedback_dir, "parabens.mp3")
+    if not os.path.exists(parabens_dest) or force_all:
+        print("  + Gerando áudio de parabenização ('Muito bem! Parabéns!')... ", end="", flush=True)
+        await generate_file("Muito bem! Parabéns!", parabens_dest, rate="-5%")
+        print("OK")
+    else:
+        print("  ✓ Áudio de parabenização já existe.")
+
     print("\n✨ Sincronização de todos os áudios concluída com sucesso!")
 
 if __name__ == "__main__":

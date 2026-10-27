@@ -143,3 +143,26 @@ etlify.toml\.
      - Nos contextos de `relogio` e `regador`, a sílaba `RE` continua a tocar `RE.mp3` (R forte fechado [ʁe]).
   4. **PWA Cache:** Atualização do Service Worker para `soletrando-mundo-v10`, incluindo `RO_TEPE.mp3` e `RE_TEPE.mp3` no pre-cache offline.
 - **Consequência:** Solução definitiva e perfeita da oposição fonológica entre o R forte [ʁ] e o tepe brando [ɾ], eliminando qualquer som de "RR", "URO" ou "ARE" e garantindo fidelidade 100% científica à BNCC e à fonoaudiologia infantil.
+
+---
+
+### ADR 13: Refinamento Pedagógico da Máquina de Estados: Feedback Cadenciado de Erro/Acerto e Navegação Sequencial de Cômodos
+- **Data:** 27/10/2026
+- **Contexto:** 
+  1. **Interrupção Prematura de Sílaba no Erro:** Ao colocar a última sílaba incorreta, o aplicativo disparava a dica imediatamente, cancelando o áudio da sílaba recém-tocada antes que a criança pudesse assimilá-la auditivamente.
+  2. **Celebração Incompleta no Acerto:** Ao completar a palavra, o jogo executava fanfarra mas não pronunciava a palavra inteira acolhedora nem emitia reforço verbal afetuoso de parabenização.
+  3. **Fricção de Navegação entre Ambientes:** Para avançar de um cômodo para outro, a criança era forçada a sair para o mapa geral, quebrando a imersão na exploração da casa.
+  4. **Acessibilidade Mobile em Telas Pequenas:** Ao entrar num cômodo em celulares e tablets, a cena 3D ocupava a parte superior da tela e a arena de soletração ficava abaixo da dobra, exigindo rolagem manual.
+- **Decisão:**
+  1. **Tempo de Assimilação no Erro:** Adotar atraso intencional de 800ms antes de emitir a dica acústica (`speakHint` / `speakInverted`), garantindo que o áudio da sílaba colocada soe por completo e a criança compreenda o fonema que selecionou.
+  2. **Celebração Fonética Tripla no Acerto:**
+     - Última sílaba conclui seu som suavemente (550ms).
+     - Fanfarra suave + confetes táteis + registro do acerto (`onComplete`).
+     - A voz neural pronuncia a palavra completa (`/audio/words/${clean}.mp3`).
+     - Pausa afetuosa de 300ms seguida da parabenização acolhedora (`/audio/feedback/parabens.mp3`: *"Muito bem! Parabéns!"*).
+  3. **Navegação Sequencial Direta de Cômodos:**
+     - Adição de botões de navegação sequencial (`[◀ Anterior]` e `[Próximo ▶]`) diretamente no cabeçalho do `SceneBuilder`.
+     - No banner de 100% do cômodo concluído, inclusão de botão CTA proativo para viajar ao próximo cômodo.
+     - Proteção suave por estrelas: caso o próximo cômodo exija mais estrelas, emite aviso sonoro leve de mola com toast afetuoso (*"Faltam X ⭐ para abrir..."*).
+  4. **Auto-Scroll Inteligente para a Soletração:** Ao entrar em um cômodo incompleto (ou ao selecionar um item na esteira), o app rola a página suavemente até `#spelling-arena`. Caso o cômodo esteja 100% concluído, mantém o topo visível para contemplação da arte 3D nítida.
+- **Consequência:** Fluxo de jogo altamente acolhedor, ritmo fonoaudiológico respeitado, menor sobrecarga cognitiva e navegação fluida em dispositivos móveis.

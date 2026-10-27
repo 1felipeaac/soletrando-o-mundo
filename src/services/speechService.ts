@@ -150,6 +150,28 @@ class SpeechService {
     }
   }
 
+  // Feedback comemorativo de acerto: pronuncia a palavra completa e em seguida a voz de parabenização acolhedora
+  public async speakSuccess(itemId: string) {
+    this.cancel();
+    const seqId = this.currentSequenceId;
+    const clean = itemId.trim().toLowerCase();
+
+    // 1. Pronuncia a palavra inteira (ex: "Muro.")
+    let ok = await this.playAudioClip(`/audio/words/${clean}.mp3`);
+    if (!ok && this.currentSequenceId === seqId) {
+      ok = await this.playAudioClip(`/audio/items/${clean}.mp3`);
+    }
+
+    if (this.currentSequenceId !== seqId) return;
+
+    // Pausa afetuosa de 300ms antes da parabenização
+    await new Promise((r) => setTimeout(r, 300));
+    if (this.currentSequenceId !== seqId) return;
+
+    // 2. Voz acolhedora de parabenização ("Muito bem! Parabéns!")
+    await this.playAudioClip('/audio/feedback/parabens.mp3');
+  }
+
   // Feedback com humor para sílabas invertidas com áudio neural
   public async speakInverted(_formed?: string, _targetName?: string) {
     this.cancel();

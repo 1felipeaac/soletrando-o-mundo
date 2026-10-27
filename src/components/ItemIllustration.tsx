@@ -400,6 +400,51 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
         </svg>
       );
 
+    case 'arvore':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
+          <ellipse cx="50" cy="88" rx="36" ry="6" fill="#E2E8F0" />
+          <rect x="42" y="52" width="16" height="34" rx="4" fill="#B45309" stroke="#78350F" strokeWidth="2.5" />
+          <circle cx="50" cy="40" r="28" fill="#22C55E" stroke="#15803D" strokeWidth="2.5" />
+          <circle cx="36" cy="46" r="18" fill="#4ADE80" stroke="#15803D" strokeWidth="2" />
+          <circle cx="64" cy="46" r="18" fill="#4ADE80" stroke="#15803D" strokeWidth="2" />
+          <circle cx="50" cy="30" r="18" fill="#86EFAC" stroke="#15803D" strokeWidth="2" />
+        </svg>
+      );
+
+    case 'regador':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
+          <ellipse cx="50" cy="88" rx="34" ry="6" fill="#E2E8F0" />
+          <rect x="30" y="44" width="38" height="40" rx="8" fill="#38BDF8" stroke="#0284C7" strokeWidth="2.5" />
+          <path d="M30 52C20 52 14 62 14 70C14 78 20 80 30 80" stroke="#0284C7" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <path d="M68 56L84 46" stroke="#0284C7" strokeWidth="3.5" strokeLinecap="round" />
+          <ellipse cx="85" cy="45" rx="5" ry="8" fill="#0284C7" />
+        </svg>
+      );
+
+    case 'balanco':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
+          <ellipse cx="50" cy="88" rx="36" ry="6" fill="#E2E8F0" />
+          <line x1="28" y1="14" x2="32" y2="70" stroke="#D97706" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="72" y1="14" x2="68" y2="70" stroke="#D97706" strokeWidth="2.5" strokeLinecap="round" />
+          <rect x="22" y="70" width="56" height="9" rx="3" fill="#B45309" stroke="#78350F" strokeWidth="2" />
+        </svg>
+      );
+
+    case 'cerca':
+      return (
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={combinedClassName}>
+          <ellipse cx="50" cy="88" rx="38" ry="6" fill="#E2E8F0" />
+          <rect x="16" y="44" width="68" height="7" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="2" />
+          <rect x="16" y="64" width="68" height="7" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="2" />
+          <path d="M22 84V28L28 22L34 28V84H22Z" fill="#FFFFFF" stroke="#94A3B8" strokeWidth="2" />
+          <path d="M44 84V28L50 22L56 28V84H44Z" fill="#FFFFFF" stroke="#94A3B8" strokeWidth="2" />
+          <path d="M66 84V28L72 22L78 28V84H66Z" fill="#FFFFFF" stroke="#94A3B8" strokeWidth="2" />
+        </svg>
+      );
+
     default:
       return (
         <span className="text-4xl flex items-center justify-center mx-auto select-none" role="img" aria-label={itemId}>

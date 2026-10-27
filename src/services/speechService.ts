@@ -59,21 +59,7 @@ class SpeechService {
       if (okZ) return true;
     }
 
-    // Caso de R brando (tepe alveolar [ɾ]) intervocálico em palavras específicas (BNCC / Fonoaudiologia):
-    // Em 'muro' o RO tem som de tepe [ɾo] (diferente de 'rosa', que tem R forte /ʁ/ no início)
-    // Em 'arvore' o RE tem som de tepe [ɾe] (diferente de 'relogio' e 'regador', que têm R forte /ʁ/ no início)
-    const isTepeR = contextItemId && ['muro', 'arvore'].includes(contextItemId.trim().toLowerCase());
-    if (isTepeR) {
-      if (clean === 'RO') {
-        const okTepe = await this.playAudioClip('/audio/syllables/RO_TEPE.mp3');
-        if (okTepe) return true;
-      } else if (clean === 'RE') {
-        const okTepe = await this.playAudioClip('/audio/syllables/RE_TEPE.mp3');
-        if (okTepe) return true;
-      }
-    }
-
-    // 1. Tenta o arquivo direto (ex: /audio/syllables/CA.mp3, SA.mp3 com som de Ç)
+    // 1. Tenta o arquivo direto (ex: /audio/syllables/CA.mp3, SA.mp3 com som de Ç, RO.mp3, RE.mp3)
     let ok = await this.playAudioClip(`/audio/syllables/${clean}.mp3`);
 
     // 2. Tenta versão com codificação de URI

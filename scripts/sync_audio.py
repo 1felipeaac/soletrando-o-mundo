@@ -20,9 +20,9 @@ SPECIAL_SYLLABLES = {
     # Sibilantes Intervocálicas (S entre duas vogais ganha som de Z /z/)
     "SA_Z": "Zá!",
     "SO_Z": "Zó!",
-    # R Brando Intervocálico (Tepe Alveolar [ɾ] em vez de R forte /ʁ/)
-    "RO_TEPE": "Muro.",  # Extraído foneticamente via frame slicing
-    "RE_TEPE": "Áre.",   # Extraído foneticamente via frame slicing
+    # Sílabas Róticas Suaves e Acolhedoras (tom calmo fechado, sem ataque gutural estridente)
+    "RO": "Rô.",
+    "RE": "Rê.",
     # Ditongos Nasais Decrescentes (Til [ɐ̃w̃], sem monotongar em 'bom')
     "BÃO": "Bãum!",
     "UR": "Úr",
@@ -497,7 +497,7 @@ async def main():
 
     force_all = "--force" in sys.argv
     phonetics_mode = force_all or "--phonetics" in sys.argv or True
-    FORCE_REGENERATE_SYLLABLES = {"SA", "SO", "SU", "SE", "SI", "BÃO", "SA_Z", "SO_Z", "RO_TEPE", "RE_TEPE"}
+    FORCE_REGENERATE_SYLLABLES = {"SA", "SO", "SU", "SE", "SI", "BÃO", "SA_Z", "SO_Z", "RO", "RE"}
     FORCE_REGENERATE_ITEMS = {"sofa", "suco", "sopa", "sabao", "sapo", "sapato", "sacola", "muro", "arvore"}
 
     # 1. Sílabas Especiais / Faltantes
@@ -507,10 +507,7 @@ async def main():
         should_gen = not os.path.exists(dest) or force_all or (phonetics_mode and syl in FORCE_REGENERATE_SYLLABLES)
         if should_gen:
             print(f"  + Gerando sílaba {syl} ('{spoken}')... ", end="", flush=True)
-            if syl in ("RO_TEPE", "RE_TEPE"):
-                await generate_tepe_syllable(syl, dest)
-            else:
-                await generate_file(spoken, dest)
+            await generate_file(spoken, dest)
             print("OK")
         else:
             print(f"  ✓ Sílaba {syl} já existe.")

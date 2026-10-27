@@ -447,9 +447,11 @@ export const ItemIllustration: React.FC<ItemIllustrationProps> = ({
 
     default:
       return (
-        <span className="text-4xl flex items-center justify-center mx-auto select-none" role="img" aria-label={itemId}>
-          {fallbackIcon || '⭐'}
-        </span>
+        <div className={`${combinedClassName} flex items-center justify-center rounded-2xl bg-amber-50/60 border border-dashed border-amber-200/80 p-1 shadow-xs select-none`}>
+          <span className="text-3xl filter drop-shadow-xs" role="img" aria-label={itemId}>
+            {fallbackIcon || '⭐'}
+          </span>
+        </div>
       );
   }
 };

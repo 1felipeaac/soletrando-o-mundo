@@ -47,11 +47,19 @@ class SpeechService {
   }
 
   // Toca a sílaba com a voz neural natural acolhedora
-  public async speakSyllable(syllable: string): Promise<boolean> {
+  // Diferenciação fonética (BNCC): S inicial tem som de Ç (/s/), S intervocálico tem som de Z (/z/)
+  public async speakSyllable(syllable: string, contextItemId?: string): Promise<boolean> {
     const clean = syllable.trim().toUpperCase();
     const encoded = encodeURIComponent(clean);
 
-    // 1. Tenta o arquivo direto (ex: /audio/syllables/CA.mp3)
+    // Caso de S intervocálico em palavras específicas (som de Z: ME-ZA, VA-ZO, RO-ZA, CA-ZA-CO)
+    const isIntervocalicZ = contextItemId && ['mesa', 'vaso', 'rosa', 'casaco'].includes(contextItemId.trim().toLowerCase());
+    if (isIntervocalicZ && (clean === 'SA' || clean === 'SO')) {
+      const okZ = await this.playAudioClip(`/audio/syllables/${clean}_Z.mp3`);
+      if (okZ) return true;
+    }
+
+    // 1. Tenta o arquivo direto (ex: /audio/syllables/CA.mp3, SA.mp3 com som de Ç)
     let ok = await this.playAudioClip(`/audio/syllables/${clean}.mp3`);
 
     // 2. Tenta versão com codificação de URI
@@ -88,7 +96,7 @@ class SpeechService {
     // 1. Toca cada sílaba individualmente com pausa pedagógica compassada (700ms)
     for (let i = 0; i < syllables.length; i++) {
       if (this.currentSequenceId !== seqId) return;
-      await this.speakSyllable(syllables[i]);
+      await this.speakSyllable(syllables[i], clean);
       if (this.currentSequenceId !== seqId) return;
 
       // Pausa respiratória clara entre as sílabas para a criança assimilar

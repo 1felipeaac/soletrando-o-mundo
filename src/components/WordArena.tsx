@@ -170,7 +170,7 @@ export const WordArena: React.FC<WordArenaProps> = ({
 
     speechService.cancel();
     soundService.playWoodClick();
-    speechService.speakSyllable(tile.syllable);
+    speechService.speakSyllable(tile.syllable, item.id);
 
     setSlots((prev) => {
       const next = [...prev];

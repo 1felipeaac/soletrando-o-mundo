@@ -9,7 +9,19 @@ if hasattr(sys.stdout, 'reconfigure'):
 VOICE = "pt-BR-FranciscaNeural"
 
 # Sílabas especiais / acentuadas / codas necessárias para pronúncia fonética cristalina
+# Regras fonéticas: S inicial tem som de Ç (/s/), S intervocálico tem som de Z (/z/), Til ÃO é ditongo [ɐ̃w̃]
 SPECIAL_SYLLABLES = {
+    # Sibilantes Canônicas (S inicial tem som de Ç /s/, nunca /z/)
+    "SA": "Ssá!",
+    "SO": "Ssó!",
+    "SU": "Ssú!",
+    "SE": "Ssé!",
+    "SI": "Ssí!",
+    # Sibilantes Intervocálicas (S entre duas vogais ganha som de Z /z/)
+    "SA_Z": "Zá!",
+    "SO_Z": "Zó!",
+    # Ditongos Nasais Decrescentes (Til [ɐ̃w̃], sem monotongar em 'bom')
+    "BÃO": "Bãum!",
     "UR": "Úr",
     "POR": "Pór",
     "JUR": "Júr",
@@ -32,7 +44,6 @@ SPECIAL_SYLLABLES = {
     "RÁ": "Rá",
     "DIO": "Diu",
     # Banheiro
-    "BÃO": "Bão",
     "LHA": "Lha",
     "ES": "És",
     "LHO": "Lho",
@@ -81,7 +92,7 @@ ITEMS_AUDIO = [
     {
         "id": "sofa",
         "clean_word": "Sofá.",
-        "spoken_name": "Só... fá! Sofá!",
+        "spoken_name": "Ssó... fá! Sofá!",
         "hint": "Grande, confortável e macio no centro da sala para toda a família sentar."
     },
     {
@@ -125,13 +136,13 @@ ITEMS_AUDIO = [
     {
         "id": "suco",
         "clean_word": "Suco.",
-        "spoken_name": "Sú... co! Suco!",
+        "spoken_name": "Ssú... co! Suco!",
         "hint": "Feito de frutas fresquinhas espremidas na jarra."
     },
     {
         "id": "sopa",
         "clean_word": "Sopa.",
-        "spoken_name": "Sô... pa! Sopa!",
+        "spoken_name": "Ssô... pa! Sopa!",
         "hint": "Quentinha no prato fundo com legumes e macarrão."
     },
     {
@@ -225,7 +236,7 @@ ITEMS_AUDIO = [
     {
         "id": "sabao",
         "clean_word": "Sabão.",
-        "spoken_name": "Sa... bão! Sabão!",
+        "spoken_name": "Ssa... bãum! Sabão!",
         "hint": "Faz bolhas coloridas e deixa as mãozinhas limpas e cheirosas."
     },
     {
@@ -325,7 +336,7 @@ ITEMS_AUDIO = [
     {
         "id": "sapato",
         "clean_word": "Sapato.",
-        "spoken_name": "Sa... pa... to! Sapato!",
+        "spoken_name": "Ssa... pá... to! Sapato!",
         "hint": "Calçamos nos pezinhos com meias para passear com segurança."
     },
     {
@@ -415,7 +426,7 @@ ITEMS_AUDIO = [
     {
         "id": "sapo",
         "clean_word": "Sapo.",
-        "spoken_name": "Sá... po! Sapo!",
+        "spoken_name": "Ssá... po! Sapo!",
         "hint": "Verdinho, pula bem alto perto das plantinhas do jardim."
     },
     {
@@ -433,7 +444,7 @@ ITEMS_AUDIO = [
     {
         "id": "sacola",
         "clean_word": "Sacola.",
-        "spoken_name": "Sa... có... la! Sacola!",
+        "spoken_name": "Ssa... có... la! Sacola!",
         "hint": "Com alças para carregar as comprinhas da feira ou brinquedos."
     },
 ]
@@ -455,11 +466,17 @@ async def main():
     os.makedirs(hints_dir, exist_ok=True)
     os.makedirs(words_dir, exist_ok=True)
 
+    force_all = "--force" in sys.argv
+    phonetics_mode = force_all or "--phonetics" in sys.argv or True
+    FORCE_REGENERATE_SYLLABLES = {"SA", "SO", "SU", "SE", "SI", "BÃO", "SA_Z", "SO_Z"}
+    FORCE_REGENERATE_ITEMS = {"sofa", "suco", "sopa", "sabao", "sapo", "sapato", "sacola"}
+
     # 1. Sílabas Especiais / Faltantes
     print("\n📖 Verificando Sílabas Especiais...")
     for syl, spoken in SPECIAL_SYLLABLES.items():
         dest = os.path.join(syllables_dir, f"{syl}.mp3")
-        if not os.path.exists(dest):
+        should_gen = not os.path.exists(dest) or force_all or (phonetics_mode and syl in FORCE_REGENERATE_SYLLABLES)
+        if should_gen:
             print(f"  + Gerando sílaba {syl} ('{spoken}')... ", end="", flush=True)
             await generate_file(spoken, dest)
             print("OK")
@@ -470,7 +487,8 @@ async def main():
     print("\n📦 Verificando Áudios dos Objetos...")
     for item in ITEMS_AUDIO:
         dest = os.path.join(items_dir, f"{item['id']}.mp3")
-        if not os.path.exists(dest):
+        should_gen = not os.path.exists(dest) or force_all or (phonetics_mode and item["id"] in FORCE_REGENERATE_ITEMS)
+        if should_gen:
             print(f"  + Gerando objeto {item['id']} ('{item['spoken_name']}')... ", end="", flush=True)
             await generate_file(item["spoken_name"], dest)
             print("OK")

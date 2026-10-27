@@ -28,6 +28,10 @@ AGENTS.md
 GEMINI.md
 .agents/
 
+# Environment secrets
+.env
+.env.*
+
 # Python cache
 __pycache__/
 *.pyc

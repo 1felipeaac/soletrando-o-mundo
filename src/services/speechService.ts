@@ -59,11 +59,12 @@ class SpeechService {
       if (okZ) return true;
     }
 
-    // Oposição Fonológica de Timbre Vocálico (Aberto /ɔ/ vs. Fechado /o/):
+    // Oposição Fonológica de Timbre Vocálico (Aberto /ɔ/ vs. Fechado /o/) e Tepe Alveolar [ɾ] (R brando):
     // BO aberto [bɔ] em BOLA e BOTA (diferente de BOLO e BONÉ, que são fechados [bo])
     // CO aberto [kɔ] em COPO e SACOLA (diferente de ESCOVA, que é fechado [ko])
     // PO aberto [pɔ] em POTE (diferente de COPO e SAPO)
     // RO aberto [ʁɔ] em ROSA (diferente de MURO)
+    // RO e RE com Tepe Alveolar [ɾo], [ɾe] (R brando intervocálico em MURO e ÁRVORE, diferente de ROSA, RELÓGIO e REGADOR)
     if (contextItemId) {
       const cid = contextItemId.trim().toLowerCase();
       if (clean === 'BO' && ['bola', 'bota'].includes(cid)) {
@@ -81,6 +82,14 @@ class SpeechService {
       if (clean === 'RO' && cid === 'rosa') {
         const okOpen = await this.playAudioClip('/audio/syllables/RO_OPEN.mp3');
         if (okOpen) return true;
+      }
+      if (clean === 'RO' && ['muro'].includes(cid)) {
+        const okTepe = await this.playAudioClip('/audio/syllables/RO_TEPE.mp3');
+        if (okTepe) return true;
+      }
+      if (clean === 'RE' && ['arvore'].includes(cid)) {
+        const okTepe = await this.playAudioClip('/audio/syllables/RE_TEPE.mp3');
+        if (okTepe) return true;
       }
     }
 

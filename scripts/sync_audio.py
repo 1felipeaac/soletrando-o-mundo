@@ -2,6 +2,9 @@ import asyncio
 import os
 import sys
 import edge_tts
+import miniaudio
+import numpy as np
+import lameenc
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -466,31 +469,88 @@ async def generate_file(text: str, filepath: str, rate: str = "+0%"):
     communicate = edge_tts.Communicate(text, VOICE, rate=rate)
     await communicate.save(filepath)
 
-async def generate_tepe_syllable(syl: str, dest: str):
-    """Extrai a sílaba com tepe alveolar [ɾ] (R brando) via slicing de frames CBR MP3."""
-    FRAME_SIZE = 144
-    if syl == "RO_TEPE":
-        # Extraído da pronúncia contínua de 'Muro.' em -10% de taxa
-        c = edge_tts.Communicate("Muro.", VOICE, rate="-10%")
-        audio_bytes = bytearray()
-        async for msg in c.stream():
-            if msg["type"] == "audio":
-                audio_bytes.extend(msg["data"])
-        # Frame 14 (336ms) é o início exato do tepe alveolar [ɾo]
-        sliced = audio_bytes[14 * FRAME_SIZE :]
-        with open(dest, "wb") as f:
-            f.write(sliced)
-    elif syl == "RE_TEPE":
-        # Extraído da pronúncia contínua de 'Áre.' em -10% de taxa
-        c = edge_tts.Communicate("Áre.", VOICE, rate="-10%")
-        audio_bytes = bytearray()
-        async for msg in c.stream():
-            if msg["type"] == "audio":
-                audio_bytes.extend(msg["data"])
-        # Frame 11 (264ms) é o início exato do tepe alveolar [ɾe]
-        sliced = audio_bytes[11 * FRAME_SIZE :]
-        with open(dest, "wb") as f:
-            f.write(sliced)
+def extract_tepe_from_file(input_mp3: str, start_ms_est: float, end_ms_est: float, output_mp3: str, lead_ms: float = 12.0, target_rms: float = 3500.0):
+    """Extrai com precisão cirúrgica a oclusão e o burst do tepe alveolar [ɾ] (R brando) com re-encoding limpo LAME."""
+    decoded = miniaudio.decode_file(input_mp3)
+    sr = decoded.sample_rate
+    channels = decoded.nchannels
+    samples = np.array(decoded.samples, dtype=np.int16)
+
+    if channels == 2:
+        samples = samples.reshape(-1, 2)
+    else:
+        samples = samples.reshape(-1, 1)
+
+    mono = samples.mean(axis=1) if channels == 2 else samples[:, 0]
+
+    # Busca o ponto mínimo de energia (a oclusão do tepe) em torno da estimativa temporal
+    search_start = max(0, int((start_ms_est - 30) / 1000.0 * sr))
+    search_end = min(len(mono), int((start_ms_est + 30) / 1000.0 * sr))
+    
+    win_len = int(sr * 0.003)
+    min_energy = float('inf')
+    dip_idx = search_start
+    for i in range(search_start, search_end - win_len, int(sr * 0.0005)):
+        e = np.sum(mono[i : i + win_len].astype(np.float64) ** 2)
+        if e < min_energy:
+            min_energy = e
+            dip_idx = i
+
+    # O burst (soltura da língua dos alvéolos) ocorre logo após a oclusão
+    burst_idx = dip_idx
+    for k in range(dip_idx, min(len(mono), dip_idx + int(sr * 0.030))):
+        if abs(mono[k]) > 500:
+            burst_idx = k
+            break
+
+    # Ponto de início exatamente lead_ms antes do burst (preserva a oclusão do tepe sem a vogal anterior)
+    ideal_start = max(0, burst_idx - int(sr * (lead_ms / 1000.0)))
+
+    # Zero-crossing mais próximo para evitar clique
+    cut_start = ideal_start
+    for j in range(max(0, ideal_start - int(sr * 0.002)), min(len(mono) - 1, ideal_start + int(sr * 0.002))):
+        if mono[j] * mono[j+1] <= 0:
+            cut_start = j
+            break
+
+    cut_end = min(len(samples), int(end_ms_est / 1000.0 * sr))
+    for j in range(max(0, cut_end - int(sr * 0.005)), cut_end):
+        if 0 <= j < len(mono) - 1 and mono[j] * mono[j+1] <= 0:
+            cut_end = j
+            break
+
+    sliced = samples[cut_start:cut_end].copy().astype(np.float32)
+
+    # Fade-in suave de 3ms
+    fade_in_len = int(sr * 0.003)
+    fade_in = np.sin(np.linspace(0, np.pi / 2, fade_in_len)) ** 2
+    for c in range(channels):
+        sliced[:fade_in_len, c] *= fade_in
+
+    # Fade-out suave de 25ms
+    fade_out_len = int(sr * 0.025)
+    fade_out = np.cos(np.linspace(0, np.pi / 2, fade_out_len)) ** 2
+    for c in range(channels):
+        sliced[-fade_out_len:, c] *= fade_out
+
+    vowel_rms = np.sqrt(np.mean(sliced[:, 0] ** 2))
+    if vowel_rms > 0:
+        gain = target_rms / vowel_rms
+        if 0.7 <= gain <= 1.5:
+            sliced *= gain
+
+    sliced_int16 = np.clip(sliced, -32768, 32767).astype(np.int16)
+
+    encoder = lameenc.Encoder()
+    encoder.set_bit_rate(48)
+    encoder.set_in_sample_rate(sr)
+    encoder.set_channels(channels)
+    encoder.set_quality(2)
+    mp3_data = encoder.encode(sliced_int16.tobytes())
+    mp3_data += encoder.flush()
+
+    with open(output_mp3, "wb") as f:
+        f.write(mp3_data)
 
 async def main():
     print("⚡ SINCRONIZANDO ÁUDIOS NEURAIS (Soletrando o Mundo - 48 Itens)")
@@ -563,6 +623,31 @@ async def main():
             print("OK")
         else:
             print(f"  ✓ Dica de {item['id']} já existe.")
+
+    # 5. Sílabas Específicas com Tepe Alveolar [ɾ] (R brando intervocálico em MURO e ÁRVORE)
+    print("\n👅 Verificando Sílabas com Tepe Alveolar [ɾ]...")
+    ro_tepe_dest = os.path.join(syllables_dir, "RO_TEPE.mp3")
+    re_tepe_dest = os.path.join(syllables_dir, "RE_TEPE.mp3")
+    muro_word = os.path.join(words_dir, "muro.mp3")
+    arvore_word = os.path.join(words_dir, "arvore.mp3")
+
+    if not os.path.exists(ro_tepe_dest) or force_all or phonetics_mode:
+        print("  + Sintetizando e extraindo RO_TEPE [ɾo] de 'Muro.'... ", end="", flush=True)
+        if not os.path.exists(muro_word):
+            await generate_file("Muro.", muro_word, rate="-5%")
+        extract_tepe_from_file(muro_word, 420, 580, ro_tepe_dest, lead_ms=12)
+        print("OK")
+    else:
+        print("  ✓ Sílaba RO_TEPE já existe.")
+
+    if not os.path.exists(re_tepe_dest) or force_all or phonetics_mode:
+        print("  + Sintetizando e extraindo RE_TEPE [ɾe] de 'Árvore.'... ", end="", flush=True)
+        if not os.path.exists(arvore_word):
+            await generate_file("Árvore.", arvore_word, rate="-5%")
+        extract_tepe_from_file(arvore_word, 585, 720, re_tepe_dest, lead_ms=12)
+        print("OK")
+    else:
+        print("  ✓ Sílaba RE_TEPE já existe.")
 
     print("\n✨ Sincronização de todos os áudios concluída com sucesso!")
 

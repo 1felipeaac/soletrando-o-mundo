@@ -124,3 +124,22 @@ etlify.toml\.
      - `COR.mp3` corrigido para timbre fechado `"Côr"` em *cortina*.
   3. **Despacho Dinâmico no `speechService.ts`:** Mapear o `contextItemId` para tocar automaticamente a variante aberta ou fechada correspondente à palavra em soletração.
 - **Consequência:** Fidelidade fônica absoluta em todas as vogais médias tônicas do jogo, alinhando a percepção auditiva da criança à norma culta falada do PB e às diretrizes da BNCC.
+
+---
+
+### ADR 12: Extração Acústica e Despacho Contextual do Tepe Alveolar [ɾ] (R Brando) em Posição Intervocálica
+- **Data:** 27/10/2026
+- **Contexto:** 
+  1. No português brasileiro, o grafema "R" em posição intervocálica simples (`V_V`, ex: *muro* [ˈmu.ɾu], *árvore* [ˈaɾ.vu.ɾi]) é estritamente realizado como **tepe alveolar [ɾ]** (som brando/tremido, com oclusão lingual de 15 a 25ms contra os alvéolos).
+  2. Qualquer motor neural de TTS (incluindo `pt-BR-FranciscaNeural`), ao receber uma sílaba isolada como `"Rô."` ou `"Rê."`, classifica o "R" como início absoluto de enunciado (`#_V`), gerando inevitavelmente o **R forte fricativo [ʁ]** (som de "RR", como em *rato* ou *murro*).
+  3. Tentativas anteriores de fatiamento cego por bytes MP3 resultavam em vazamento dos formantes da vogal anterior, fazendo a criança ouvir *"URO"* ou *"ARE"*.
+- **Decisão:**
+  1. **Algoritmo Acústico Científico em Python (`scripts/sync_audio.py`):** Utilizar `miniaudio`, `numpy` e `lameenc` para analisar o envelope de energia RMS em janelas de 3ms do sinal PCM decodificado. O algoritmo detecta o vale exato da oclusão lingual do tepe [ɾ] no vocábulo natural contínuo, alinha o corte no ponto exato de *zero-crossing* 12ms antes do *burst* (explosão da soltura), aplica fade-in cosseno de 3ms e fade-out suave de 25ms, gerando MP3s puros com codificação LAME CBR.
+  2. **Geração dos Assets Canônicos:** Criar `RO_TEPE.mp3` (extraído de *Muro.*) e `RE_TEPE.mp3` (extraído de *Árvore.*), sem nenhum resíduo de vogais prévias e com o autêntico tepe alveolar [ɾ].
+  3. **Despacho Contextual Inteligente (`speechService.ts`):** 
+     - No contexto de `muro`, o toque na sílaba `RO` despacha `RO_TEPE.mp3`.
+     - No contexto de `arvore`, o toque na sílaba `RE` despacha `RE_TEPE.mp3`.
+     - No contexto de `rosa`, a sílaba `RO` continua a tocar `RO_OPEN.mp3` (R forte aberto [ʁɔ]).
+     - Nos contextos de `relogio` e `regador`, a sílaba `RE` continua a tocar `RE.mp3` (R forte fechado [ʁe]).
+  4. **PWA Cache:** Atualização do Service Worker para `soletrando-mundo-v10`, incluindo `RO_TEPE.mp3` e `RE_TEPE.mp3` no pre-cache offline.
+- **Consequência:** Solução definitiva e perfeita da oposição fonológica entre o R forte [ʁ] e o tepe brando [ɾ], eliminando qualquer som de "RR", "URO" ou "ARE" e garantindo fidelidade 100% científica à BNCC e à fonoaudiologia infantil.

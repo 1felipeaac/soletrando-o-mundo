@@ -20,6 +20,9 @@ SPECIAL_SYLLABLES = {
     # Sibilantes Intervocálicas (S entre duas vogais ganha som de Z /z/)
     "SA_Z": "Zá!",
     "SO_Z": "Zó!",
+    # R Brando Intervocálico (Tepe Alveolar [ɾ] em vez de R forte /ʁ/)
+    "RO_TEPE": "Muro.",  # Extraído foneticamente via frame slicing
+    "RE_TEPE": "Áre.",   # Extraído foneticamente via frame slicing
     # Ditongos Nasais Decrescentes (Til [ɐ̃w̃], sem monotongar em 'bom')
     "BÃO": "Bãum!",
     "UR": "Úr",
@@ -286,7 +289,7 @@ ITEMS_AUDIO = [
     {
         "id": "arvore",
         "clean_word": "Árvore.",
-        "spoken_name": "Ár... vo... re! Árvore!",
+        "spoken_name": "Ár-vo-re! Árvore!",
         "hint": "Tem tronco forte de madeira e copa verde cheia de folhas e sombra."
     },
     {
@@ -420,7 +423,7 @@ ITEMS_AUDIO = [
     {
         "id": "muro",
         "clean_word": "Muro.",
-        "spoken_name": "Mú... ro! Muro!",
+        "spoken_name": "Mú-ro! Muro!",
         "hint": "Parede branquinha de tijolos que cerca o quintal."
     },
     {
@@ -453,6 +456,32 @@ async def generate_file(text: str, filepath: str, rate: str = "+0%"):
     communicate = edge_tts.Communicate(text, VOICE, rate=rate)
     await communicate.save(filepath)
 
+async def generate_tepe_syllable(syl: str, dest: str):
+    """Extrai a sílaba com tepe alveolar [ɾ] (R brando) via slicing de frames CBR MP3."""
+    FRAME_SIZE = 144
+    if syl == "RO_TEPE":
+        # Extraído da pronúncia contínua de 'Muro.' em -10% de taxa
+        c = edge_tts.Communicate("Muro.", VOICE, rate="-10%")
+        audio_bytes = bytearray()
+        async for msg in c.stream():
+            if msg["type"] == "audio":
+                audio_bytes.extend(msg["data"])
+        # Frame 14 (336ms) é o início exato do tepe alveolar [ɾo]
+        sliced = audio_bytes[14 * FRAME_SIZE :]
+        with open(dest, "wb") as f:
+            f.write(sliced)
+    elif syl == "RE_TEPE":
+        # Extraído da pronúncia contínua de 'Áre.' em -10% de taxa
+        c = edge_tts.Communicate("Áre.", VOICE, rate="-10%")
+        audio_bytes = bytearray()
+        async for msg in c.stream():
+            if msg["type"] == "audio":
+                audio_bytes.extend(msg["data"])
+        # Frame 11 (264ms) é o início exato do tepe alveolar [ɾe]
+        sliced = audio_bytes[11 * FRAME_SIZE :]
+        with open(dest, "wb") as f:
+            f.write(sliced)
+
 async def main():
     print("⚡ SINCRONIZANDO ÁUDIOS NEURAIS (Soletrando o Mundo - 48 Itens)")
     
@@ -468,8 +497,8 @@ async def main():
 
     force_all = "--force" in sys.argv
     phonetics_mode = force_all or "--phonetics" in sys.argv or True
-    FORCE_REGENERATE_SYLLABLES = {"SA", "SO", "SU", "SE", "SI", "BÃO", "SA_Z", "SO_Z"}
-    FORCE_REGENERATE_ITEMS = {"sofa", "suco", "sopa", "sabao", "sapo", "sapato", "sacola"}
+    FORCE_REGENERATE_SYLLABLES = {"SA", "SO", "SU", "SE", "SI", "BÃO", "SA_Z", "SO_Z", "RO_TEPE", "RE_TEPE"}
+    FORCE_REGENERATE_ITEMS = {"sofa", "suco", "sopa", "sabao", "sapo", "sapato", "sacola", "muro", "arvore"}
 
     # 1. Sílabas Especiais / Faltantes
     print("\n📖 Verificando Sílabas Especiais...")
@@ -478,7 +507,10 @@ async def main():
         should_gen = not os.path.exists(dest) or force_all or (phonetics_mode and syl in FORCE_REGENERATE_SYLLABLES)
         if should_gen:
             print(f"  + Gerando sílaba {syl} ('{spoken}')... ", end="", flush=True)
-            await generate_file(spoken, dest)
+            if syl in ("RO_TEPE", "RE_TEPE"):
+                await generate_tepe_syllable(syl, dest)
+            else:
+                await generate_file(spoken, dest)
             print("OK")
         else:
             print(f"  ✓ Sílaba {syl} já existe.")

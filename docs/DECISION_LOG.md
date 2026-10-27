@@ -93,3 +93,17 @@ etlify.toml\.
   2. **Motor Secundário (Fallback Híbrido via API Key):** Em caso de esgotamento de cota (`429 RESOURCE_EXHAUSTED`), se houver uma chave `GEMINI_API_KEY` cadastrada no arquivo `.env` (gitignored), o sistema alterna suavemente para a geração via SDK `google-genai` com `imagen-3.0-generate-002` / `gemini-*-image`.
   3. **Persistência de Fila e Timer Reativo:** Quando ambos atingem seus tetos, o sistema preserva a fila estruturada em `scripts/generation_queue.json` e agenda um timer de despertar automático sem perda de progresso.
 - **Consequência:** Máxima economia para o desenvolvedor, alta disponibilidade de geração e zero risco de regressão estética ou vazamento de chaves.
+
+---
+
+### ADR 10: Tratamento Fonético-Computacional dos Róticos no TTS Neural (Tepe Alveolar [ɾ] vs. R Forte /ʁ/)
+- **Data:** 27/10/2026
+- **Contexto:** No português brasileiro, o grafema "R" possui comportamentos fonotáticos distintos:
+  1. No início de palavras ou emissões (`#_V`): é categoricamente realizado como **R forte** (/ʁ/ ou /h/, como em *rato*, *rosa*).
+  2. Em posição intervocálica simples (`V_V`): opõe-se como **tepe alveolar [ɾ]** (vibrante simples / R brando tremido, como em *muro* [ˈmu.ɾu] e *árvore* [ˈaɾ.vu.ɾi]).
+  No sintetizador neural (`pt-BR-FranciscaNeural`), quando o texto de uma palavra soletrada era quebrado por reticências (`Mú... ro!`), ou quando uma sílaba isolada como `"RO"` ou `"RE"` era reproduzida, o módulo G2P (Grapheme-to-Phoneme) classificava a consoante como início absoluto de enunciado, gerando indevidamente o R forte (som de *rato* / *murro* em vez de *muro*).
+- **Decisão:**
+  1. **Coarticulação Prosódica com Hífen:** No áudio do objeto (`spoken_name`), substituir pausas pontuadas por hifens contínuos (`"Mú-ro! Muro!"` e `"Ár-vo-re! Árvore!"`), garantindo que o módulo G2P reconheça a posição intervocálica natural do tepe alveolar.
+  2. **Sílabas Contextuais no `speechService.ts`:** Criar arquivos dedicados com o tepe autêntico (`RO_TEPE.mp3` e `RE_TEPE.mp3`) obtidos por slicing de frames CBR MP3 da palavra falada com tepe. No `speechService.ts`, mapear contextualmente `contextItemId === 'muro'` -> `RO_TEPE.mp3` e `contextItemId === 'arvore'` -> `RE_TEPE.mp3`, mantendo `RO.mp3` e `RE.mp3` fortes para itens de início absoluto como *rosa*, *relógio* e *regador*.
+  3. **Adoção das 5 Diretrizes Fonotáticas do PB:** Formalizar as regras de Redução Vocálica, Palatização de T/D, Vocalização de L, S Intervocálico (/z/) e Róticos (Tepe [ɾ] vs. R forte) na documentação técnica e pedagógica do projeto.
+- **Consequência:** Fidelidade fonoaudiológica e alinhamento rigoroso à BNCC na alfabetização fônica infantil, eliminando distorções fonéticas no aprendizado da leitura e escrita.

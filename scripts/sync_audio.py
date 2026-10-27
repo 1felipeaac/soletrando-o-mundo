@@ -12,14 +12,14 @@ VOICE = "pt-BR-FranciscaNeural"
 # Regras fonéticas: S inicial tem som de Ç (/s/), S intervocálico tem som de Z (/z/), Til ÃO é ditongo [ɐ̃w̃]
 SPECIAL_SYLLABLES = {
     # Sibilantes Canônicas (S inicial tem som de Ç /s/, nunca /z/)
-    "SA": "Ssá!",
-    "SO": "Ssô.",
-    "SU": "Ssú!",
-    "SE": "Ssé!",
-    "SI": "Ssí!",
+    "SA": "Sá.",
+    "SO": "Sô.",
+    "SU": "Sú.",
+    "SE": "Sé.",
+    "SI": "Sí.",
     # Sibilantes Intervocálicas (S entre duas vogais ganha som de Z /z/)
-    "SA_Z": "Zá!",
-    "SO_Z": "Zó!",
+    "SA_Z": "Zá.",
+    "SO_Z": "Zó.",
     # Oposição Fonológica de Timbre Vocálico (Aberto /ɔ, ɛ/ vs. Fechado /o, e/)
     "BO": "Bô.",
     "BO_OPEN": "Bó.",

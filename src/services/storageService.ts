@@ -1,12 +1,18 @@
-import type { PlayerProgress } from '../types/game';
+import type { PlayerProgress, ParentSettings } from '../types/game';
 
 const STORAGE_KEY = 'soletrando_o_mundo_progress_v1';
+
+export const DEFAULT_PARENT_SETTINGS: ParentSettings = {
+  screenTimeLimitMinutes: 20, // Padrão recomendado pela Sociedade Brasileira de Pediatria (SBP)
+  enableSoundEffects: true,
+};
 
 const DEFAULT_PROGRESS: PlayerProgress = {
   completedItems: {},
   completedRooms: {},
   starsCount: 0,
   activeWorldId: 1,
+  parentSettings: DEFAULT_PARENT_SETTINGS,
 };
 
 class StorageService {
@@ -19,6 +25,10 @@ class StorageService {
       return {
         ...DEFAULT_PROGRESS,
         ...parsed,
+        parentSettings: {
+          ...DEFAULT_PARENT_SETTINGS,
+          ...(parsed.parentSettings || {}),
+        },
       };
     } catch {
       return DEFAULT_PROGRESS;
@@ -30,6 +40,25 @@ class StorageService {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     } catch {}
+  }
+
+  public getParentSettings(): ParentSettings {
+    const progress = this.getProgress();
+    return progress.parentSettings || DEFAULT_PARENT_SETTINGS;
+  }
+
+  public saveParentSettings(settings: Partial<ParentSettings>): ParentSettings {
+    const progress = this.getProgress();
+    const updatedSettings: ParentSettings = {
+      ...(progress.parentSettings || DEFAULT_PARENT_SETTINGS),
+      ...settings,
+    };
+    const updatedProgress: PlayerProgress = {
+      ...progress,
+      parentSettings: updatedSettings,
+    };
+    this.saveProgress(updatedProgress);
+    return updatedSettings;
   }
 
   public registerItemCompletion(itemId: string, worldId: number): PlayerProgress {

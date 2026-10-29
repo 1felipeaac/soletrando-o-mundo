@@ -1,6 +1,15 @@
-import { Heart, ShieldCheck } from 'lucide-react';
+import { Heart, ShieldCheck, FileText, Lock } from 'lucide-react';
+import { soundService } from '../services/soundService';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenPrivacyTerms?: (tab: 'privacy' | 'terms') => void;
+  onOpenParentalGate?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({
+  onOpenPrivacyTerms,
+  onOpenParentalGate,
+}) => {
   return (
     <footer className="w-full bg-amber-100/50 border-t-2 border-amber-200 mt-auto py-6 px-4 select-none text-center">
       <div className="max-w-xl mx-auto space-y-3">
@@ -10,18 +19,51 @@ export const Footer: React.FC = () => {
         </div>
 
         <p className="text-xs text-stone-600 font-medium">
-          Fundamentado na <strong>BNCC</strong> (Habilidades EF01LP06 e EF01LP08), método fônico e design não-hiperestimulante.
+          Fundamentado na <strong>BNCC</strong> (Habilidades EF01LP06 e EF01LP08), método fônico e design não-hiperestimulante (SBP).
         </p>
 
-        <div className="text-[11px] text-stone-500 space-x-2">
+        {/* Links de Segurança e Conformidade Jurídica */}
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] text-stone-600 font-semibold pt-1">
+          <button
+            onClick={() => {
+              soundService.playWoodClick();
+              onOpenPrivacyTerms?.('privacy');
+            }}
+            className="hover:text-sky-800 underline cursor-pointer inline-flex items-center gap-1"
+          >
+            <ShieldCheck className="w-3 h-3 text-emerald-600" />
+            <span>Privacidade (LGPD)</span>
+          </button>
+          <span>•</span>
+          <button
+            onClick={() => {
+              soundService.playWoodClick();
+              onOpenPrivacyTerms?.('terms');
+            }}
+            className="hover:text-sky-800 underline cursor-pointer inline-flex items-center gap-1"
+          >
+            <FileText className="w-3 h-3 text-sky-600" />
+            <span>Termos de Uso</span>
+          </button>
+          <span>•</span>
+          <button
+            onClick={() => {
+              soundService.playWoodClick();
+              onOpenParentalGate?.();
+            }}
+            className="hover:text-amber-900 font-bold text-amber-800 underline cursor-pointer inline-flex items-center gap-1"
+          >
+            <Lock className="w-3 h-3" />
+            <span>Área dos Pais</span>
+          </button>
+        </div>
+
+        <div className="text-[10px] text-stone-500 space-x-2 pt-1">
           <span>Acessibilidade WCAG 2.2 / LBI</span>
           <span>•</span>
-          <span>Zero Anúncios Invasivos</span>
+          <span>100% Offline</span>
           <span>•</span>
-          <span className="inline-flex items-center gap-0.5 text-amber-800 font-bold">
-            <ShieldCheck className="w-3 h-3" />
-            Trava Parental
-          </span>
+          <span>Zero Anúncios Invasivos</span>
         </div>
 
         <p className="text-[10px] text-stone-400">

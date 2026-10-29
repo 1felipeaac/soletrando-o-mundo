@@ -1,21 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { WorldSelect } from './components/WorldSelect';
 import { SceneBuilder } from './components/SceneBuilder';
 import { WordArena } from './components/WordArena';
 import { Footer } from './components/Footer';
-import { ParentalGateModal } from './components/ParentalGateModal';
+import { ParentDashboardModal } from './components/ParentDashboardModal';
+import { PrivacyTermsModal } from './components/PrivacyTermsModal';
+import { ScreenTimeAlertModal } from './components/ScreenTimeAlertModal';
 import { WORLDS_DATA } from './data/worldsData';
 import { storageService } from './services/storageService';
 import { soundService } from './services/soundService';
-import type { PlayerProgress, ItemStage } from './types/game';
+import type { PlayerProgress, ItemStage, ParentSettings } from './types/game';
 
 export function App() {
   const [progress, setProgress] = useState<PlayerProgress>(() => storageService.getProgress());
   const [currentView, setCurrentView] = useState<'map' | 'room'>('map');
   const [activeWorldId, setActiveWorldId] = useState<number>(1);
-  const [isParentalGateOpen, setIsParentalGateOpen] = useState(false);
+  const [isParentalDashboardOpen, setIsParentalDashboardOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [privacyInitialTab, setPrivacyInitialTab] = useState<'privacy' | 'terms'>('privacy');
   const [lockedNotice, setLockedNotice] = useState<string | null>(null);
+
+  // Monitoramento de Tempo de Tela (SBP - Sociedade Brasileira de Pediatria)
+  const [sessionStartTime] = useState<number>(() => Date.now());
+  const [sessionElapsedMinutes, setSessionElapsedMinutes] = useState<number>(0);
+  const [isScreenTimeAlertOpen, setIsScreenTimeAlertOpen] = useState(false);
+  const [snoozeMinutes, setSnoozeMinutes] = useState<number>(0);
+  const [hasAlertedForLimit, setHasAlertedForLimit] = useState<number | null>(null);
+
+  useEffect(() => {
+    const checkInterval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - sessionStartTime) / 60000);
+      setSessionElapsedMinutes(elapsed);
+
+      const limit = progress.parentSettings?.screenTimeLimitMinutes ?? 20;
+      if (limit > 0) {
+        const effectiveLimit = limit + snoozeMinutes;
+        if (elapsed >= effectiveLimit && hasAlertedForLimit !== effectiveLimit) {
+          setIsScreenTimeAlertOpen(true);
+          setHasAlertedForLimit(effectiveLimit);
+        }
+      }
+    }, 10000);
+
+    return () => clearInterval(checkInterval);
+  }, [sessionStartTime, progress.parentSettings?.screenTimeLimitMinutes, snoozeMinutes, hasAlertedForLimit]);
 
   const activeWorld = WORLDS_DATA.find((w) => w.id === activeWorldId) || WORLDS_DATA[0];
   const [activeItemId, setActiveItemId] = useState<string>(activeWorld.items[0].id);
@@ -118,6 +147,23 @@ export function App() {
     setCurrentView('map');
   };
 
+  const handleOpenPrivacyTerms = (tab: 'privacy' | 'terms') => {
+    setPrivacyInitialTab(tab);
+    setIsPrivacyModalOpen(true);
+  };
+
+  const handleUpdateSettings = (settings: ParentSettings) => {
+    setProgress((prev) => ({
+      ...prev,
+      parentSettings: settings,
+    }));
+  };
+
+  const handleSnooze5Min = () => {
+    setSnoozeMinutes((prev) => prev + 5);
+    setIsScreenTimeAlertOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#e8f4fc] via-[#f1f7fc] to-[#faf8f5] text-slate-800 flex flex-col font-sans selection:bg-amber-200">
       <Navbar
@@ -126,7 +172,7 @@ export function App() {
         starsCount={progress.starsCount}
         totalItems={totalItemsCount}
         currentWorldTitle={currentView === 'room' ? activeWorld.title : undefined}
-        onOpenParentalGate={() => setIsParentalGateOpen(true)}
+        onOpenParentalGate={() => setIsParentalDashboardOpen(true)}
       />
 
       <main className="flex-1 w-full pb-10">
@@ -186,16 +232,42 @@ export function App() {
         </div>
       )}
 
-      {/* Trava Parental */}
-      {isParentalGateOpen && (
-        <ParentalGateModal
-          isOpen={isParentalGateOpen}
-          onClose={() => setIsParentalGateOpen(false)}
+      {/* Painel da Família e do Educador (com Trava Parental integrada) */}
+      {isParentalDashboardOpen && (
+        <ParentDashboardModal
+          isOpen={isParentalDashboardOpen}
+          onClose={() => setIsParentalDashboardOpen(false)}
+          progress={progress}
           onConfirmReset={handleResetProgress}
+          onOpenPrivacyTerms={handleOpenPrivacyTerms}
+          sessionElapsedMinutes={sessionElapsedMinutes}
+          onUpdateSettings={handleUpdateSettings}
         />
       )}
 
-      <Footer />
+      {/* Modal de Leitura da Política de Privacidade e Termos de Uso */}
+      {isPrivacyModalOpen && (
+        <PrivacyTermsModal
+          isOpen={isPrivacyModalOpen}
+          onClose={() => setIsPrivacyModalOpen(false)}
+          initialTab={privacyInitialTab}
+        />
+      )}
+
+      {/* Alerta Afetuoso de Tempo de Tela (SBP) */}
+      {isScreenTimeAlertOpen && (
+        <ScreenTimeAlertModal
+          isOpen={isScreenTimeAlertOpen}
+          onClose={() => setIsScreenTimeAlertOpen(false)}
+          minutesPlayed={sessionElapsedMinutes}
+          onSnooze5Min={handleSnooze5Min}
+        />
+      )}
+
+      <Footer
+        onOpenPrivacyTerms={handleOpenPrivacyTerms}
+        onOpenParentalGate={() => setIsParentalDashboardOpen(true)}
+      />
     </div>
   );
 }

@@ -45,9 +45,16 @@ export interface WorldRoom {
   items: ItemStage[];
 }
 
+export interface ParentSettings {
+  screenTimeLimitMinutes: number; // 0 = sem limite, 15, 20, 30
+  childName?: string;
+  enableSoundEffects?: boolean;
+}
+
 export interface PlayerProgress {
   completedItems: Record<string, { completedAt: string; stars: number }>;
   completedRooms: Record<number, boolean>;
   starsCount: number;
   activeWorldId: number;
+  parentSettings?: ParentSettings;
 }

@@ -166,3 +166,52 @@ etlify.toml\.
      - Proteção suave por estrelas: caso o próximo cômodo exija mais estrelas, emite aviso sonoro leve de mola com toast afetuoso (*"Faltam X ⭐ para abrir..."*).
   4. **Auto-Scroll Inteligente para a Soletração:** Ao entrar em um cômodo incompleto (ou ao selecionar um item na esteira), o app rola a página suavemente até `#spelling-arena`. Caso o cômodo esteja 100% concluído, mantém o topo visível para contemplação da arte 3D nítida.
 - **Consequência:** Fluxo de jogo altamente acolhedor, ritmo fonoaudiológico respeitado, menor sobrecarga cognitiva e navegação fluida em dispositivos móveis.
+
+
+---
+
+### ADR 14: Conformidade Jurídica (LGPD Art. 14 / COPPA), Painel da Família & Educador (BNCC) e Controle de Tempo de Tela (SBP)
+- **Data:** 28/10/2026
+- **Contexto:** Para transformar o aplicativo em um produto comercial e profissional pronto para homologação na Google Play Store (Designed for Families) e Apple App Store (Kids Category), era indispensável:
+  1. Estruturar conformidade jurídica explícita com a LGPD (Art. 14) e COPPA (zero coleta de dados pessoais, ausência de identificadores de publicidade e funcionamento prioritariamente offline com dados salvos em LocalStorage).
+  2. Fornecer valor tangível aos pais e educadores através de um relatório pedagógico que traduza o progresso do jogo para as competências da BNCC (EF01LP06 e EF01LP08).
+  3. Proteger a saúde e o bem-estar infantil com controle de tempo de tela e alertas acolhedores de pausa recomendados pela Sociedade Brasileira de Pediatria (SBP).
+- **Decisão:**
+  1. **Documentação Legal Pública e Integrada:**
+     - Criação de `public/privacidade.html` e `public/termos.html` em layout responsivo com identidade visual acolhedora, além de rotas diretas no Netlify (`/privacidade` e `/termos` via `_redirects` UTF-8 sem BOM).
+     - Criação do componente `PrivacyTermsModal.tsx` para leitura direta dos termos dentro do app.
+  2. **Evolução do Parental Gate para o Painel da Família (`ParentDashboardModal.tsx`):**
+     - A trava matemática permanece como gatekeeper seguro para impedir que a criança acesse configurações ou links externos.
+     - Uma vez autenticado o adulto, o painel revela 4 abas estratégicas:
+       - 📊 **Relatório Pedagógico (BNCC):** Métricas de estrelas e palavras, análise das habilidades EF01LP06 (sílabas simples) e EF01LP08 (regras contextuais como S com som de Z, R brando e timbres abertos) e detalhamento por cômodo.
+       - ⏱️ **Tempo de Tela & Saúde (SBP):** Seletor de limite de sessão (15 min, 20 min padrão SBP, 30 min ou livre) e tempo de jogo decorrido.
+       - 🛡️ **Privacidade & Segurança:** Selos de conformidade e links para as políticas.
+       - ⚙️ **Gerenciamento de Dados:** Reinício seguro de progresso com dupla confirmação.
+  3. **Alerta Afetuoso de Pausa Saudável (`ScreenTimeAlertModal.tsx`):**
+     - Pop-up não-punitivo com visual ensolarado e mensagem carinhosa convidando a criança a tomar água e descansar os olhos após o limite configurado pelos pais, com opção suave de "Mais 5 minutinhos".
+  4. **Persistência de Configurações:** Integração de `parentSettings` no `storageService.ts` com retrocompatibilidade total.
+- **Consequência:** Blindagem jurídica internacional para submissão nas lojas de aplicativos, elevação drástica da percepção de valor por parte dos pais e apoio ético à saúde infantil.
+
+
+---
+
+### ADR 15: Escolha Arquitetural Pragmática — Adoção de Component-Driven / Feature-Based em Detrimento de DDD e Clean Architecture Formal
+- **Data:** 28/10/2026
+- **Contexto:** 
+  Avaliou-se a conveniência de refatorar a base do aplicativo para padrões corporativos estritos de **Domain-Driven Design (DDD)** e **Clean Architecture** (divisão formal em Camadas de Domínio Puro, Casos de Uso / Aplicação, Entidades com invariantes protegidas, Value Objects, DTOs e Inversão de Dependência com Interfaces de Repositório).
+- **Decisão:**
+  Decidiu-se **manter a arquitetura pragmática orientada a componentes (Component-Driven / Feature-Based)** com Clean Code idiomático em React + TypeScript, recusando a introdução de DDD formal neste estágio do produto, pelos seguintes fundamentos técnicos:
+  1. **Prevenção de Overengineering (YAGNI / KISS):**
+     A introdução de camadas formais de Clean Architecture multiplicaria significativamente o número de arquivos, classes e mappers, adicionando carga cognitiva e lentidão iterativa sem agregar valor direto à criança ou às famílias.
+  2. **Natureza das Regras de Domínio:**
+     O aplicativo não lida com concorrência transacional complexa, contabilidade financeira ou múltiplos serviços externos. Seu núcleo é a **alfabetização fônica serena**, cujas regras (validação de sílabas correspondentes, contagem tangível 1:1 de estrelas e desbloqueio gradual por ZPD) são eficientemente resolvidas por funções puras, tipagem estrita e máquina de estados reativa.
+  3. **Linguagem Ubíqua sem Burocracia:**
+     Embora não adote entidades DDD clássicas, o projeto preserva o benefício central do DDD: uma **Linguagem Ubíqua rigorosa e coesa** entre fonoaudiologia, pedagogia BNCC e código (`WorldRoom`, `ItemStage`, `Syllable`, `Distractor`, `ParentalGate`, `ScreenTimeLimit`).
+  4. **Coesão Sensorial em Interfaces Lúdicas:**
+     Em jogos educativos infantis de baixa estimulação sensorial, a experiência depende da sincronia precisa e tátil entre interação gestual, Web Audio API, animações e áudio neural. O acoplamento controlado de apresentação e estado em componentes e hooks favorece a cadência de 500ms a 700ms preconizada pela neuroeducação.
+- **Critérios de Gatilho para Refatoração Futura:**
+  Fica estabelecido que a evolução para camadas formais de Clean Architecture e desacoplamento de repositórios só ocorrerá quando houver:
+  1. *Backend e Sincronização em Nuvem (Cloud Sync):* Momento em que a abstração de `IProgressRepository` (separando `LocalStorageAdapter` de `SupabaseAdapter`/`FirebaseAdapter`) se tornará técnica e economicamente justificada;
+  2. *Expansão Massiva de Catálogo (Mundos 2, 3 e além):* Momento de quebrar o arquivo único `worldsData.ts` em módulos isolados por tema/cômodo e separar dados visuais de coordenadas dos metadados fonéticos BNCC;
+  3. *Crescimento da Equipe de Engenharia:* Quando o trabalho paralelo em UI e regras de negócio demandar desacoplamento rígido de contratos.
+- **Consequência:** Máxima velocidade de lançamento, código limpo e compreensível, zero sobrecarga arquitetural e caminho de transição claramente mapeado para fases futuras.

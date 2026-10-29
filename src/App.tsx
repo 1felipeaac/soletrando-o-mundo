@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import { ParentDashboardModal } from './components/ParentDashboardModal';
 import { PrivacyTermsModal } from './components/PrivacyTermsModal';
 import { ScreenTimeAlertModal } from './components/ScreenTimeAlertModal';
+import { MemoryGameModal } from './components/MemoryGameModal';
 import { WORLDS_DATA } from './data/worldsData';
 import { storageService } from './services/storageService';
 import { soundService } from './services/soundService';
@@ -20,6 +21,7 @@ export function App() {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [privacyInitialTab, setPrivacyInitialTab] = useState<'privacy' | 'terms'>('privacy');
   const [lockedNotice, setLockedNotice] = useState<string | null>(null);
+  const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
 
   // Monitoramento de Tempo de Tela (SBP - Sociedade Brasileira de Pediatria)
   const [sessionStartTime] = useState<number>(() => Date.now());
@@ -164,6 +166,11 @@ export function App() {
     setIsScreenTimeAlertOpen(false);
   };
 
+  const handleCompleteMemoryLevel = (worldId: number, level: number) => {
+    const updated = storageService.registerMemoryLevelCompletion(worldId, level);
+    setProgress(updated);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#e8f4fc] via-[#f1f7fc] to-[#faf8f5] text-slate-800 flex flex-col font-sans selection:bg-amber-200">
       <Navbar
@@ -201,6 +208,8 @@ export function App() {
                   prevWorldName={prevWorld?.shortName}
                   nextWorldName={nextWorld?.shortName}
                   isNextWorldLocked={isNextWorldLocked}
+                  onOpenMemoryGame={() => setIsMemoryModalOpen(true)}
+                  memoryLevel={progress.completedMemoryLevels?.[activeWorld.id] || 0}
                 />
               </div>
 
@@ -261,6 +270,17 @@ export function App() {
           onClose={() => setIsScreenTimeAlertOpen(false)}
           minutesPlayed={sessionElapsedMinutes}
           onSnooze5Min={handleSnooze5Min}
+        />
+      )}
+
+      {/* Minijogo da Memória Fonológico & Visual (Desbloqueado ao completar o cômodo) */}
+      {isMemoryModalOpen && (
+        <MemoryGameModal
+          isOpen={isMemoryModalOpen}
+          onClose={() => setIsMemoryModalOpen(false)}
+          world={activeWorld}
+          completedLevel={progress.completedMemoryLevels?.[activeWorld.id] || 0}
+          onCompletedMemoryLevel={handleCompleteMemoryLevel}
         />
       )}
 

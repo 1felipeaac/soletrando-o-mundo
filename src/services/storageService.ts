@@ -82,6 +82,30 @@ class StorageService {
     return updated;
   }
 
+  public registerMemoryGameCompletion(worldId: number): PlayerProgress {
+    return this.registerMemoryLevelCompletion(worldId, 1);
+  }
+
+  public registerMemoryLevelCompletion(worldId: number, level: number): PlayerProgress {
+    const current = this.getProgress();
+    const prevMax = current.completedMemoryLevels?.[worldId] || 0;
+    const newMax = Math.max(prevMax, level);
+
+    const updated: PlayerProgress = {
+      ...current,
+      completedMemoryRooms: {
+        ...(current.completedMemoryRooms || {}),
+        [worldId]: true,
+      },
+      completedMemoryLevels: {
+        ...(current.completedMemoryLevels || {}),
+        [worldId]: newMax,
+      },
+    };
+    this.saveProgress(updated);
+    return updated;
+  }
+
   public resetProgress(): PlayerProgress {
     if (typeof window !== 'undefined') {
       try {

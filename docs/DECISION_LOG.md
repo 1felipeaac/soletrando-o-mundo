@@ -215,3 +215,16 @@ etlify.toml\.
   2. *Expansão Massiva de Catálogo (Mundos 2, 3 e além):* Momento de quebrar o arquivo único `worldsData.ts` em módulos isolados por tema/cômodo e separar dados visuais de coordenadas dos metadados fonéticos BNCC;
   3. *Crescimento da Equipe de Engenharia:* Quando o trabalho paralelo em UI e regras de negócio demandar desacoplamento rígido de contratos.
 - **Consequência:** Máxima velocidade de lançamento, código limpo e compreensível, zero sobrecarga arquitetural e caminho de transição claramente mapeado para fases futuras.
+
+---
+
+### ADR 16: Jogo da Memória Imagem ↔ Palavra Escrita como Recompensa Pedagógica de Fechamento de Ciclo
+- **Data:** 29/10/2026
+- **Contexto:** 
+  Avaliou-se a inclusão de um minijogo comemorativo ("Jogo da Memória") desbloqueado após a revelação completa de cada cômodo, ponderando se a mecânica poderia dispersar o foco da alfabetização ou se funcionaria como reforço pedagógico motivador.
+- **Decisão:**
+  Aprovar o **Jogo da Memória Imagem ↔ Palavra Escrita** como recompensa construtiva e consolidação pós-missão, sob as seguintes regras estritas de neuroeducação e design:
+  1. **Pareamento Imagem ↔ Palavra Escrita com Áudio Neural:** Conecta simultaneamente os sistemas imagético e verbal (Teoria da Dupla Codificação de Paivio) e estimula o mapeamento ortográfico e léxico (Linnea Ehri).
+  2. **Teto Cognitivo de 6 Pares (12 Cartas):** Respeita a capacidade limitada da memória de trabalho visuoespacial em crianças de 4 a 6 anos (Sweller / Baddeley / Cowan), iniciando com 3 pares (6 cartas) no Quarto e escalando suavemente até 6 pares no Bônus.
+  3. **Zero Pressão Temporal & Baixa Estimulação Sensorial:** Sem cronômetro, sem contagem regressiva e sem sons de erro (SBP / Christakis), evitando a liberação de cortisol e mantendo o fluxo calmo.
+- **Consequência:** Fortalecimento da retenção vocabular, elevação do engajamento intrínseco da criança sem recorrer a recompensas vazias (gacha/moedas) e plena conformidade com a BNCC (EI03EF01, EF01LP08).

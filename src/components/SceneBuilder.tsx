@@ -14,6 +14,8 @@ interface SceneBuilderProps {
   prevWorldName?: string;
   nextWorldName?: string;
   isNextWorldLocked?: boolean;
+  onOpenMemoryGame?: () => void;
+  memoryLevel?: number;
 }
 
 export const SceneBuilder: React.FC<SceneBuilderProps> = ({
@@ -28,6 +30,8 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
   prevWorldName,
   nextWorldName,
   isNextWorldLocked,
+  onOpenMemoryGame,
+  memoryLevel = 0,
 }) => {
   const { items } = world;
   const completedCount = items.filter((i) => completedItemIds[i.id]).length;
@@ -130,6 +134,23 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
               </div>
             </div>
 
+            {/* Botão de Jogo da Memória como Recompensa Comemorativa */}
+            {onOpenMemoryGame && (
+              <button
+                onClick={onOpenMemoryGame}
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl shadow-xs border border-emerald-500 cursor-pointer active:scale-98 transition-all"
+              >
+                <span className="text-base" aria-hidden="true">🧩</span>
+                <span>
+                  {memoryLevel >= 4
+                    ? 'Mestre da Memória (Nível 4/4) 🏆'
+                    : memoryLevel > 0
+                    ? `Jogo da Memória (Nível ${memoryLevel}/4 ⭐)`
+                    : '🎮 Jogar Jogo da Memória!'}
+                </span>
+              </button>
+            )}
+
             {/* Ação de Avançar para o Próximo Cômodo sem overflow */}
             {hasNextWorld && onNextWorld && (
               <div className="pt-2 border-t border-amber-500/30 flex items-center justify-between gap-2">
@@ -173,6 +194,17 @@ export const SceneBuilder: React.FC<SceneBuilderProps> = ({
                 <span>Descubra todos os objetos abaixo para revelar o cômodo!</span>
               </div>
             </div>
+          )}
+
+          {/* Botão Flutuante de Acesso Rápido ao Jogo da Memória na Cena Revelada */}
+          {isRoomFinished && onOpenMemoryGame && (
+            <button
+              onClick={onOpenMemoryGame}
+              className="absolute bottom-2.5 right-2.5 z-20 flex items-center gap-1.5 bg-emerald-600/95 hover:bg-emerald-600 text-white font-black text-xs px-3 py-1.5 rounded-xl shadow-md border border-emerald-300 backdrop-blur-xs cursor-pointer active:scale-95 transition-all"
+            >
+              <span>🧩</span>
+              <span>{memoryLevel > 0 ? `Memória (${memoryLevel}/4 ⭐)` : 'Jogo da Memória'}</span>
+            </button>
           )}
         </div>
 

@@ -150,6 +150,17 @@ class SpeechService {
     }
   }
 
+  // Pronuncia direta da palavra inteira com voz neural (ideal para o Jogo da Memória)
+  public async speakWord(itemId: string): Promise<boolean> {
+    this.cancel();
+    const clean = itemId.trim().toLowerCase();
+    let ok = await this.playAudioClip(`/audio/words/${clean}.mp3`);
+    if (!ok) {
+      ok = await this.playAudioClip(`/audio/items/${clean}.mp3`);
+    }
+    return ok;
+  }
+
   // Feedback comemorativo de acerto: pronuncia a palavra completa e em seguida a voz de parabenização acolhedora
   public async speakSuccess(itemId: string) {
     this.cancel();

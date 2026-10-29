@@ -51,9 +51,22 @@ export interface ParentSettings {
   enableSoundEffects?: boolean;
 }
 
+export interface MemoryCard {
+  id: string; // Ex: 'cama-image' ou 'cama-word'
+  itemId: string; // 'cama'
+  type: 'image' | 'word';
+  label: string; // 'CAMA'
+  imageSrc?: string;
+  fallbackIcon?: string;
+  isFlipped: boolean;
+  isMatched: boolean;
+}
+
 export interface PlayerProgress {
   completedItems: Record<string, { completedAt: string; stars: number }>;
   completedRooms: Record<number, boolean>;
+  completedMemoryRooms?: Record<number, boolean>;
+  completedMemoryLevels?: Record<number, number>; // worldId -> nível máximo vencido (1, 2, 3 ou 4)
   starsCount: number;
   activeWorldId: number;
   parentSettings?: ParentSettings;

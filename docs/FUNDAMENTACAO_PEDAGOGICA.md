@@ -92,6 +92,24 @@ Este documento reúne a base científica, os pilares pedagógicos e as diretrize
 
 ---
 
+### Pilar 7: Consolidação Lúdica por Dupla Codificação e Memória de Trabalho
+* **Autores e Obras de Referência:**
+  * **Allan Paivio** (1986/2006) — *Mind and Its Evolution: A Dual Coding Approach*. Psychology Press.
+  * **Linnea C. Ehri** (2005/2014) — *Orthographic Mapping in the Acquisition of Sight Word Reading*. Scientific Studies of Reading.
+  * **Alan Baddeley** (1974/2000) — *The episodic buffer: a new component of working memory?* Trends in Cognitive Sciences.
+  * **Nelson Cowan** (2001) — *The magical number 4 in short-term memory*. Behavioral and Brain Sciences.
+* **Fundamentação:**
+  * **Dupla Codificação:** O aprendizado de uma nova palavra se torna perene quando os sistemas representacionais não-verbal (imagem 3D) e verbal (ortografia + voz neural) são ativados em conjunto.
+  * **Mapeamento Ortográfico:** A criança que já decodificou as sílabas individuais precisa de momentos de reconhecimento global da palavra inteira, consolidando o léxico visual da leitura rápida.
+  * **Capacidade da Memória de Trabalho:** O esboço visuoespacial de crianças de 4 a 6 anos opera eficazmente com 3 a 4 informações simultâneas. Grades excessivas de jogos de memória convencionais geram colapso de atenção e fadiga mental.
+* **Aplicação no Jogo (Jogo da Memória dos Cômodos Revelados):**
+  * Desbloqueado exclusivamente como recompensa comemorativa de fechamento de ciclo após a conclusão dos 8 itens de um cômodo.
+  * Pares formados por **Carta Imagem ↔ Carta Palavra Escrita**, com a pronúncia neural imediata (`FranciscaNeural`) ao virar cada carta.
+  * **Teto máximo estrito de 6 pares (12 cartas)**, iniciando com 3 pares (6 cartas) no Quarto e progredindo conforme a ZPD.
+  * Ausência total de cronômetros, limites de tentativas ou sons punitivos de erro.
+
+---
+
 ## 2. Alinhamento Oficial com a Base Nacional Comum Curricular (BNCC)
 
 O aplicativo desenvolve e avalia competências estipuladas na BNCC para a Educação Infantil e o Ciclo de Alfabetização:

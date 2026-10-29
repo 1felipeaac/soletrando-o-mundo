@@ -86,6 +86,28 @@ class SoundService {
     osc.stop(ctx.currentTime + 0.29);
   }
 
+  // Virada tátil e serena de carta de feltro/madeira (Jogo da Memória)
+  public playCardFlip() {
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(420, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(190, ctx.currentTime + 0.07);
+
+    gain.gain.setValueAtTime(0.16, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.09);
+  }
+
   // Celebração da conclusão do cômodo/prato (arpeggio acolhedor com notas quentes)
   public playFanfare() {
     const ctx = this.getContext();

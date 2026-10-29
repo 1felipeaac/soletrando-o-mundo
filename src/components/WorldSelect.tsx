@@ -123,27 +123,32 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
                 }`}
               >
                 {/* Pin Flutuante de Estrela (como no mockup) */}
-                <div className="flex items-center justify-between gap-3 mb-2">
+                <div className="flex items-center justify-between gap-2 mb-2">
                   {isLocked ? (
-                    <div className="inline-flex items-center gap-1.5 bg-slate-600 text-white font-black text-xs px-3 py-1 rounded-full shadow-xs">
+                    <div className="inline-flex items-center gap-1.5 bg-slate-600 text-white font-black text-xs px-2.5 py-1 rounded-full shadow-xs whitespace-nowrap shrink-0">
                       <Lock className="w-3.5 h-3.5 text-amber-300" />
                       <span>Mundo {world.id}</span>
                     </div>
                   ) : (
-                    <div className={`inline-flex items-center gap-1.5 ${style.pin} text-white font-black text-xs px-3 py-1 rounded-full shadow-xs`}>
+                    <div className={`inline-flex items-center gap-1.5 ${style.pin} text-white font-black text-xs px-2.5 py-1 rounded-full shadow-xs whitespace-nowrap shrink-0`}>
                       <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
                       <span>Mundo {world.id}</span>
                     </div>
                   )}
 
                   {isLocked ? (
-                    <span className="bg-amber-100/90 text-amber-950 text-xs font-black px-3 py-1 rounded-xl border border-amber-200 shadow-2xs flex items-center gap-1.5">
+                    <span className="bg-amber-100/90 text-amber-950 text-xs font-black px-2.5 py-1 rounded-xl border border-amber-200 shadow-2xs flex items-center gap-1 whitespace-nowrap shrink-0">
                       <Lock className="w-3.5 h-3.5 text-amber-700" />
-                      <span>Precisa de {requiredStars} ⭐ (Falta{missingStars > 1 ? 'm' : ''} {missingStars})</span>
+                      <span>Falta{missingStars > 1 ? 'm' : ''} {missingStars} ⭐</span>
+                    </span>
+                  ) : completedCount === world.items.length ? (
+                    <span className="bg-emerald-50 text-emerald-900 text-[11px] sm:text-xs font-black px-2.5 py-1 rounded-xl border border-emerald-300 shadow-2xs flex items-center gap-1 whitespace-nowrap shrink-0">
+                      <span>🧩</span>
+                      <span>100% • Memória</span>
                     </span>
                   ) : (
-                    <span className="bg-white/90 text-slate-800 text-xs font-black px-3 py-1 rounded-xl border border-slate-200 shadow-2xs">
-                      ⭐ {completedCount} de {world.items.length} estrelas
+                    <span className="bg-white/90 text-slate-800 text-xs font-black px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs whitespace-nowrap shrink-0">
+                      ⭐ {completedCount}/{world.items.length}
                     </span>
                   )}
                 </div>

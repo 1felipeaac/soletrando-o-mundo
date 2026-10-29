@@ -195,13 +195,13 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
     }
   };
 
-  // Dinâmica de colunas responsivas segundo o número de cartas
+  // Dinâmica de colunas responsivas mantendo cartas no tamanho padrão do Nível 1 (~125-140px)
   const getGridColsClass = () => {
     const totalCards = pairCount * 2;
-    if (totalCards === 6) return 'grid-cols-3 max-w-sm sm:max-w-md'; // 3x2 (Nível 1)
-    if (totalCards === 8) return 'grid-cols-4 max-w-md sm:max-w-lg'; // 4x2 (Nível 2)
-    if (totalCards === 10) return 'grid-cols-5 max-w-lg sm:max-w-xl'; // 5x2 (Nível 3)
-    return 'grid-cols-4 max-w-md sm:max-w-xl'; // 12 cartas -> 4x3 (Nível 4)
+    if (totalCards === 6) return 'grid-cols-3 max-w-sm sm:max-w-lg'; // 3x2 (Nível 1)
+    if (totalCards === 8) return 'grid-cols-4 max-w-md sm:max-w-2xl'; // 4x2 (Nível 2)
+    if (totalCards === 10) return 'grid-cols-5 max-w-lg sm:max-w-3xl'; // 5x2 (Nível 3)
+    return 'grid-cols-4 max-w-md sm:max-w-2xl'; // 12 cartas -> 4x3 (Nível 4)
   };
 
   return (
@@ -211,7 +211,7 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
       aria-label={`Jogo da Memória do ${world.title}`}
       className="fixed inset-0 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in"
     >
-      <div className="relative w-full max-w-lg sm:max-w-xl md:max-w-2xl bg-[#FAF8F5] rounded-3xl border-4 border-amber-300 shadow-2xl p-3.5 sm:p-6 flex flex-col max-h-[94vh] overflow-y-auto">
+      <div className="relative w-full max-w-lg sm:max-w-2xl md:max-w-3xl lg:max-w-4xl bg-[#FAF8F5] rounded-3xl border-4 border-amber-300 shadow-2xl p-3.5 sm:p-6 flex flex-col max-h-[94vh] overflow-y-auto">
         {/* Cabeçalho Acolhedor */}
         <div className="flex items-center justify-between gap-2 pb-2.5 sm:pb-3 border-b-2 border-amber-200/60 shrink-0">
           <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -349,7 +349,7 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
                         ? `${card.type === 'image' ? 'Imagem de' : 'Palavra'} ${card.label}`
                         : 'Carta virada para baixo'
                     }
-                    className={`relative aspect-square min-w-[58px] min-h-[58px] sm:min-w-[76px] sm:min-h-[76px] rounded-2xl sm:rounded-3xl cursor-pointer select-none transition-all duration-300 transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-amber-300/50 ${
+                    className={`relative aspect-[4/4.5] sm:aspect-square w-full min-h-[70px] sm:min-h-[115px] md:min-h-[130px] rounded-2xl sm:rounded-3xl cursor-pointer select-none transition-all duration-300 transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-amber-300/50 ${
                       card.isMatched
                         ? 'bg-emerald-50 border-3 border-emerald-400 shadow-xs opacity-90 scale-95'
                         : isRevealed
@@ -358,22 +358,22 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
                     }`}
                   >
                     {isRevealed ? (
-                      <div className="w-full h-full p-1.5 sm:p-2 flex flex-col items-center justify-center animate-fade-in">
+                      <div className="w-full h-full p-1.5 sm:p-2.5 flex flex-col items-center justify-center animate-fade-in">
                         {card.type === 'image' ? (
                           <div className="w-full h-full flex items-center justify-center">
                             <ItemIllustration
                               itemId={card.itemId}
                               fallbackIcon={card.fallbackIcon}
-                              className="w-10 h-10 sm:w-14 sm:h-14 object-contain drop-shadow-xs"
+                              className="w-11 h-11 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain drop-shadow-xs"
                             />
                           </div>
                         ) : (
                           <div className="w-full h-full flex flex-col items-center justify-center px-0.5 sm:px-1">
-                            <span className="font-black text-xs sm:text-base md:text-lg text-slate-800 tracking-wider text-center uppercase break-words leading-tight">
+                            <span className="font-black text-xs sm:text-base md:text-xl text-slate-800 tracking-wider text-center uppercase break-words leading-tight">
                               {card.label}
                             </span>
-                            <span className="mt-0.5 sm:mt-1 flex items-center gap-0.5 text-[8px] sm:text-[9px] text-amber-700 font-extrabold uppercase">
-                              <Volume2 className="w-2.5 h-2.5" />
+                            <span className="mt-0.5 sm:mt-1 flex items-center gap-0.5 text-[8px] sm:text-[10px] text-amber-700 font-extrabold uppercase">
+                              <Volume2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                               Ouvir
                             </span>
                           </div>
@@ -382,8 +382,8 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
                     ) : (
                       // Verso da Carta: Madeira e Massinha Acolhedora
                       <div className="w-full h-full flex items-center justify-center">
-                        <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-amber-400/50 flex items-center justify-center border-2 border-amber-400/60 shadow-inner">
-                          <span className="text-amber-800 font-black text-sm sm:text-base">
+                        <div className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-amber-400/50 flex items-center justify-center border-2 border-amber-400/60 shadow-inner">
+                          <span className="text-amber-800 font-black text-sm sm:text-xl md:text-2xl">
                             ?
                           </span>
                         </div>

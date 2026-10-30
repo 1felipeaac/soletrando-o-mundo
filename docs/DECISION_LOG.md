@@ -242,3 +242,22 @@ etlify.toml\.
   3. **Áudio sob Demanda (Scaffolding / Apoio Pedagógico):** Se a criança tiver dúvida ou estiver em fase inicial (4 anos), um segundo toque na carta virada (ou no selo `[ 🔊 Ouvir ]`) dispara a voz neural `FranciscaNeural`.
   4. **Validação Fonética na Vitória do Par:** Ao formar o par correto, a voz neural pronuncia a palavra com afeto e celebra, validando que a hipótese de leitura da criança estava correta.
 - **Consequência:** Engajamento visual real com a ortografia, estímulo à rota fonológica/lexical, autonomia para crianças em diferentes estágios de letramento e pleno alinhamento com a BNCC (`EI03EF09`, `EF01LP08`).
+
+---
+
+### ADR 18: Arquitetura Arejada da Área dos Pais — Abas Concisas, Relatório Descongestionado e Integração Legal Direta
+- **Data:** 30/10/2026
+- **Contexto:** 
+  A Área da Família e do Educador (`ParentDashboardModal`) apresentava sobrecarga visual ("muito prensado") e problemas de quebra de layout:
+  1. No cabeçalho de abas, títulos longos (`Relatório Pedagógico (BNCC)`, `Tempo de Tela (SBP)`, etc.) sofriam corte horizontal (`Tempo de T...`) em telas de smartphones.
+  2. A visualização do Relatório Pedagógico condensava métricas, análise BNCC e 6 acordeões volumosos contendo 48 botões em uma única rolagem vertical densa.
+  3. A aba de privacidade continha botões que abriam um modal secundário sobre o modal existente, criando complexidade desnecessária.
+- **Decisão:**
+  1. **Navegação Superior Concisa e Responsiva:** Adotar 4 abas diretas e autoexplicativas (`[ 📊 Relatório ] [ ⏱️ Tempo de Tela ] [ 🛡️ Privacidade ] [ 📄 Termos de Uso ]`), eliminando quebras em telas móveis e mantendo a identidade acolhedora.
+  2. **Relatório Pedagógico Arejado em Sub-Visões:** Dividir o relatório em:
+     - *Métricas Principais:* 3 cartões táteis (Estrelas 1:1, Palavras dominadas, Cômodos completos).
+     - *Habilidades BNCC:* Análise clara e progressiva das competências `EF01LP06` e `EF01LP08` acompanhadas de dicas pedagógicas para a rotina familiar.
+     - *Vocabulário por Cômodo:* Seletor horizontal de pílulas dos 6 cômodos com visualização arejada apenas dos 8 vocábulos do ambiente ativo, com ícones, sílabas e selos de conquista (`⭐ Dominado` ou `🌱 A descobrir`).
+  3. **Integração Legal e Transparência Nativa:** Apresentar a Política de Privacidade (LGPD Art. 14 / COPPA) e os Termos de Uso diretamente nas suas respectivas abas, com links para as páginas web estáticas (`/privacidade.html` e `/termos.html`).
+  4. **Zerar Progresso Seguro no Rodapé:** Ação de redefinição mantida no rodapé com confirmação em duas etapas para prevenir acidentes sem poluir a navegação primária.
+- **Consequência:** Redução drástica da carga cognitiva para pais e educadores, excelente usabilidade em smartphones e conformidade plena com LGPD e Google Play Families.

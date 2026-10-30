@@ -109,7 +109,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
     // Gerar token JWT assinado para o front-end salvar offline
     const token = signJwt(
       {
-        email: extRef.email || 'cliente@soletrando.com.br',
+        email: event.queryStringParameters?.email || extRef.email || 'cliente@soletrando.com.br',
         plan: isFullHouse ? 'FULL_HOUSE' : 'SINGLE_ROOM',
         unlockedRoomIds: unlockedRooms,
         paymentId: payment.id,

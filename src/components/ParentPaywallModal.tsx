@@ -148,7 +148,7 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
   const verifyPaymentStatus = async (paymentId: string) => {
     try {
       setIsChecking(true);
-      const res = await fetch(`/.netlify/functions/check-payment?id=${paymentId}`);
+      const res = await fetch(`/.netlify/functions/check-payment?id=${paymentId}&email=${encodeURIComponent(email)}`);
       const data = await res.json();
 
       if (data.paid && data.token) {

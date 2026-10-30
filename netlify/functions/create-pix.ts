@@ -119,11 +119,10 @@ export const handler: Handler = async (event: HandlerEvent) => {
         ? `Soletrando o Mundo: ${roomName}`
         : `Soletrando o Mundo: ${planConfig.desc}`;
 
+    // externalReference no Asaas tem limite estrito de 100 caracteres
     const externalReference = JSON.stringify({
       plan,
       targetRoomId: targetRoomId || null,
-      email: email.trim().toLowerCase(),
-      createdAt: new Date().toISOString(),
     });
 
     const paymentRes = await fetch(`${ASAAS_API_URL}/payments`, {

@@ -2,24 +2,37 @@ import { useState } from 'react';
 import type { WorldRoom } from '../types/game';
 import { Star, ChevronRight, Sparkles, Lock } from 'lucide-react';
 import { soundService } from '../services/soundService';
+import { PRICING } from '../config/pricing';
 
 interface WorldSelectProps {
   worlds: WorldRoom[];
   completedItemIds: Record<string, boolean>;
   onSelectWorld: (worldId: number) => void;
+  isRoomLicensed?: (roomId: number, isFree?: boolean) => boolean;
+  onOpenPaywall?: (room: WorldRoom) => void;
 }
 
 export const WorldSelect: React.FC<WorldSelectProps> = ({
   worlds,
   completedItemIds,
   onSelectWorld,
+  isRoomLicensed,
+  onOpenPaywall,
 }) => {
   const [lockedNoticeId, setLockedNoticeId] = useState<number | null>(null);
 
   // Total de estrelas conquistadas pelo jogador (1 por item completado)
   const totalStarsEarned = Object.keys(completedItemIds).filter((id) => completedItemIds[id]).length;
 
-  const handleCardClick = (world: WorldRoom, isLocked: boolean) => {
+  const handleCardClick = (world: WorldRoom, isLocked: boolean, isPaymentLocked: boolean) => {
+    if (isPaymentLocked) {
+      soundService.playBoing();
+      if (onOpenPaywall) {
+        onOpenPaywall(world);
+      }
+      return;
+    }
+
     if (isLocked) {
       soundService.playBoing();
       setLockedNoticeId(world.id);
@@ -28,6 +41,7 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
       }, 4000);
       return;
     }
+
     soundService.playWoodClick();
     onSelectWorld(world.id);
   };
@@ -53,6 +67,10 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
         {worlds.map((world, index) => {
           const completedCount = world.items.filter((i) => completedItemIds[i.id]).length;
           const isFinished = completedCount === world.items.length;
+
+          // Checagem de Licença Paga (se não for gratuito e não tiver licença)
+          const isLicensed = isRoomLicensed ? isRoomLicensed(world.id, world.isFree) : true;
+          const isPaymentLocked = !isLicensed;
 
           // Parâmetro de Desbloqueio por Estrelas (Threshold Progressivo)
           const requiredStars = world.requiredStars ?? 0;
@@ -115,16 +133,23 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
 
               {/* Card / Ilha do Mundo */}
               <div
-                onClick={() => handleCardClick(world, isLocked)}
+                onClick={() => handleCardClick(world, isLocked, isPaymentLocked)}
                 className={`w-full rounded-3xl p-4 sm:p-5 border-3 transition-all cursor-pointer relative overflow-hidden ${
-                  isLocked
+                  isPaymentLocked
+                    ? 'bg-gradient-to-br from-amber-50/70 via-white to-orange-50/40 border-amber-300 hover:border-amber-400 shadow-xs'
+                    : isLocked
                     ? 'bg-gradient-to-br from-slate-50 via-white to-amber-50/40 border-dashed border-amber-300 hover:border-amber-400 opacity-90 shadow-xs'
                     : `${style.card} shadow-sm active:scale-98 group`
                 }`}
               >
                 {/* Pin Flutuante de Estrela (como no mockup) */}
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  {isLocked ? (
+                  {isPaymentLocked ? (
+                    <div className="inline-flex items-center gap-1.5 bg-amber-600 text-white font-black text-xs px-2.5 py-1 rounded-full shadow-xs whitespace-nowrap shrink-0">
+                      <Lock className="w-3.5 h-3.5 text-amber-200" />
+                      <span>Mundo {world.id}</span>
+                    </div>
+                  ) : isLocked ? (
                     <div className="inline-flex items-center gap-1.5 bg-slate-600 text-white font-black text-xs px-2.5 py-1 rounded-full shadow-xs whitespace-nowrap shrink-0">
                       <Lock className="w-3.5 h-3.5 text-amber-300" />
                       <span>Mundo {world.id}</span>
@@ -136,7 +161,12 @@ export const WorldSelect: React.FC<WorldSelectProps> = ({
                     </div>
                   )}
 
-                  {isLocked ? (
+                  {isPaymentLocked ? (
+                    <span className="bg-amber-100 text-amber-950 text-xs font-black px-2.5 py-1 rounded-xl border border-amber-300 shadow-2xs flex items-center gap-1 whitespace-nowrap shrink-0">
+                      <Lock className="w-3.5 h-3.5 text-amber-700" />
+                      <span>Desbloquear (R$ {PRICING.SINGLE_ROOM.price})</span>
+                    </span>
+                  ) : isLocked ? (
                     <span className="bg-amber-100/90 text-amber-950 text-xs font-black px-2.5 py-1 rounded-xl border border-amber-200 shadow-2xs flex items-center gap-1 whitespace-nowrap shrink-0">
                       <Lock className="w-3.5 h-3.5 text-amber-700" />
                       <span>Falta{missingStars > 1 ? 'm' : ''} {missingStars} ⭐</span>

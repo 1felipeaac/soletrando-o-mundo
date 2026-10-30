@@ -31,6 +31,7 @@ export interface WorldRoom {
   icon: string;
   hidden?: boolean; // Oculta o mundo temporariamente da navegação/mapa
   requiredStars?: number; // Estrelas globais necessárias para desbloquear
+  isFree?: boolean; // Cômodo de degustação gratuita (true) ou requer licença paga (false)
   sceneImage?: string;
   sceneSubtitle?: string;
   completedTitle?: string;

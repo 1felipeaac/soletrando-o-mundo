@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Star, ShieldCheck, MapPin, Download } from 'lucide-react';
+import { ArrowLeft, Star, ShieldCheck, MapPin, Download, Sparkles } from 'lucide-react';
 import { pwaService } from '../services/pwaService';
 
 interface NavbarProps {
@@ -9,6 +9,8 @@ interface NavbarProps {
   totalItems: number;
   currentWorldTitle?: string;
   onOpenParentalGate: () => void;
+  onOpenPaywall?: () => void;
+  isFullHouseUnlocked?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,6 +20,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   totalItems,
   currentWorldTitle,
   onOpenParentalGate,
+  onOpenPaywall,
+  isFullHouseUnlocked,
 }) => {
   const [canInstall, setCanInstall] = useState(pwaService.canInstall());
 
@@ -67,8 +71,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
         </div>
 
-        {/* Lado Direito: PWA Install + Estrelas + Trava Parental */}
+        {/* Lado Direito: PWA Install + Desbloquear Casa + Estrelas + Trava Parental */}
         <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {/* Botão de Desbloqueio da Casa Completa */}
+          {!isFullHouseUnlocked && onOpenPaywall && (
+            <button
+              onClick={onOpenPaywall}
+              className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black px-3 py-1.5 rounded-2xl border border-amber-400 shadow-xs transition-all active:scale-95 text-xs cursor-pointer"
+              title="Desbloquear todos os cômodos da casa (R$ 15)"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-950" />
+              <span>Desbloquear Casa (R$ 15)</span>
+            </button>
+          )}
+
           {/* Botão de Instalação PWA */}
           {canInstall && (
             <button

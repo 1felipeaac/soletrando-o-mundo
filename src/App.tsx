@@ -8,10 +8,12 @@ import { ParentDashboardModal } from './components/ParentDashboardModal';
 import { PrivacyTermsModal } from './components/PrivacyTermsModal';
 import { ScreenTimeAlertModal } from './components/ScreenTimeAlertModal';
 import { MemoryGameModal } from './components/MemoryGameModal';
+import { ParentPaywallModal } from './components/ParentPaywallModal';
 import { WORLDS_DATA } from './data/worldsData';
 import { storageService } from './services/storageService';
 import { soundService } from './services/soundService';
-import type { PlayerProgress, ItemStage, ParentSettings } from './types/game';
+import { licenseService } from './services/licenseService';
+import type { PlayerProgress, ItemStage, ParentSettings, WorldRoom } from './types/game';
 
 export function App() {
   const [progress, setProgress] = useState<PlayerProgress>(() => storageService.getProgress());
@@ -22,6 +24,22 @@ export function App() {
   const [privacyInitialTab, setPrivacyInitialTab] = useState<'privacy' | 'terms'>('privacy');
   const [lockedNotice, setLockedNotice] = useState<string | null>(null);
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
+
+  // Sistema de Licenciamento & Paywall Asaas
+  const [isPaywallOpen, setIsPaywallOpen] = useState(false);
+  const [paywallTargetRoom, setPaywallTargetRoom] = useState<WorldRoom | undefined>(undefined);
+  const [, setLicenseUpdateTick] = useState(0);
+
+  const isRoomLicensed = (roomId: number, isFree?: boolean) => {
+    return licenseService.isRoomUnlocked(roomId, isFree);
+  };
+
+  const isFullHouseUnlocked = licenseService.getLicense().isFullHouse;
+
+  const handleOpenPaywall = (room?: WorldRoom) => {
+    setPaywallTargetRoom(room || WORLDS_DATA.find((w) => !isRoomLicensed(w.id, w.isFree)) || WORLDS_DATA[2]);
+    setIsPaywallOpen(true);
+  };
 
   // Monitoramento de Tempo de Tela (SBP - Sociedade Brasileira de Pediatria)
   const [sessionStartTime] = useState<number>(() => Date.now());
@@ -85,6 +103,14 @@ export function App() {
 
   const handleSelectWorld = (worldId: number) => {
     const world = WORLDS_DATA.find((w) => w.id === worldId) || WORLDS_DATA[0];
+
+    // Checagem de Licença Paga
+    if (!licenseService.isRoomUnlocked(world.id, world.isFree)) {
+      soundService.playBoing();
+      handleOpenPaywall(world);
+      return;
+    }
+
     if (world.requiredStars && progress.starsCount < world.requiredStars) {
       return;
     }
@@ -105,6 +131,13 @@ export function App() {
 
   const handleNextWorld = () => {
     if (!hasNextWorld || !nextWorld) return;
+
+    if (!licenseService.isRoomUnlocked(nextWorld.id, nextWorld.isFree)) {
+      soundService.playBoing();
+      handleOpenPaywall(nextWorld);
+      return;
+    }
+
     if (isNextWorldLocked) {
       soundService.playBoing();
       const missing = (nextWorld.requiredStars ?? 0) - progress.starsCount;
@@ -208,6 +241,8 @@ export function App() {
         totalItems={totalItemsCount}
         currentWorldTitle={currentView === 'room' ? activeWorld.title : undefined}
         onOpenParentalGate={() => setIsParentalDashboardOpen(true)}
+        onOpenPaywall={() => handleOpenPaywall()}
+        isFullHouseUnlocked={isFullHouseUnlocked}
       />
 
       <main className="flex-1 w-full pb-10">
@@ -216,6 +251,8 @@ export function App() {
             worlds={WORLDS_DATA}
             completedItemIds={completedItemIds}
             onSelectWorld={handleSelectWorld}
+            isRoomLicensed={isRoomLicensed}
+            onOpenPaywall={handleOpenPaywall}
           />
         )}
 
@@ -312,6 +349,21 @@ export function App() {
           world={activeWorld}
           completedLevel={progress.completedMemoryLevels?.[activeWorld.id] || 0}
           onCompletedMemoryLevel={handleCompleteMemoryLevel}
+        />
+      )}
+
+      {/* Modal de Pagamento Seguro / Desbloqueio PIX Asaas */}
+      {isPaywallOpen && (
+        <ParentPaywallModal
+          isOpen={isPaywallOpen}
+          onClose={() => setIsPaywallOpen(false)}
+          targetRoom={paywallTargetRoom}
+          onSuccessUnlock={() => {
+            setLicenseUpdateTick((t) => t + 1);
+            if (paywallTargetRoom) {
+              handleSelectWorld(paywallTargetRoom.id);
+            }
+          }}
         />
       )}
 

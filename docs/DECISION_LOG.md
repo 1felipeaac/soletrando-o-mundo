@@ -261,3 +261,25 @@ etlify.toml\.
   3. **Integração Legal e Transparência Nativa:** Apresentar a Política de Privacidade (LGPD Art. 14 / COPPA) e os Termos de Uso diretamente nas suas respectivas abas, com links para as páginas web estáticas (`/privacidade.html` e `/termos.html`).
   4. **Zerar Progresso Seguro no Rodapé:** Ação de redefinição mantida no rodapé com confirmação em duas etapas para prevenir acidentes sem poluir a navegação primária.
 - **Consequência:** Redução drástica da carga cognitiva para pais e educadores, excelente usabilidade em smartphones e conformidade plena com LGPD e Google Play Families.
+
+
+---
+
+### ADR 19: Monetização Web com PIX Transparente Asaas, Precificação Acessível e Restauração Multi-Dispositivo
+- **Data:** 30/10/2026
+- **Contexto:** 
+  Para monetizar o aplicativo diretamente via Web/PWA eliminando intermediários e taxas predatórias de lojas de aplicativos (15% a 30%), era necessário desenhar uma arquitetura de pagamentos acessível, segura e com baixíssima fricção para famílias com crianças pequenas em múltiplos aparelhos.
+- **Decisão:**
+  1. **Gateway Asaas (Produção PJ):**
+     - Adoção do Asaas com taxa de 0,99% no PIX e cashout diário automático via PIX para conta jurídica.
+     - Funções serverless no Netlify (`create-pix.ts`, `check-payment.ts`, `restore-license.ts`) operando com autenticação via `access_token` seguro e secrets isolados no Netlify.
+  2. **Estrutura de Precificação e Efeito Âncora:**
+     - **Degustação Gratuita:** Quarto (1) e Cozinha (2) com 16 palavras liberadas.
+     - **Cômodo Avulso:** R$ 5,00 por ambiente restante (*Sala*, *Banheiro*, *Jardim*, *Bônus*).
+     - **Casa Completa (Vitalício):** R$ 15,00 (ancorado contra 4 cômodos x R$ 5 = R$ 20, incentivando a compra integral).
+     - **Upgrade Inteligente:** R$ 10,00 (permite a quem comprou avulso migrar para a casa completa abatendo o valor já pago).
+  3. **Restauração Multi-Dispositivo sem Senha (Tablet ↔ Celular):**
+     - Em vez de forçar as famílias a criarem e decorarem senhas ou dependerem de e-mails em caixas de spam, a função `restore-license.ts` consulta a API do Asaas validando o CPF e E-mail da compra.
+     - Confirmada a aprovação no Asaas, o novo dispositivo recebe um Token JWT assinado com algoritmo HMAC-SHA256 e o salva em `localStorage`.
+     - Uma vez ativado, o aplicativo opera 100% offline em qualquer aparelho da família.
+- **Consequência:** Experiência comercial sem atrito, taxas operacionais mínimas (>98% de margem líquida), total conformidade com o CDC e flexibilidade para as famílias usarem em todos os dispositivos da casa.

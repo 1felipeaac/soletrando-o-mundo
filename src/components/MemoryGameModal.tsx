@@ -124,7 +124,17 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
   };
 
   const handleCardClick = (clickedCard: MemoryCard) => {
-    if (isBusy || clickedCard.isFlipped || clickedCard.isMatched) return;
+    // Se a carta já estiver revelada (virada ou já combinada):
+    // Permite que a criança toque nela para escutar a pronúncia sob demanda (apoio pedagógico)
+    if (clickedCard.isFlipped || clickedCard.isMatched) {
+      if (!isBusy) {
+        soundService.playWoodClick();
+        speechService.speakWord(clickedCard.itemId);
+      }
+      return;
+    }
+
+    if (isBusy) return;
     if (selectedCardIds.includes(clickedCard.id)) return;
 
     soundService.playCardFlip();
@@ -139,8 +149,13 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
     setSelectedCardIds(newSelected);
 
     if (newSelected.length === 1) {
-      // Primeira carta virada: pronuncia a palavra com a voz neural
-      speechService.speakWord(clickedCard.itemId);
+      // Primeira carta virada:
+      // - Se for Imagem: pronuncia o nome (reforço semântico visual)
+      // - Se for Palavra: silêncio proposital para incentivar a decodificação ativa da leitura (Dehaene / Ehri).
+      //   O áudio fica disponível sob demanda ao tocar novamente na carta.
+      if (clickedCard.type === 'image') {
+        speechService.speakWord(clickedCard.itemId);
+      }
     } else if (newSelected.length === 2) {
       const firstCard = newCards.find((c) => c.id === newSelected[0])!;
       const secondCard = newCards.find((c) => c.id === newSelected[1])!;
@@ -170,12 +185,14 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
             onCompletedMemoryLevel(world.id, currentLevel);
           }
         } else {
-          // Par intermediário: reforça a palavra confirmando o acerto
+          // Par intermediário: valida e coroa o acerto de leitura pronunciando a palavra
           speechService.speakWord(firstCard.itemId);
         }
       } else {
-        // Carta diferente: pronuncia a segunda para a criança aprender o que virou
-        speechService.speakWord(clickedCard.itemId);
+        // Carta diferente: se for imagem, pronuncia. Se for palavra escrita, mantém silêncio para leitura.
+        if (clickedCard.type === 'image') {
+          speechService.speakWord(clickedCard.itemId);
+        }
 
         // Pausa acolhedora de 1.2s para memorização visual (sem som de erro)
         setIsBusy(true);
@@ -343,10 +360,10 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
                   <button
                     key={card.id}
                     onClick={() => handleCardClick(card)}
-                    disabled={isBusy || card.isMatched || card.isFlipped}
+                    disabled={isBusy}
                     aria-label={
                       isRevealed
-                        ? `${card.type === 'image' ? 'Imagem de' : 'Palavra'} ${card.label}`
+                        ? `${card.type === 'image' ? 'Imagem de' : 'Palavra'} ${card.label}. Toque para ouvir.`
                         : 'Carta virada para baixo'
                     }
                     className={`relative aspect-[4/4.5] sm:aspect-square w-full min-h-[70px] sm:min-h-[115px] md:min-h-[130px] rounded-2xl sm:rounded-3xl cursor-pointer select-none transition-all duration-300 transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-amber-300/50 ${
@@ -372,9 +389,9 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
                             <span className="font-black text-xs sm:text-base md:text-xl text-slate-800 tracking-wider text-center uppercase break-words leading-tight">
                               {card.label}
                             </span>
-                            <span className="mt-0.5 sm:mt-1 flex items-center gap-0.5 text-[8px] sm:text-[10px] text-amber-700 font-extrabold uppercase">
-                              <Volume2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                              Ouvir
+                            <span className="mt-1 sm:mt-1.5 inline-flex items-center gap-1 text-[9px] sm:text-[11px] text-amber-900 bg-amber-100 hover:bg-amber-200 px-2 py-0.5 rounded-full font-black uppercase shadow-2xs border border-amber-300/80 transition-all">
+                              <Volume2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-700 shrink-0" />
+                              <span>Ouvir</span>
                             </span>
                           </div>
                         )}
@@ -408,7 +425,7 @@ export const MemoryGameModal: React.FC<MemoryGameModalProps> = ({
             </button>
 
             <span className="text-[11px] text-slate-600">
-              Toque na carta para ouvir o som 🌿
+              Leia a palavra ou toque nela para ouvir se precisar 🌿
             </span>
           </div>
         )}

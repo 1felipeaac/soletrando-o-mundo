@@ -64,11 +64,13 @@ A inclusão deste minijogo não é uma mera distração ou "gamificação vazia"
    * *A cada nova partida em qualquer nível, os itens são sorteados aleatoriamente dentre os 8 objetos do cômodo, garantindo que todas as imagens sejam exploradas.*
    * *O jogo da memória é estritamente recreativo e restrito a cada cômodo, sem condicionar ou travar a progressão no mapa principal.*
 
-4. **Experiência Fonética e Sonora Neural:**
-   * **Ao tocar em uma carta (Imagem ou Palavra):** O efeito tátil orgânico de virada é reproduzido (`playCardFlip()`) e a voz de estúdio `FranciscaNeural` pronuncia a palavra com carinho (ex: *"Urso!"*).
-   * **Ao formar o par correto:** Efeito suave de sino afinado (`playSnap()`), com leve animação elástica e borda dourada/suave, fixando o par aberto.
+4. **Experiência Fonética e Sonora Neural (Decodificação Ativa vs. Atalho Auditivo):**
+   * **Ao tocar na Carta Imagem:** O efeito tátil orgânico de virada é reproduzido (`playCardFlip()`) e a voz de estúdio `FranciscaNeural` pronuncia a palavra com carinho (ex: *"Urso!"*), ancorando o léxico visual.
+   * **Ao tocar na Carta Palavra Escrita:** A carta vira em silêncio suave (`playCardFlip()`) exibindo os grafemas em destaque (ex: `URSO`) com um selo `[ 🔊 Ouvir ]`. A criança é desafiada a tentar ler ativamente.
+   * **Áudio sob Demanda:** Um segundo toque na carta de palavra já virada dispara a voz neural, oferecendo suporte afetuoso para crianças que ainda estão desenvolvendo a leitura.
+   * **Ao formar o par correto:** Efeito suave de sino afinado (`playSnap()`), com leve animação elástica e a voz neural pronunciando a palavra completa para validar a hipótese de leitura da criança.
    * **Ao virar cartas que não combinam:** Pequena pausa reflexiva de 1,2 segundo (permitindo que a criança observe onde a carta estava) e retorno suave das cartas, sem qualquer som estridente ou aviso de erro.
-   * **Ao completar todos os pares:** Voz acolhedora *"Muito bem! Parabéns!"*, chuva serena de confetes de massinha e exibição de um selo carinhoso de memorização.
+   * **Ao completar todos os pares do nível:** Voz acolhedora *"Muito bem! Parabéns!"*, confetes de massinha e desbloqueio do próximo nível de memória.
 
 ---
 

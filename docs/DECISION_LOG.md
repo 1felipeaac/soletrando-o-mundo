@@ -228,3 +228,17 @@ etlify.toml\.
   2. **Teto Cognitivo de 6 Pares (12 Cartas):** Respeita a capacidade limitada da memória de trabalho visuoespacial em crianças de 4 a 6 anos (Sweller / Baddeley / Cowan), iniciando com 3 pares (6 cartas) no Quarto e escalando suavemente até 6 pares no Bônus.
   3. **Zero Pressão Temporal & Baixa Estimulação Sensorial:** Sem cronômetro, sem contagem regressiva e sem sons de erro (SBP / Christakis), evitando a liberação de cortisol e mantendo o fluxo calmo.
 - **Consequência:** Fortalecimento da retenção vocabular, elevação do engajamento intrínseco da criança sem recorrer a recompensas vazias (gacha/moedas) e plena conformidade com a BNCC (EI03EF01, EF01LP08).
+
+---
+
+### ADR 17: Supressão de Atalho Auditivo no Jogo da Memória — Decodificação Ativa com Áudio sob Demanda
+- **Data:** 30/10/2026
+- **Contexto:** 
+  No pareamento Imagem ↔ Palavra Escrita, observou-se que a pronúncia automática imediata da palavra escrita ao virar a carta criava um "atalho auditivo": a criança assimilava a palavra pelo canal fonológico oral (*"Urso!"*) e procurava a figura do urso sem precisar examinar os grafemas (`U-R-S-O`), reduzindo o jogo a um pareamento Som ↔ Imagem e neutralizando o esforço de leitura ativa.
+- **Decisão:**
+  Refatorar a mecânica sonora do Jogo da Memória com foco na ativação da rota de decodificação visual (Stanislas Dehaene / Linnea Ehri):
+  1. **Cartas com Imagem:** Continuam com pronúncia automática no primeiro clique, pois a imagem não contém texto e o áudio ancora o objeto no léxico mental.
+  2. **Cartas com Palavra Escrita (Silêncio Inicial para Leitura Ativa):** Ao virar pela primeira vez, a carta vira em silêncio (apenas com o som orgânico tátil de madeira/feltro), exibindo a palavra em destaque para que a criança tente decodificá-la ativamente.
+  3. **Áudio sob Demanda (Scaffolding / Apoio Pedagógico):** Se a criança tiver dúvida ou estiver em fase inicial (4 anos), um segundo toque na carta virada (ou no selo `[ 🔊 Ouvir ]`) dispara a voz neural `FranciscaNeural`.
+  4. **Validação Fonética na Vitória do Par:** Ao formar o par correto, a voz neural pronuncia a palavra com afeto e celebra, validando que a hipótese de leitura da criança estava correta.
+- **Consequência:** Engajamento visual real com a ortografia, estímulo à rota fonológica/lexical, autonomia para crianças em diferentes estágios de letramento e pleno alinhamento com a BNCC (`EI03EF09`, `EF01LP08`).

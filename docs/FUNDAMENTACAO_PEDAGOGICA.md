@@ -104,8 +104,13 @@ Este documento reúne a base científica, os pilares pedagógicos e as diretrize
   * **Capacidade da Memória de Trabalho:** O esboço visuoespacial de crianças de 4 a 6 anos opera eficazmente com 3 a 4 informações simultâneas. Grades excessivas de jogos de memória convencionais geram colapso de atenção e fadiga mental.
 * **Aplicação no Jogo (Jogo da Memória dos Cômodos Revelados):**
   * Desbloqueado exclusivamente como recompensa comemorativa de fechamento de ciclo após a conclusão dos 8 itens de um cômodo.
-  * Pares formados por **Carta Imagem ↔ Carta Palavra Escrita**, com a pronúncia neural imediata (`FranciscaNeural`) ao virar cada carta.
-  * **Teto máximo estrito de 6 pares (12 cartas)**, iniciando com 3 pares (6 cartas) no Quarto e progredindo conforme a ZPD.
+  * Pares formados por **Carta Imagem ↔ Carta Palavra Escrita**.
+  * **Prevenção do Atalho Auditivo (Decodificação Ativa):**
+    * Ao virar a **Carta Imagem**, a voz neural pronuncia imediatamente o nome do objeto (*"Urso!"*), reforçando a semântica visual.
+    * Ao virar a **Carta Palavra Escrita**, a carta vira em silêncio suave, convidando a criança a escanear visualmente os grafemas (`U - R - S - O`) e formular hipóteses de leitura.
+    * **Áudio sob Demanda (Andaime Cognitivo / Scaffolding):** Se a criança tiver dúvida, um toque na carta virada (no selo `[ 🔊 Ouvir ]`) reproduz o áudio neural com carinho.
+    * **Validação do Par:** Ao formar o par correto, a voz neural pronuncia a palavra com afeto e celebra, confirmando a leitura bem-sucedida.
+  * **4 Níveis Progressivos por Cômodo:** 3 pares (Nível 1), 4 pares (Nível 2), 5 pares (Nível 3) e 6 pares (Nível 4 — teto estrito de ZPD).
   * Ausência total de cronômetros, limites de tentativas ou sons punitivos de erro.
 
 ---

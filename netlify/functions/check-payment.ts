@@ -3,7 +3,7 @@ import crypto from 'crypto';
 
 const ASAAS_API_URL = process.env.ASAAS_API_URL || 'https://api.asaas.com/v3';
 const ASAAS_API_KEY = process.env.ASAAS_API_KEY || '';
-const JWT_SECRET = process.env.JWT_SECRET || 'soletrando_sec_prod_9811d77d742047d6b0f1ee278c1a3b02_jwt_auth';
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 function signJwt(payload: object, secret: string): string {
   const header = { alg: 'HS256', typ: 'JWT' };
@@ -45,6 +45,14 @@ export const handler: Handler = async (event: HandlerEvent) => {
       statusCode: 400,
       headers,
       body: JSON.stringify({ error: 'ID do pagamento não informado' }),
+    };
+  }
+
+  if (!ASAAS_API_KEY || !JWT_SECRET) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'Configurações de servidor ausentes (API Key ou JWT Secret)' }),
     };
   }
 

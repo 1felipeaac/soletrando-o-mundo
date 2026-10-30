@@ -149,14 +149,14 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 select-none animate-fade-in">
       <div className={`bg-white rounded-3xl border-4 border-amber-300 w-full ${!isAuthenticated ? 'max-w-md' : 'max-w-2xl'} max-h-[90vh] sm:max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-pop-in transition-all duration-300`}>
         {/* Cabeçalho */}
-        <div className="bg-gradient-to-r from-amber-100 via-amber-50 to-orange-50 px-4 sm:px-6 py-3.5 sm:py-4 border-b-2 border-amber-200 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-amber-100 via-amber-50 to-orange-50 px-4 sm:px-6 py-3 sm:py-3.5 border-b-2 border-amber-200 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-white text-amber-800 flex items-center justify-center border-2 border-amber-300 shadow-xs shrink-0">
-              <ShieldCheck className="w-6 h-6 text-amber-700" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white text-amber-800 flex items-center justify-center border-2 border-amber-300 shadow-xs shrink-0">
+              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-amber-700" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base sm:text-lg font-black text-slate-800 leading-tight">
+                <h3 className="text-sm sm:text-base md:text-lg font-black text-slate-800 leading-tight">
                   Área da Família & Educador
                 </h3>
                 {isAuthenticated && (
@@ -166,7 +166,7 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
                   </span>
                 )}
               </div>
-              <p className="text-[11px] sm:text-xs font-bold text-amber-900/80">
+              <p className="text-[10px] sm:text-xs font-bold text-amber-900/80">
                 Acompanhamento pedagógico, saúde digital e transparência
               </p>
             </div>
@@ -176,35 +176,35 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
               soundService.playWoodClick();
               onClose();
             }}
-            className="p-2 rounded-full bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 cursor-pointer transition-colors shadow-xs shrink-0"
+            className="p-1.5 sm:p-2 rounded-full bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 cursor-pointer transition-colors shadow-xs shrink-0"
             title="Fechar"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Passo 1: Desafio Matemático de Trava Parental (Com Scroll Seguro e Layout Responsivo) */}
+        {/* Passo 1: Desafio Matemático de Trava Parental (Com Top-padding Seguro e Sem Corte Flexbox) */}
         {!isAuthenticated ? (
-          <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6 flex flex-col justify-center">
-            <div className="text-center space-y-3 sm:space-y-4 max-w-sm mx-auto w-full my-auto py-1">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto border-2 border-amber-300 shadow-xs shrink-0">
-                <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8" />
+          <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-5">
+            <div className="max-w-sm mx-auto text-center space-y-2.5 sm:space-y-3 pt-1 pb-2">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto border-2 border-amber-300 shadow-xs shrink-0">
+                <ShieldCheck className="w-6 h-6 text-amber-700" />
               </div>
 
               <div>
-                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full">
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full inline-block">
                   Trava Parental Obrigatória
                 </span>
-                <h4 className="text-lg sm:text-xl font-black text-slate-800 mt-1.5 sm:mt-2">
+                <h4 className="text-base sm:text-lg font-black text-slate-800 mt-1">
                   Confirme que você é um adulto
                 </h4>
-                <p className="text-[11px] sm:text-xs font-bold text-slate-500 mt-1">
-                  Para proteger as configurações e o progresso da criança, resolva o cálculo:
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Para proteger o progresso da criança, resolva o cálculo:
                 </p>
               </div>
 
-              <div className="bg-amber-50 rounded-2xl p-3 sm:p-4 border-2 border-amber-300 shadow-inner">
-                <span className="text-[11px] sm:text-xs font-black text-amber-800 uppercase block mb-0.5 sm:mb-1">
+              <div className="bg-amber-50 rounded-2xl p-2.5 sm:p-3 border-2 border-amber-300 shadow-inner">
+                <span className="text-[10px] sm:text-[11px] font-black text-amber-800 uppercase block mb-0.5">
                   Quanto é:
                 </span>
                 <span className="text-2xl sm:text-3xl font-black text-amber-950 tracking-wider">
@@ -213,12 +213,12 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
               </div>
 
               {errorMessage && (
-                <div className="text-xs font-black text-rose-600 bg-rose-50 p-2 sm:p-2.5 rounded-xl border border-rose-200">
+                <div className="text-xs font-black text-rose-600 bg-rose-50 p-2 rounded-xl border border-rose-200">
                   {errorMessage}
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-2 sm:gap-2.5 pt-1">
+              <div className="grid grid-cols-2 gap-2 sm:gap-2.5 pt-0.5">
                 {problem.options.map((opt) => (
                   <button
                     key={opt}

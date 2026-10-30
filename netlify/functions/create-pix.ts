@@ -86,6 +86,16 @@ export const handler: Handler = async (event: HandlerEvent) => {
     );
     const findData = await findRes.json();
 
+    if (!findRes.ok) {
+      return {
+        statusCode: findRes.status || 400,
+        headers,
+        body: JSON.stringify({
+          error: findData.errors?.[0]?.description || findData.message || 'Erro ao consultar cliente no Asaas',
+        }),
+      };
+    }
+
     if (findData.data && findData.data.length > 0) {
       customerId = findData.data[0].id;
     } else {
@@ -106,7 +116,7 @@ export const handler: Handler = async (event: HandlerEvent) => {
           statusCode: 400,
           headers,
           body: JSON.stringify({
-            error: custData.errors?.[0]?.description || 'Erro ao registrar cliente no Asaas',
+            error: custData.errors?.[0]?.description || custData.message || 'Erro ao registrar cliente no Asaas',
           }),
         };
       }
@@ -144,25 +154,38 @@ export const handler: Handler = async (event: HandlerEvent) => {
         statusCode: 400,
         headers,
         body: JSON.stringify({
-          error: paymentData.errors?.[0]?.description || 'Erro ao gerar cobrança no Asaas',
+          error: paymentData.errors?.[0]?.description || paymentData.message || 'Erro ao gerar cobrança no Asaas',
         }),
       };
     }
 
     const paymentId = paymentData.id;
 
-    // 4. Buscar o QR Code do PIX e payload Copia e Cola
-    const qrRes = await fetch(`${ASAAS_API_URL}/payments/${paymentId}/pixQrCode`, {
-      headers: asaasHeaders,
-    });
-    const qrData = await qrRes.json();
+    // 4. Buscar o QR Code do PIX e payload Copia e Cola (com até 3 tentativas com pausa de 500ms)
+    let qrData: any = null;
+    let qrOk = false;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      const qrRes = await fetch(`${ASAAS_API_URL}/payments/${paymentId}/pixQrCode`, {
+        headers: asaasHeaders,
+      });
+      qrData = await qrRes.json();
 
-    if (!qrRes.ok || !qrData.payload) {
+      if (qrRes.ok && qrData.payload) {
+        qrOk = true;
+        break;
+      }
+
+      if (attempt < 3) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+    }
+
+    if (!qrOk || !qrData?.payload) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
-          error: 'Cobrança criada, mas falha ao gerar o QR Code PIX',
+          error: qrData?.errors?.[0]?.description || qrData?.message || 'Cobrança criada, mas falha ao obter o QR Code PIX. Tente novamente.',
         }),
       };
     }

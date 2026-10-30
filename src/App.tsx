@@ -9,6 +9,7 @@ import { PrivacyTermsModal } from './components/PrivacyTermsModal';
 import { ScreenTimeAlertModal } from './components/ScreenTimeAlertModal';
 import { MemoryGameModal } from './components/MemoryGameModal';
 import { ParentPaywallModal } from './components/ParentPaywallModal';
+import { InstallAppModal } from './components/InstallAppModal';
 import { WORLDS_DATA } from './data/worldsData';
 import { storageService } from './services/storageService';
 import { soundService } from './services/soundService';
@@ -24,6 +25,7 @@ export function App() {
   const [privacyInitialTab, setPrivacyInitialTab] = useState<'privacy' | 'terms'>('privacy');
   const [lockedNotice, setLockedNotice] = useState<string | null>(null);
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
   // Sistema de Licenciamento & Paywall Asaas
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
@@ -370,6 +372,12 @@ export function App() {
       <Footer
         onOpenPrivacyTerms={handleOpenPrivacyTerms}
         onOpenParentalGate={() => setIsParentalDashboardOpen(true)}
+        onOpenInstallHelp={() => setIsInstallModalOpen(true)}
+      />
+
+      <InstallAppModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
       />
     </div>
   );

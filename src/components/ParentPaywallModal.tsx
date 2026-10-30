@@ -26,6 +26,62 @@ interface ParentPaywallModalProps {
   onSuccessUnlock: () => void;
 }
 
+function validateCpfOrCnpj(value: string): { valid: boolean; message?: string } {
+  const clean = value.replace(/\D/g, '');
+  if (clean.length === 11) {
+    if (/^(\d)\1{10}$/.test(clean)) {
+      return { valid: false, message: 'CPF inválido (todos os dígitos são iguais).' };
+    }
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(clean.charAt(i), 10) * (10 - i);
+    }
+    let rev = 11 - (sum % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(clean.charAt(9), 10)) {
+      return { valid: false, message: 'CPF inválido. Verifique os dígitos informados.' };
+    }
+
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(clean.charAt(i), 10) * (11 - i);
+    }
+    rev = 11 - (sum % 11);
+    if (rev === 10 || rev === 11) rev = 0;
+    if (rev !== parseInt(clean.charAt(10), 10)) {
+      return { valid: false, message: 'CPF inválido. Verifique os dígitos informados.' };
+    }
+    return { valid: true };
+  } else if (clean.length === 14) {
+    if (/^(\d)\1{13}$/.test(clean)) {
+      return { valid: false, message: 'CNPJ inválido (todos os dígitos são iguais).' };
+    }
+    const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    let sum = 0;
+    for (let i = 0; i < 12; i++) {
+      sum += parseInt(clean.charAt(i), 10) * weights1[i];
+    }
+    let mod = sum % 11;
+    let dig1 = mod < 2 ? 0 : 11 - mod;
+    if (dig1 !== parseInt(clean.charAt(12), 10)) {
+      return { valid: false, message: 'CNPJ inválido. Verifique os dígitos informados.' };
+    }
+
+    const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    sum = 0;
+    for (let i = 0; i < 13; i++) {
+      sum += parseInt(clean.charAt(i), 10) * weights2[i];
+    }
+    mod = sum % 11;
+    let dig2 = mod < 2 ? 0 : 11 - mod;
+    if (dig2 !== parseInt(clean.charAt(13), 10)) {
+      return { valid: false, message: 'CNPJ inválido. Verifique os dígitos informados.' };
+    }
+    return { valid: true };
+  }
+  return { valid: false, message: 'Por favor, informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido.' };
+}
+
 export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
   isOpen,
   onClose,
@@ -66,16 +122,21 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Formatar CPF enquanto o usuário digita
+  // Formatar CPF ou CNPJ enquanto o usuário digita
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value.replace(/\D/g, '');
-    if (val.length > 11) val = val.slice(0, 11);
-    if (val.length > 9) {
-      val = val.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-    } else if (val.length > 6) {
-      val = val.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-    } else if (val.length > 3) {
-      val = val.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+    if (val.length > 14) val = val.slice(0, 14);
+
+    if (val.length <= 11) {
+      if (val.length > 9) {
+        val = val.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+      } else if (val.length > 6) {
+        val = val.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+      } else if (val.length > 3) {
+        val = val.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+      }
+    } else {
+      val = val.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{1,2})$/, '$1.$2.$3/$4-$5');
     }
     setCpf(val);
   };
@@ -93,8 +154,10 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
       setFormError('Por favor, informe um e-mail válido para receber o comprovante.');
       return;
     }
-    if (cleanCpf.length !== 11) {
-      setFormError('Por favor, informe um CPF válido com 11 dígitos.');
+
+    const docCheck = validateCpfOrCnpj(cleanCpf);
+    if (!docCheck.valid) {
+      setFormError(docCheck.message || 'CPF ou CNPJ inválido.');
       return;
     }
 
@@ -176,8 +239,9 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
     e.preventDefault();
     setFormError(null);
     const cleanCpf = cpf.replace(/\D/g, '');
-    if (cleanCpf.length !== 11) {
-      setFormError('Por favor, informe o CPF cadastrado no momento da compra.');
+    const docCheck = validateCpfOrCnpj(cleanCpf);
+    if (!docCheck.valid) {
+      setFormError(docCheck.message || 'Por favor, informe o CPF ou CNPJ cadastrado na compra.');
       return;
     }
 
@@ -500,15 +564,15 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-black text-slate-800 mb-1">
-                    CPF do Responsável:
+                    CPF ou CNPJ do Responsável:
                   </label>
                   <input
                     type="text"
                     required
                     value={cpf}
                     onChange={handleCpfChange}
-                    placeholder="000.000.000-00"
-                    maxLength={14}
+                    placeholder="000.000.000-00 ou CNPJ"
+                    maxLength={18}
                     className="w-full bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-bold text-slate-800 outline-none transition-all font-mono"
                   />
                 </div>
@@ -628,15 +692,15 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-black text-slate-800 mb-1">
-                    CPF do Responsável (utilizado no PIX):
+                    CPF ou CNPJ do Responsável (utilizado no PIX):
                   </label>
                   <input
                     type="text"
                     required
                     value={cpf}
                     onChange={handleCpfChange}
-                    placeholder="000.000.000-00"
-                    maxLength={14}
+                    placeholder="000.000.000-00 ou CNPJ"
+                    maxLength={18}
                     className="w-full bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-bold text-slate-800 outline-none transition-all font-mono"
                   />
                 </div>

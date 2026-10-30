@@ -131,14 +131,42 @@ export function App() {
     setProgress(updated);
   };
 
+  const handleAdvanceAfterSuccess = (completedItemId: string) => {
+    // Verifica se todos os itens do cômodo foram concluídos com esse acerto
+    const currentCompleted = {
+      ...progress.completedItems,
+      [completedItemId]: { completedAt: new Date().toISOString(), stars: 1 },
+    };
+    const isRoomFinished = activeWorld.items.every((i) => !!currentCompleted[i.id]);
+
+    if (isRoomFinished) {
+      // Se todos os 8 itens foram concluídos, rola suavemente para o topo para contemplar a cena 3D nítida!
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Avança automaticamente para o próximo item pendente no cômodo
+      const nextIncomplete =
+        activeWorld.items.slice(activeItemIndex + 1).find((i) => !currentCompleted[i.id]) ||
+        activeWorld.items.find((i) => !currentCompleted[i.id]);
+
+      if (nextIncomplete) {
+        soundService.playWoodClick();
+        setActiveItemId(nextIncomplete.id);
+      } else if (activeItemIndex < activeWorld.items.length - 1) {
+        handleNextItem();
+      }
+    }
+  };
+
   const handlePrevItem = () => {
     if (activeItemIndex > 0) {
+      soundService.playWoodClick();
       setActiveItemId(activeWorld.items[activeItemIndex - 1].id);
     }
   };
 
   const handleNextItem = () => {
     if (activeItemIndex < activeWorld.items.length - 1) {
+      soundService.playWoodClick();
       setActiveItemId(activeWorld.items[activeItemIndex + 1].id);
     }
   };
@@ -218,10 +246,13 @@ export function App() {
                 <WordArena
                   key={activeItem.id}
                   item={activeItem}
+                  currentIndex={activeItemIndex}
+                  totalItems={activeWorld.items.length}
                   worldTitle={activeWorld.title}
                   placementLabel={activeWorld.placementLabel}
                   isItemCompleted={!!completedItemIds[activeItem.id]}
                   onComplete={handleCompleteItem}
+                  onAdvanceNext={() => handleAdvanceAfterSuccess(activeItem.id)}
                   onPrevItem={handlePrevItem}
                   onNextItem={handleNextItem}
                   hasPrev={activeItemIndex > 0}

@@ -8,10 +8,13 @@ import confetti from 'canvas-confetti';
 
 interface WordArenaProps {
   item: ItemStage;
+  currentIndex?: number;
+  totalItems?: number;
   worldTitle?: string;
   placementLabel?: string;
   isItemCompleted: boolean;
   onComplete: (itemId: string) => void;
+  onAdvanceNext?: () => void;
   onPrevItem: () => void;
   onNextItem: () => void;
   hasPrev: boolean;
@@ -71,10 +74,13 @@ const TILE_THEMES: TileTheme[] = [
 
 export const WordArena: React.FC<WordArenaProps> = ({
   item,
+  currentIndex,
+  totalItems,
   worldTitle,
   placementLabel,
   isItemCompleted,
   onComplete,
+  onAdvanceNext,
   onPrevItem,
   onNextItem,
   hasPrev,
@@ -85,6 +91,14 @@ export const WordArena: React.FC<WordArenaProps> = ({
   const [funnyFeedback, setFunnyFeedback] = useState<string | null>(null);
   const [isWiggling, setIsWiggling] = useState(false);
   const hasFinishedRef = useRef(false);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Inicializa o estágio do item
   useEffect(() => {
@@ -146,6 +160,13 @@ export const WordArena: React.FC<WordArenaProps> = ({
 
         // Pronuncia a palavra inteira e depois a voz de parabenização acolhedora
         await speechService.speakSuccess(item.id);
+
+        // Pausa afetuosa para a criança assimilar a comemoração (1300ms) antes do avanço automático
+        await new Promise((resolve) => setTimeout(resolve, 1300));
+
+        if (isMountedRef.current && hasFinishedRef.current && onAdvanceNext) {
+          onAdvanceNext();
+        }
       }, 550);
 
       return () => clearTimeout(timer);
@@ -224,7 +245,7 @@ export const WordArena: React.FC<WordArenaProps> = ({
   return (
     <div
       id="spelling-arena"
-      className="w-full max-w-lg lg:max-w-xl mx-auto px-2 xs:px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center select-none space-y-3 sm:space-y-4"
+      className="w-full max-w-lg lg:max-w-xl mx-auto px-2 xs:px-3 sm:px-4 py-2 sm:py-3 flex flex-col items-center select-none space-y-3 sm:space-y-4 scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Navegação Rápida entre Itens */}
       <div className="w-full flex items-center justify-between gap-2 px-1">
@@ -237,14 +258,23 @@ export const WordArena: React.FC<WordArenaProps> = ({
           <span>Anterior</span>
         </button>
 
-        <span className="font-extrabold text-slate-700 bg-white px-3 xs:px-3.5 py-1 rounded-full text-[11px] xs:text-xs sm:text-sm tracking-wide border border-sky-200 shadow-2xs">
-          Palavra: <strong className="text-slate-900 uppercase">{item.displayName}</strong>
+        <span className="font-extrabold text-slate-700 bg-white px-3 xs:px-3.5 py-1 rounded-full text-[11px] xs:text-xs sm:text-sm tracking-wide border border-sky-200 shadow-2xs flex items-center gap-1.5 whitespace-nowrap">
+          {currentIndex !== undefined && totalItems !== undefined && (
+            <span className="bg-sky-100 text-sky-800 text-[10px] sm:text-xs font-black px-1.5 py-0.5 rounded-md">
+              {currentIndex + 1}/{totalItems}
+            </span>
+          )}
+          <span>Palavra: <strong className="text-slate-900 uppercase">{item.displayName}</strong></span>
         </span>
 
         <button
           onClick={onNextItem}
           disabled={!hasNext}
-          className="flex items-center gap-1 bg-white hover:bg-sky-50 disabled:opacity-30 disabled:hover:bg-white text-slate-800 font-black px-2.5 xs:px-3 py-1.5 rounded-xl border border-sky-200 shadow-2xs text-[11px] xs:text-xs cursor-pointer active:scale-95 transition-all"
+          className={`flex items-center gap-1 font-black px-2.5 xs:px-3 py-1.5 rounded-xl border shadow-2xs text-[11px] xs:text-xs cursor-pointer active:scale-95 transition-all ${
+            isItemCompleted && hasNext
+              ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-emerald-300'
+              : 'bg-white hover:bg-sky-50 disabled:opacity-30 disabled:hover:bg-white text-slate-800 border-sky-200'
+          }`}
         >
           <span>Próximo</span>
           <ChevronRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-sky-700" />

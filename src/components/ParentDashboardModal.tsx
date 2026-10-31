@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   RotateCcw,
@@ -13,10 +13,20 @@ import {
   FileText,
   ExternalLink,
   Lightbulb,
+  Smartphone,
+  Download,
+  Share,
+  PlusSquare,
+  MoreVertical,
+  Laptop,
+  Maximize2,
+  WifiOff,
+  Zap,
 } from 'lucide-react';
 import { soundService } from '../services/soundService';
 import { storageService } from '../services/storageService';
 import { WORLDS_DATA } from '../data/worldsData';
+import { pwaService, type DevicePlatform } from '../services/pwaService';
 import type { PlayerProgress, ParentSettings } from '../types/game';
 
 interface ParentDashboardModalProps {
@@ -27,7 +37,7 @@ interface ParentDashboardModalProps {
   onOpenPrivacyTerms?: (initialTab: 'privacy' | 'terms') => void;
   sessionElapsedMinutes: number;
   onUpdateSettings?: (settings: ParentSettings) => void;
-  initialTab?: 'report' | 'time' | 'privacy' | 'terms';
+  initialTab?: 'report' | 'time' | 'privacy' | 'terms' | 'install';
 }
 
 interface MathProblem {
@@ -80,13 +90,13 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
   onUpdateSettings,
   initialTab = 'report',
 }) => {
-  // Se abrir diretamente para ler privacidade ou termos, dispensa a trava matemática (exigência LGPD / LBI / Google Play)
-  const isPublicLegalTab = initialTab === 'privacy' || initialTab === 'terms';
+  // Se abrir diretamente para ler privacidade, termos ou instalar app, dispensa a trava matemática
+  const isPublicLegalTab = initialTab === 'privacy' || initialTab === 'terms' || initialTab === 'install';
   const [isAuthenticated, setIsAuthenticated] = useState(isPublicLegalTab);
   const [problem, setProblem] = useState<MathProblem>(generateMathProblem);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'report' | 'time' | 'privacy' | 'terms'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'report' | 'time' | 'privacy' | 'terms' | 'install'>(initialTab);
   const [reportSubView, setReportSubView] = useState<'bncc' | 'rooms'>('bncc');
   const [selectedRoomId, setSelectedRoomId] = useState<number>(1);
   const [selectedTimeLimit, setSelectedTimeLimit] = useState<number>(() => {
@@ -94,6 +104,27 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
   });
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [savedSettingsNotice, setSavedSettingsNotice] = useState(false);
+
+  // Estados de Instalação PWA
+  const [installPlatform, setInstallPlatform] = useState<DevicePlatform>(() => pwaService.getPlatform());
+  const [installCanInstall, setInstallCanInstall] = useState<boolean>(() => pwaService.canInstall());
+  const [installIsStandalone, setInstallIsStandalone] = useState<boolean>(() => pwaService.isStandalone());
+  const [installJustInstalled, setInstallJustInstalled] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setInstallPlatform(pwaService.getPlatform());
+      setInstallCanInstall(pwaService.canInstall());
+      setInstallIsStandalone(pwaService.isStandalone());
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    return pwaService.subscribe(() => {
+      setInstallCanInstall(pwaService.canInstall());
+      setInstallIsStandalone(pwaService.isStandalone());
+    });
+  }, []);
 
   const totalWordsCount = WORLDS_DATA.reduce((acc, w) => acc + w.items.length, 0);
   const completedWordsCount = Object.keys(progress.completedItems).length;
@@ -141,6 +172,15 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
     onClose();
   };
 
+  const handleDirectInstall = async () => {
+    soundService.playSnap();
+    const accepted = await pwaService.install();
+    if (accepted) {
+      soundService.playFanfare();
+      setInstallJustInstalled(true);
+    }
+  };
+
   const selectedRoom = WORLDS_DATA.find((w) => w.id === selectedRoomId) || WORLDS_DATA[0];
   const selectedRoomDone = selectedRoom.items.filter((i) => !!progress.completedItems[i.id]).length;
   const isSelectedRoomAllDone = selectedRoomDone === selectedRoom.items.length;
@@ -183,7 +223,7 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
           </button>
         </div>
 
-        {/* Passo 1: Desafio Matemático de Trava Parental (Com Top-padding Seguro e Sem Corte Flexbox) */}
+        {/* Passo 1: Desafio Matemático de Trava Parental */}
         {!isAuthenticated ? (
           <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-5">
             <div className="max-w-sm mx-auto text-center space-y-2.5 sm:space-y-3 pt-1 pb-2">
@@ -241,7 +281,7 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
         ) : (
           /* Passo 2: O Dashboard Completo dos Pais com Abas Arejadas */
           <div className="flex-1 flex flex-col min-h-0">
-            {/* Seletor de Abas Principais (Estilo Limpo e Sem Quebras Horizontais) */}
+            {/* Seletor de Abas Principais */}
             <div className="flex border-b border-slate-200 bg-slate-50 px-2 sm:px-4 pt-2.5 gap-1 sm:gap-2 overflow-x-auto no-scrollbar">
               <button
                 onClick={() => {
@@ -271,6 +311,21 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
               >
                 <Clock className="w-4 h-4 text-sky-600 shrink-0" />
                 <span>Tempo de Tela</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  soundService.playWoodClick();
+                  setActiveTab('install');
+                }}
+                className={`flex items-center gap-1.5 px-3 py-2.5 rounded-t-2xl font-black text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                  activeTab === 'install'
+                    ? 'bg-white text-amber-950 border-t-2 border-x-2 border-amber-400 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
+                }`}
+              >
+                <Smartphone className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Instalar App</span>
               </button>
 
               <button
@@ -306,9 +361,35 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
 
             {/* Conteúdo com Scroll */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
-              {/* ABA 1: Relatório Pedagógico Arejado (com Sub-Abas BNCC e Cômodos) */}
+              {/* ABA 1: Relatório Pedagógico Arejado */}
               {activeTab === 'report' && (
                 <div className="space-y-4">
+                  {/* Banner Convite para Instalação no Celular */}
+                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-3 sm:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center border border-amber-300 shrink-0">
+                        <Smartphone className="w-5 h-5 text-amber-700" />
+                      </div>
+                      <div>
+                        <h5 className="font-black text-xs sm:text-sm text-slate-800">
+                          Jogue em Tela Cheia no Celular ou Tablet
+                        </h5>
+                        <p className="text-[11px] text-slate-600 font-medium">
+                          Evita que a criança feche abas por engano e funciona 100% offline.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        soundService.playWoodClick();
+                        setActiveTab('install');
+                      }}
+                      className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl border border-amber-600 shadow-2xs cursor-pointer transition-all shrink-0"
+                    >
+                      Como Instalar
+                    </button>
+                  </div>
+
                   {/* Cards de Métricas Principais */}
                   <div className="grid grid-cols-3 gap-2 sm:gap-3">
                     <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-3 text-center shadow-2xs">
@@ -440,10 +521,9 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
                     </div>
                   )}
 
-                  {/* Sub-Visão 2: Vocabulário por Cômodo (Arejado e Interativo) */}
+                  {/* Sub-Visão 2: Vocabulário por Cômodo */}
                   {reportSubView === 'rooms' && (
                     <div className="space-y-3 animate-fade-in">
-                      {/* Seletor de Cômodos em Pílulas */}
                       <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
                         {WORLDS_DATA.map((w) => {
                           const isSelected = selectedRoomId === w.id;
@@ -475,7 +555,6 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
                         })}
                       </div>
 
-                      {/* Detalhes do Cômodo Ativo */}
                       <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -496,7 +575,6 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
                           )}
                         </div>
 
-                        {/* Grade Arejada com os 8 Itens do Cômodo */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                           {selectedRoom.items.map((item) => {
                             const done = !!progress.completedItems[item.id];
@@ -610,7 +688,251 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
                 </div>
               )}
 
-              {/* ABA 3: Privacidade & Segurança (Texto Completo Integrado) */}
+              {/* ABA 3: Instalar App na Tela Inicial */}
+              {activeTab === 'install' && (
+                <div className="space-y-4 animate-fade-in">
+                  {/* Status Standalone */}
+                  {installIsStandalone || installJustInstalled ? (
+                    <div className="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3.5 flex items-center gap-3 text-emerald-900 shadow-xs">
+                      <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
+                      <div className="text-xs sm:text-sm">
+                        <strong className="block font-black text-emerald-950">
+                          O Soletrando já está instalado no seu aparelho!
+                        </strong>
+                        <span>
+                          Você já está aproveitando a experiência completa de tela cheia sem barras de navegador.
+                        </span>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {/* Botão de Instalação Direta */}
+                  {installCanInstall && !installIsStandalone && (
+                    <div className="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-slate-950 shadow-md border-2 border-amber-600 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+                      <div>
+                        <h4 className="font-black text-sm sm:text-base text-slate-950 leading-tight">
+                          Instalar com 1 Toque
+                        </h4>
+                        <p className="text-xs text-amber-950/90 font-semibold mt-0.5">
+                          Seu navegador suporta a instalação direta agora mesmo!
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleDirectInstall}
+                        className="w-full sm:w-auto bg-slate-950 hover:bg-slate-900 active:scale-95 text-white font-black text-xs sm:text-sm px-4 py-2.5 rounded-xl border-2 border-amber-300 shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0"
+                      >
+                        <Download className="w-4 h-4 text-amber-400" />
+                        <span>Instalar Agora</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Seletor de Plataforma */}
+                  <div>
+                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-500 block mb-1.5">
+                      Instruções específicas para o seu dispositivo:
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                      <button
+                        onClick={() => {
+                          soundService.playWoodClick();
+                          setInstallPlatform('android');
+                        }}
+                        className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl border-2 font-black text-xs transition-all cursor-pointer ${
+                          installPlatform === 'android'
+                            ? 'bg-emerald-50 border-emerald-500 text-emerald-950 shadow-xs'
+                            : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        <Smartphone className="w-4 h-4 text-emerald-600" />
+                        <span>Android</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          soundService.playWoodClick();
+                          setInstallPlatform('ios');
+                        }}
+                        className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl border-2 font-black text-xs transition-all cursor-pointer ${
+                          installPlatform === 'ios'
+                            ? 'bg-sky-50 border-sky-500 text-sky-950 shadow-xs'
+                            : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        <Smartphone className="w-4 h-4 text-sky-600" />
+                        <span>iPhone / iPad</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          soundService.playWoodClick();
+                          setInstallPlatform('desktop');
+                        }}
+                        className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-2xl border-2 font-black text-xs transition-all cursor-pointer ${
+                          installPlatform === 'desktop'
+                            ? 'bg-purple-50 border-purple-500 text-purple-950 shadow-xs'
+                            : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        <Laptop className="w-4 h-4 text-purple-600" />
+                        <span>Computador</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Instruções */}
+                  <div className="bg-slate-50/80 rounded-2xl border-2 border-slate-200 p-3.5 sm:p-4 space-y-3">
+                    {installPlatform === 'android' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center shrink-0">
+                            1
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            No <strong>Google Chrome</strong>, toque nos <strong>três pontinhos (⋮)</strong> no topo à direita.
+                          </p>
+                          <MoreVertical className="w-4 h-4 text-slate-400 shrink-0" />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center shrink-0">
+                            2
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            Selecione <strong>&ldquo;Instalar aplicativo&rdquo;</strong> ou <strong>&ldquo;Adicionar à tela inicial&rdquo;</strong>.
+                          </p>
+                          <Download className="w-4 h-4 text-emerald-600 shrink-0" />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs flex items-center justify-center shrink-0">
+                            3
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            Toque em <strong>&ldquo;Instalar&rdquo;</strong>. O ícone da casinha 🏡 aparecerá na sua tela de início!
+                          </p>
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        </div>
+                      </div>
+                    )}
+
+                    {installPlatform === 'ios' && (
+                      <div className="space-y-3">
+                        <div className="bg-sky-100/60 border border-sky-300 rounded-xl p-2.5 text-[11px] text-sky-900 font-medium">
+                          💡 <strong>No Safari do iPhone/iPad:</strong> A Apple exige a instalação pelo menu de Compartilhamento em 3 passos simples:
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-sky-100 text-sky-800 font-black text-xs flex items-center justify-center shrink-0">
+                            1
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            No navegador <strong>Safari</strong>, toque no botão de <strong>Compartilhar</strong> (quadradinho com seta para cima na barra inferior).
+                          </p>
+                          <Share className="w-4 h-4 text-sky-600 shrink-0" />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-sky-100 text-sky-800 font-black text-xs flex items-center justify-center shrink-0">
+                            2
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            Role a folha de opções para cima e toque em <strong>&ldquo;Adicionar à Tela de Início&rdquo;</strong>.
+                          </p>
+                          <PlusSquare className="w-4 h-4 text-sky-600 shrink-0" />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-sky-100 text-sky-800 font-black text-xs flex items-center justify-center shrink-0">
+                            3
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            Toque em <strong>&ldquo;Adicionar&rdquo;</strong> no canto superior direito. Pronto! O app fica na tela com os outros joguinhos.
+                          </p>
+                          <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0" />
+                        </div>
+                      </div>
+                    )}
+
+                    {installPlatform === 'desktop' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 font-black text-xs flex items-center justify-center shrink-0">
+                            1
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            No <strong>Chrome</strong> ou <strong>Edge</strong>, olhe para a barra de endereços (ao lado da estrelinha de favoritos).
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 font-black text-xs flex items-center justify-center shrink-0">
+                            2
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            Clique no ícone de <strong>Instalar</strong> (monitor com setinha para baixo).
+                          </p>
+                          <Download className="w-4 h-4 text-purple-600 shrink-0" />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 font-black text-xs flex items-center justify-center shrink-0">
+                            3
+                          </span>
+                          <p className="text-xs sm:text-sm text-slate-700 font-bold">
+                            Clique em <strong>&ldquo;Instalar&rdquo;</strong>. O jogo abrirá em tela exclusiva e criará um atalho na Área de Trabalho!
+                          </p>
+                          <CheckCircle2 className="w-4 h-4 text-purple-600 shrink-0" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Vantagens */}
+                  <div className="bg-amber-50/70 border-2 border-amber-200 rounded-2xl p-3.5 space-y-2.5">
+                    <h4 className="text-xs font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+                      <span>Benefícios da instalação:</span>
+                    </h4>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] sm:text-xs">
+                      <div className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-amber-200/80">
+                        <Maximize2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+                        <div>
+                          <strong className="block font-black text-slate-800">Tela Cheia Sem Distrações</strong>
+                          <span className="text-slate-600">A criança não fecha abas nem clica na barra de busca sem querer.</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-amber-200/80">
+                        <Zap className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <div>
+                          <strong className="block font-black text-slate-800">Acesso em 1 Toque</strong>
+                          <span className="text-slate-600">Abre direto com o ícone da casinha, sem precisar digitar endereço.</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-amber-200/80">
+                        <WifiOff className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <div>
+                          <strong className="block font-black text-slate-800">100% Offline</strong>
+                          <span className="text-slate-600">Áudios e fases funcionam mesmo no carro ou sem sinal de Wi-Fi.</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-2 bg-white/80 p-2 rounded-xl border border-amber-200/80">
+                        <Sparkles className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                        <div>
+                          <strong className="block font-black text-slate-800">Super Leve e Seguro</strong>
+                          <span className="text-slate-600">Não ocupa a memória pesada do celular nem pede permissões invasivas.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ABA 4: Privacidade & Segurança */}
               {activeTab === 'privacy' && (
                 <div className="space-y-4 text-slate-700 text-xs sm:text-sm leading-relaxed">
                   <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 text-emerald-950">
@@ -678,7 +1000,7 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
                 </div>
               )}
 
-              {/* ABA 4: Termos de Uso (Texto Completo Integrado) */}
+              {/* ABA 5: Termos de Uso */}
               {activeTab === 'terms' && (
                 <div className="space-y-4 text-slate-700 text-xs sm:text-sm leading-relaxed">
                   <div className="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 text-sky-950">
@@ -733,7 +1055,7 @@ export const ParentDashboardModal: React.FC<ParentDashboardModalProps> = ({
               )}
             </div>
 
-            {/* Confirmação Segura de Reset (Aparece inline sobre o rodapé caso acionado) */}
+            {/* Confirmação Segura de Reset */}
             {showResetConfirm && (
               <div className="bg-rose-50 border-t-2 border-rose-300 p-4 space-y-3 animate-pop-in">
                 <div className="flex items-center gap-2 text-rose-900 font-black text-xs sm:text-sm">

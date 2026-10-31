@@ -11,6 +11,7 @@ interface NavbarProps {
   onOpenParentalGate: () => void;
   onOpenPaywall?: () => void;
   isFullHouseUnlocked?: boolean;
+  onOpenInstallHelp?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -22,17 +23,24 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenParentalGate,
   onOpenPaywall,
   isFullHouseUnlocked,
+  onOpenInstallHelp,
 }) => {
   const [canInstall, setCanInstall] = useState(pwaService.canInstall());
+  const [isStandalone, setIsStandalone] = useState(pwaService.isStandalone());
 
   useEffect(() => {
     return pwaService.subscribe(() => {
       setCanInstall(pwaService.canInstall());
+      setIsStandalone(pwaService.isStandalone());
     });
   }, []);
 
   const handleInstallClick = async () => {
-    await pwaService.install();
+    if (canInstall) {
+      await pwaService.install();
+    } else if (onOpenInstallHelp) {
+      onOpenInstallHelp();
+    }
   };
 
   return (
@@ -85,12 +93,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Botão de Instalação PWA */}
-          {canInstall && (
+          {/* Botão de Instalação PWA (visível para quem ainda não instalou) */}
+          {!isStandalone && (
             <button
               onClick={handleInstallClick}
-              className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-black px-2.5 sm:px-3.5 py-1.5 rounded-2xl border border-amber-500 shadow-xs transition-all active:scale-95 text-xs cursor-pointer"
-              title="Instalar Aplicativo no Dispositivo"
+              className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-black px-2.5 sm:px-3 py-1.5 rounded-2xl border border-amber-500 shadow-xs transition-all active:scale-95 text-xs cursor-pointer"
+              title="Instalar Aplicativo na Tela Inicial"
             >
               <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-950" />
               <span className="hidden xs:inline">Instalar App</span>

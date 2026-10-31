@@ -245,6 +245,7 @@ export function App() {
         onOpenParentalGate={() => setIsParentalDashboardOpen(true)}
         onOpenPaywall={() => handleOpenPaywall()}
         isFullHouseUnlocked={isFullHouseUnlocked}
+        onOpenInstallHelp={() => setIsInstallModalOpen(true)}
       />
 
       <main className="flex-1 w-full pb-10">

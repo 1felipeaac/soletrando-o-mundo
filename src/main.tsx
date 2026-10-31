@@ -12,11 +12,17 @@ createRoot(document.getElementById('root')!).render(
 // Gerenciamento de Service Worker PWA
 if ('serviceWorker' in navigator) {
   if (import.meta.env.PROD) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch((err) => {
+    // Registra imediatamente para que o pré-cache ocorra o mais cedo possível
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      })
+      .catch((err) => {
         console.warn('[PWA] Falha ao registrar Service Worker:', err);
       });
-    });
   } else {
     // Em modo de desenvolvimento, remove service workers prévios e limpa caches
     // para evitar conflitos de HMR, WebSockets e chunks em cache no localhost
@@ -34,4 +40,3 @@ if ('serviceWorker' in navigator) {
     }
   }
 }
-

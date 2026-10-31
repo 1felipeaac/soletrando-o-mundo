@@ -85,16 +85,17 @@ class LicenseService {
    * Salva e valida um token JWT emitido pelo backend
    */
   public saveLicenseToken(token: string): LicenseData {
+    const current = this.getLicense();
     const payload = this.decodeJwtPayload(token);
-    const isFull = payload?.plan === 'FULL_HOUSE';
+    const isFull = payload?.plan === 'FULL_HOUSE' || current.isFullHouse;
     const unlocked = isFull
       ? ALL_ROOM_IDS
-      : Array.from(new Set([...FREE_ROOM_IDS, ...(payload?.unlockedRoomIds || [])]));
+      : Array.from(new Set([...FREE_ROOM_IDS, ...current.unlockedRoomIds, ...(payload?.unlockedRoomIds || [])]));
 
     const licenseData: LicenseData = {
       isFullHouse: isFull,
       unlockedRoomIds: unlocked,
-      email: payload?.email,
+      email: payload?.email || current.email,
       token,
       activatedAt: new Date().toISOString(),
     };

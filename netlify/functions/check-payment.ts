@@ -109,15 +109,53 @@ export const handler: Handler = async (event: HandlerEvent) => {
     } catch {}
 
     const plan = extRef.plan || (payment.value >= 15 ? 'FULL_HOUSE' : 'SINGLE_ROOM');
-    const isFullHouse = plan === 'FULL_HOUSE' || plan === 'UPGRADE_HOUSE';
-    const unlockedRooms = isFullHouse ? [1, 2, 3, 4, 5, 6] : [1, 2, extRef.targetRoomId || 3];
+    let isFullHouse = plan === 'FULL_HOUSE' || plan === 'UPGRADE_HOUSE' || payment.value >= 15;
+    const unlockedRooms = new Set<number>([1, 2]);
+
+    if (extRef.targetRoomId) {
+      unlockedRooms.add(Number(extRef.targetRoomId));
+    }
+
+    // Se comprou cômodo avulso, consultar todas as compras aprovadas do cliente no Asaas para cumular cômodos anteriores
+    if (!isFullHouse && payment.customer) {
+      try {
+        const custPayRes = await fetch(
+          `${ASAAS_API_URL}/payments?customer=${payment.customer}&status=RECEIVED,CONFIRMED`,
+          {
+            headers: {
+              access_token: ASAAS_API_KEY,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const custPayData = await custPayRes.json();
+        if (custPayData.data && Array.isArray(custPayData.data)) {
+          for (const p of custPayData.data) {
+            if (p.value >= 15.0) isFullHouse = true;
+            if (p.externalReference) {
+              try {
+                const ext = JSON.parse(p.externalReference);
+                if (ext.plan === 'FULL_HOUSE' || ext.plan === 'UPGRADE_HOUSE') {
+                  isFullHouse = true;
+                }
+                if (ext.targetRoomId) {
+                  unlockedRooms.add(Number(ext.targetRoomId));
+                }
+              } catch {}
+            }
+          }
+        }
+      } catch {}
+    }
+
+    const finalUnlockedRooms = isFullHouse ? [1, 2, 3, 4, 5, 6] : Array.from(unlockedRooms);
 
     // Gerar token JWT assinado para o front-end salvar offline
     const token = signJwt(
       {
         email: event.queryStringParameters?.email || extRef.email || 'cliente@soletrando.com.br',
         plan: isFullHouse ? 'FULL_HOUSE' : 'SINGLE_ROOM',
-        unlockedRoomIds: unlockedRooms,
+        unlockedRoomIds: finalUnlockedRooms,
         paymentId: payment.id,
         iat: Math.floor(Date.now() / 1000),
         iss: 'soletrando-o-mundo',

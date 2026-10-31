@@ -130,7 +130,7 @@ export const PrivacyTermsModal: React.FC<PrivacyTermsModalProps> = ({
 
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-[11px] text-slate-600">
                 <strong>Canal do Encarregado de Dados (DPO):</strong> Felipe Coelho •{' '}
-                <span className="font-bold text-sky-700">privacidade.soletrando@gmail.com</span>
+                <span className="font-bold text-sky-700">soletrandoomundo@gmail.com</span>
               </div>
             </div>
           ) : (

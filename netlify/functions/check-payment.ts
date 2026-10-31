@@ -33,6 +33,9 @@ export const handler: Handler = async (event: HandlerEvent) => {
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+    Pragma: 'no-cache',
+    Expires: '0',
   };
 
   if (event.httpMethod === 'OPTIONS') {
@@ -80,8 +83,11 @@ export const handler: Handler = async (event: HandlerEvent) => {
       };
     }
 
-    // Status de sucesso no Asaas: RECEIVED (PIX recebido) ou CONFIRMED (cartão/boleto compensado)
-    const isPaid = payment.status === 'RECEIVED' || payment.status === 'CONFIRMED';
+    // Status de sucesso no Asaas: RECEIVED (PIX recebido), CONFIRMED (compensado) ou RECEIVED_IN_CASH
+    const isPaid =
+      payment.status === 'RECEIVED' ||
+      payment.status === 'CONFIRMED' ||
+      payment.status === 'RECEIVED_IN_CASH';
 
     if (!isPaid) {
       return {

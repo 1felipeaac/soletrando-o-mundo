@@ -283,3 +283,22 @@ etlify.toml\.
      - Confirmada a aprovação no Asaas, o novo dispositivo recebe um Token JWT assinado com algoritmo HMAC-SHA256 e o salva em `localStorage`.
      - Uma vez ativado, o aplicativo opera 100% offline em qualquer aparelho da família.
 - **Consequência:** Experiência comercial sem atrito, taxas operacionais mínimas (>98% de margem líquida), total conformidade com o CDC e flexibilidade para as famílias usarem em todos os dispositivos da casa.
+
+---
+
+### ADR 20: Eliminação de Cache em Polling de Pagamento, Bypass de API no Service Worker e Verificação Reativa no Retorno ao App
+- **Data:** 31/10/2026
+- **Contexto:** 
+  Identificou-se que, após a geração e quitação de um PIX no Asaas, o modal de pagamento permanecia preso na mensagem *"Identificando pagamento automaticamente em tempo real..."*. Ao fechar o modal, os mapas permaneciam bloqueados; no entanto, ao acionar *"Ativar compra neste aparelho"* informando CPF e e-mail, a liberação ocorria instantaneamente.
+- **Diagnóstico da Causa-Raiz:**
+  1. **Cache Stale no Service Worker PWA (`sw.js`):** O Service Worker interceptava todas as requisições `GET` do mesmo domínio. No primeiro ciclo de polling, o endpoint `/.netlify/functions/check-payment` retornava `{ paid: false, status: 'PENDING' }` (código HTTP 200). O Service Worker armazenava essa resposta em cache (`cache.put`) e a servia indefinidamente em todas as requisições subsequentes, ignorando as atualizações reais da rede. A rota de restauração funcionava unicamente por ser um `POST`, que não era interceptado pelo cache do SW.
+  2. **Ausência de Cabeçalhos Anti-Cache no Endpoint Serverless:** O Netlify Edge e navegadores intermediários podiam reter a resposta `GET` inicial na ausência de diretivas estritas de `Cache-Control`.
+  3. **Desativação de Intervalos no Background Mobile:** Quando os pais alternavam para o aplicativo bancário (Nubank, Itaú, etc.) para pagar o PIX, navegadores mobile suspendiam a execução de timers JavaScript (`setInterval`).
+- **Decisão:**
+  1. **Bypass Completo no Service Worker (`sw.js`):** Requisições com caminhos iniciados em `/.netlify` e `/api` agora são expressamente ignoradas pelo interceptador de cache do Service Worker, garantindo tráfego direto para a rede. O versionamento do cache foi incrementado para `soletrando-mundo-v12` para purgar entradas antigas no ciclo de ativação.
+  2. **Headers Anti-Cache Estritos em `check-payment.ts`:** Inclusão de `Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0`, `Pragma: no-cache` e suporte para status `RECEIVED_IN_CASH`.
+  3. **Busting de Cache e Headers no Cliente:** Inclusão de timestamp de alta resolução (`&_t=${Date.now()}`) e `cache: 'no-store'` em cada requisição de verificação.
+  4. **Verificação Reativa com `visibilitychange`:** Listener do ciclo de vida da página que dispara verificação instantânea no exato momento em que o usuário retorna do aplicativo bancário para o navegador (`document.visibilityState === 'visible'`).
+  5. **Botão de Verificação Manual Confortável:** Adição do botão *"Já paguei pelo banco (Verificar Agora)"* no modal para dar autonomia tátil aos pais sem depender exclusivamente do temporizador.
+  6. **Desbloqueio Imediato do Estado Global:** Ao detectar confirmação de pagamento ou restauração, `onSuccessUnlock()` é disparado imediatamente antes de transicionar a tela, garantindo que o mapa e a barra superior reflitam o novo status mesmo se o usuário fechar o modal pelo botão "X".
+- **Consequência:** Confirmação em tempo real ultraveloz (menos de 2 segundos após a liquidação do PIX no banco), eliminação definitiva de respostas falsas em cache e sincronia perfeita entre mobile, desktop e PWA.

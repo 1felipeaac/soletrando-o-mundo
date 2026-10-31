@@ -115,10 +115,18 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
   const checkIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && step === 'pix' && pixData?.paymentId) {
+        verifyPaymentStatus(pixData.paymentId);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (checkIntervalRef.current) clearInterval(checkIntervalRef.current);
     };
-  }, []);
+  }, [step, pixData?.paymentId, email]);
 
   if (!isOpen) return null;
 
@@ -203,6 +211,11 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
   const startPollingPayment = (paymentId: string) => {
     if (checkIntervalRef.current) clearInterval(checkIntervalRef.current);
 
+    // Verificação rápida inicial após 1.5s
+    setTimeout(() => {
+      verifyPaymentStatus(paymentId);
+    }, 1500);
+
     checkIntervalRef.current = setInterval(async () => {
       await verifyPaymentStatus(paymentId);
     }, 3000);
@@ -211,12 +224,27 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
   const verifyPaymentStatus = async (paymentId: string) => {
     try {
       setIsChecking(true);
-      const res = await fetch(`/.netlify/functions/check-payment?id=${paymentId}&email=${encodeURIComponent(email)}`);
+      const timestamp = Date.now();
+      const res = await fetch(
+        `/.netlify/functions/check-payment?id=${paymentId}&email=${encodeURIComponent(email)}&_t=${timestamp}`,
+        {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+          },
+          cache: 'no-store',
+        }
+      );
       const data = await res.json();
 
       if (data.paid && data.token) {
-        if (checkIntervalRef.current) clearInterval(checkIntervalRef.current);
+        if (checkIntervalRef.current) {
+          clearInterval(checkIntervalRef.current);
+          checkIntervalRef.current = null;
+        }
         licenseService.saveLicenseToken(data.token);
+        // Atualiza imediatamente o mapa no componente pai para já aparecer desbloqueado
+        onSuccessUnlock();
 
         soundService.playFanfare();
         confetti({
@@ -260,6 +288,7 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
       }
 
       licenseService.saveLicenseToken(data.token);
+      onSuccessUnlock();
       soundService.playFanfare();
       confetti({
         particleCount: 80,
@@ -648,7 +677,7 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
                   )}
                 </button>
 
-                <div className="flex items-center justify-center gap-2 text-[11px] text-amber-900 font-extrabold bg-amber-50 py-2 px-3 rounded-xl border border-amber-200 animate-pulse">
+                <div className="flex items-center justify-center gap-2 text-[11px] text-amber-900 font-extrabold bg-amber-50 py-2 px-3 rounded-xl border border-amber-200">
                   <RefreshCw
                     className={`w-3.5 h-3.5 text-amber-600 ${
                       isChecking ? 'animate-spin' : ''
@@ -656,6 +685,21 @@ export const ParentPaywallModal: React.FC<ParentPaywallModalProps> = ({
                   />
                   <span>Identificando pagamento automaticamente em tempo real...</span>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundService.playWoodClick();
+                    if (pixData?.paymentId) {
+                      verifyPaymentStatus(pixData.paymentId);
+                    }
+                  }}
+                  disabled={isChecking}
+                  className="w-full py-2.5 px-3 rounded-xl font-bold text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 disabled:opacity-50 shadow-xs"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 text-amber-800 ${isChecking ? 'animate-spin' : ''}`} />
+                  <span>{isChecking ? 'Consultando confirmação...' : 'Já paguei pelo banco (Verificar Agora)'}</span>
+                </button>
               </div>
             </div>
           )}

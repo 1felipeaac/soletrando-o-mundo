@@ -1,5 +1,5 @@
 // Service Worker para Soletrando o Mundo (PWA Offline)
-const CACHE_NAME = 'soletrando-mundo-v11';
+const CACHE_NAME = 'soletrando-mundo-v12';
 
 const STATIC_ASSETS = [
   '/',
@@ -81,10 +81,12 @@ self.addEventListener('fetch', (event) => {
   // Somente tratar requisições do mesmo domínio ou áudio/imagens locais
   if (event.request.method !== 'GET') return;
 
-  // Ignora requisições de desenvolvimento do Vite (HMR, módulos virtuais, tokens)
+  // Ignora requisições de desenvolvimento do Vite e chamadas de API/Netlify Functions
   if (
     url.pathname.startsWith('/@') ||
     url.pathname.startsWith('/node_modules') ||
+    url.pathname.startsWith('/.netlify') ||
+    url.pathname.startsWith('/api') ||
     url.searchParams.has('token')
   ) {
     return;
